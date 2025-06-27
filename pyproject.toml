@@ -1,0 +1,32 @@
+[project]
+name = "learnx-parser"
+version = "0.1.0"
+description = "A Python package to parse .pptx files and convert them to HTML or JSON."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Yatin Kumar", email = "yatin.kumar.dev@gmail.com" },
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Markup :: XML",
+]
+
+dependencies = [
+    "lxml",
+]
+
+[project.urls]
+Homepage = "https://github.com/yatink/pptx2html_json"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
