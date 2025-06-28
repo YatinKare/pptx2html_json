@@ -246,6 +246,39 @@ class SlideParser:
 
         return Shape(type="shape", id=shape_id, name=shape_name, transform=transform, prst_geom=prst_geom_val, fill=fill, line=line, text_frame=text_frame, ph_type=ph_type, ph_idx=ph_idx, ph_orient=ph_orient, ph_sz=ph_sz)
 
+    def _parse_picture_element(self, picture_element) -> Picture:
+        pic_id = picture_element.find(".//p:nvPicPr/p:cNvPr", namespaces=self.nsmap).get("id")
+        pic_name = picture_element.find(".//p:nvPicPr/p:cNvPr", namespaces=self.nsmap).get("name")
+        pic_path = ""
+
+        # Extract placeholder information for pictures
+        ph_elem = picture_element.find(".//p:nvPicPr/p:nvPr/p:ph", namespaces=self.nsmap)
+        ph_type = ph_elem.get("type") if ph_elem is not None else None
+        ph_idx = int(ph_elem.get("idx")) if ph_elem is not None and ph_elem.get("idx") is not None else None
+
+        transform = self._extract_transform(picture_element)
+
+        blip = picture_element.find(".//a:blip", namespaces=self.nsmap)
+        if blip is not None:
+            embed_id = blip.get("{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed")
+            if embed_id in self.rels:
+                pic_path = self.rels[embed_id]
+
+        blip_fill_elem = picture_element.find(".//p:blipFill", namespaces=self.nsmap)
+        blip_fill_obj = None
+        if blip_fill_elem is not None:
+            rot_with_shape = blip_fill_elem.get("rotWithShape", "0") == "1"
+            blip_fill_obj = BlipFill(path=pic_path, rot_with_shape=rot_with_shape)
+
+            src_rect_elem = blip_fill_elem.find(".//a:srcRect", namespaces=self.nsmap)
+            if src_rect_elem is not None:
+                blip_fill_obj.src_rect_t = int(src_rect_elem.get("t")) if src_rect_elem.get("t") is not None else None
+                blip_fill_obj.src_rect_b = int(src_rect_elem.get("b")) if src_rect_elem.get("b") is not None else None
+                blip_fill_obj.src_rect_l = int(src_rect_elem.get("l")) if src_rect_elem.get("l") is not None else None
+                blip_fill_obj.src_rect_r = int(src_rect_elem.get("r")) if src_rect_elem.get("r") is not None else None
+
+        return Picture(id=pic_id, name=pic_name, path=pic_path, transform=transform, blip_fill=blip_fill_obj, ph_type=ph_type, ph_idx=ph_idx)
+
     def _parse_shape_tree(self, sp_tree_root):
         shapes = []
         pictures = []
@@ -258,37 +291,8 @@ class SlideParser:
                 shapes.append(shape)
 
             elif child.tag == "{http://schemas.openxmlformats.org/presentationml/2006/main}pic":
-                pic_id = child.find(".//p:nvPicPr/p:cNvPr", namespaces=self.nsmap).get("id")
-                pic_name = child.find(".//p:nvPicPr/p:cNvPr", namespaces=self.nsmap).get("name")
-                pic_path = ""
-
-                # Extract placeholder information for pictures
-                ph_elem = child.find(".//p:nvPicPr/p:nvPr/p:ph", namespaces=self.nsmap)
-                ph_type = ph_elem.get("type") if ph_elem is not None else None
-                ph_idx = int(ph_elem.get("idx")) if ph_elem is not None and ph_elem.get("idx") is not None else None
-
-                transform = self._extract_transform(child)
-
-                blip = child.find(".//a:blip", namespaces=self.nsmap)
-                if blip is not None:
-                    embed_id = blip.get("{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed")
-                    if embed_id in self.rels:
-                        pic_path = self.rels[embed_id]
-
-                blip_fill_elem = child.find(".//p:blipFill", namespaces=self.nsmap)
-                blip_fill_obj = None
-                if blip_fill_elem is not None:
-                    rot_with_shape = blip_fill_elem.get("rotWithShape", "0") == "1"
-                    blip_fill_obj = BlipFill(path=pic_path, rot_with_shape=rot_with_shape)
-
-                    src_rect_elem = blip_fill_elem.find(".//a:srcRect", namespaces=self.nsmap)
-                    if src_rect_elem is not None:
-                        blip_fill_obj.src_rect_t = int(src_rect_elem.get("t")) if src_rect_elem.get("t") is not None else None
-                        blip_fill_obj.src_rect_b = int(src_rect_elem.get("b")) if src_rect_elem.get("b") is not None else None
-                        blip_fill_obj.src_rect_l = int(src_rect_elem.get("l")) if src_rect_elem.get("l") is not None else None
-                        blip_fill_obj.src_rect_r = int(src_rect_elem.get("r")) if src_rect_elem.get("r") is not None else None
-
-                pictures.append(Picture(id=pic_id, name=pic_name, path=pic_path, transform=transform, blip_fill=blip_fill_obj, ph_type=ph_type, ph_idx=ph_idx))
+                picture = self._parse_picture_element(child)
+                pictures.append(picture)
 
             elif child.tag == "{http://schemas.openxmlformats.org/presentationml/2006/main}grpSp":
                 grp_id = child.find(".//p:nvGrpSpPr/p:cNvPr", namespaces=self.nsmap).get("id")
