@@ -54,6 +54,16 @@ class HtmlWriter:
             return f"clip-path: inset({top} {right} {bottom} {left});"
         return ""
 
+    def _render_picture_html(self, element: Picture) -> str:
+        x = self._emu_to_px(element.transform.x)
+        y = self._emu_to_px(element.transform.y)
+        cx = self._emu_to_px(element.transform.cx)
+        cy = self._emu_to_px(element.transform.cy)
+        image_src = os.path.join("media", os.path.basename(element.blip_fill.path))
+        return f"""
+        <img class="image" src="{image_src}" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px; {self._get_transform_css(element.transform)} {self._get_image_crop_css(element.blip_fill)}" />
+"""
+
     def _render_shape_html(self, element: Shape) -> str:
         x = self._emu_to_px(element.transform.x)
         y = self._emu_to_px(element.transform.y)
@@ -145,10 +155,7 @@ class HtmlWriter:
             if isinstance(element, Shape):
                 html_content += self._render_shape_html(element)
             elif isinstance(element, Picture):
-                image_src = os.path.join("media", os.path.basename(element.blip_fill.path))
-                html_content += f"""
-        <img class="image" src="{image_src}" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px; {self._get_transform_css(element.transform)} {self._get_image_crop_css(element.blip_fill)}" />
-"""
+                html_content += self._render_picture_html(element)
             elif isinstance(element, GroupShape):
                 # For GroupShape, create a container div and recursively render its children
                 # This is a simplified approach and might need more complex styling for accurate group rendering
