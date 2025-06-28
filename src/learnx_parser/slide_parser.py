@@ -151,6 +151,27 @@ class SlideParser:
                 fill = grad_fill
         return fill
 
+    def _extract_line_properties(self, sp_pr_element):
+        line = None
+        ln_elem = sp_pr_element.find(".//a:ln", namespaces=self.nsmap)
+        if ln_elem is not None:
+            line = Line()
+            line.width = int(ln_elem.get("w", 0))
+            line.cap = ln_elem.get("cap")
+            line.cmpd = ln_elem.get("cmpd")
+            line.algn = ln_elem.get("algn")
+
+            solid_fill_elem = ln_elem.find(".//a:solidFill", namespaces=self.nsmap)
+            if solid_fill_elem is not None:
+                srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
+                if srgb_clr_elem is not None:
+                    line.color = srgb_clr_elem.get("val")
+                else:
+                    scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
+                    if scheme_clr_elem is not None:
+                        line.scheme_color = scheme_clr_elem.get("val")
+        return line
+
     def _parse_shape_element(self, shape_element) -> Shape:
         shape_id = shape_element.find(".//p:cNvPr", namespaces=self.nsmap).get("id")
         shape_name = shape_element.find(".//p:cNvPr", namespaces=self.nsmap).get("name")
@@ -179,23 +200,7 @@ class SlideParser:
             fill = self._extract_fill_properties(sp_pr)
 
             # Extract lines
-            ln_elem = sp_pr.find(".//a:ln", namespaces=self.nsmap)
-            if ln_elem is not None:
-                line = Line()
-                line.width = int(ln_elem.get("w", 0))
-                line.cap = ln_elem.get("cap")
-                line.cmpd = ln_elem.get("cmpd")
-                line.algn = ln_elem.get("algn")
-
-                solid_fill_elem = ln_elem.find(".//a:solidFill", namespaces=self.nsmap)
-                if solid_fill_elem is not None:
-                    srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
-                    if srgb_clr_elem is not None:
-                        line.color = srgb_clr_elem.get("val")
-                    else:
-                        scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
-                        if scheme_clr_elem is not None:
-                            line.scheme_color = scheme_clr_elem.get("val")
+            line = self._extract_line_properties(sp_pr)
 
         # Extract text and run properties
         for p_tag in shape_element.findall(".//a:p", namespaces=self.nsmap):
