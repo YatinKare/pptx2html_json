@@ -2,6 +2,8 @@
 
 A robust, fully-tested Python package for parsing `.pptx` files and converting their content into structured HTML or JSON.
 
+>[!NOTE] This package was fully developed by gemini-cli. See here how it was done: {will put a link here}
+
 ## Features
 
 -   **Parses OpenXML Structure**: Directly reads and interprets the underlying XML components of `.pptx` files.
