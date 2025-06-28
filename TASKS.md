@@ -23,7 +23,7 @@ This file tracks the high-level tasks and sub-tasks for building the LearnX Powe
     *   [ ] Sub-task: Write unit tests to verify theme property extraction.
 *   [ ] **Task: `extract_master_properties`**
     *   [ ] Sub-task: Modify `StyleResolver` to parse `ppt/slideMasters/slideMaster*.xml` to extract master slide properties, including placeholders and their default styles.
-    *   [ ] Sub-task: Write unit tests to verify master property extraction and merging with theme properties.
+    *   [ ] Sub-task: Write unit tests to verify master property extraction and merging with master/theme properties.
 *   [x] **Task: `extract_layout_properties`**
     *   [x] Sub-task: Modify `StyleResolver` to parse `ppt/slideLayouts/slideLayout*.xml` to extract layout-specific properties and placeholder information.
     *   [x] Sub-task: Write unit tests to verify layout property extraction and merging with master/theme properties.
@@ -58,6 +58,20 @@ This file tracks the high-level tasks and sub-tasks for building the LearnX Powe
 *   [ ] **Task: `render_slide_background`**
     *   [ ] Sub-task: Modify `HtmlWriter` to render the extracted slide background (e.g., using CSS for solid colors or gradients, or `<img>` for background images).
     *   [ ] Sub-task: Update `tests/test_html_writer.py` to verify background rendering.
+*   [ ] **Task: `improve_html_layout`**
+    *   **Goal:** Improve the HTML layout to accurately reflect the positioning and arrangement of elements in the original PowerPoint presentation, specifically addressing the vertical stacking issue.
+    *   [x] **Sub-task: `review_openxml_layout_docs`**
+        *   **Description:** Re-examine relevant OpenXML documentation (`13_PresentationML.txt`, `20_DrawingML_Framework.txt`, etc.) for properties related to element positioning, text box flow, and multi-column layouts.
+    *   [ ] **Sub-task: `analyze_galaxy_slide_xml_for_layout`**
+        *   **Description:** Analyze `slide23.xml` and its associated layout (`slideLayout26.xml`) to identify specific XML attributes that define the horizontal arrangement of elements, especially for the "Agenda" slide.
+    *   [ ] **Sub-task: `propose_css_layout_strategy`**
+        *   **Description:** Based on the OpenXML analysis, develop a detailed CSS strategy (e.g., using Flexbox or Grid) to achieve the desired horizontal layout, considering how elements are grouped and positioned in PowerPoint.
+    *   [ ] **Sub-task: `implement_css_layout_in_html_writer`**
+        *   **Description:** Modify `src/learnx_parser/html_writer.py` to apply the new CSS layout strategy. This may involve changes to the `slide-container` styles and how individual elements are rendered.
+    *   [ ] **Sub-task: `test_html_layout_accuracy`**
+        *   **Description:** Write/update unit tests in `tests/test_html_writer.py` to specifically verify the accuracy of the new HTML layout, ensuring elements are positioned correctly relative to each other.
+    *   [ ] **Sub-task: `visual_verify_html_output`**
+        *   **Description:** Manually verify the generated HTML output (`output_presentation/slide2/slide2.html`) against the PowerPoint screenshot to confirm visual accuracy of the layout.
 
 ### 🔹 Phase 4: Refactoring and Modularity
 **Goal**: Review the codebase for further modularization and adherence to best practices.
