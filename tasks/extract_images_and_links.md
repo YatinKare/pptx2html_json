@@ -1,24 +1,45 @@
 ## Log: Extract Images and Links
 
 - **Prompt**: (Implicit) Next task in Phase 3: Single Slide Parser Prototype.
-- **Issue**: The sample slide did not contain explicit hyperlinks, requiring a placeholder implementation and a test that asserts no links are found.
+- **Issue**: Initially, image and hyperlink extraction were placeholders or incomplete. The `Slide` dataclass now correctly captures these.
 
 ### What I did:
 
-I refactored the image extraction into a more general `extract_media` method and added a placeholder for hyperlink extraction. I also introduced a `parse_slide` method to orchestrate the overall slide parsing process.
+- **Image Extraction and Handling:**
+    - `SlideParser` now correctly extracts `Picture` objects, including their `Transform` data (position, size) and `BlipFill` information (path to the image).
+    - `PptxParser` now handles the copying of media files (images) from the unpacked PPTX directory to the slide-specific output directories, ensuring that the `image_src` in the generated HTML points to the correct location.
+    - Implemented a temporary fix in `SlideParser` to assign default `cx` and `cy` values to `Picture` objects if their `xfrm` element is missing in the XML, ensuring images are visible in the HTML output.
+
+- **Hyperlink Extraction:**
+    - `SlideParser` now extracts `Hyperlink` objects, resolving their `r:id` to the actual target URL using the relationships file.
+    - `HtmlWriter` now renders hyperlinks as `<a>` tags, using the extracted `r_id` as the `href` attribute.
 
 ### How I did it:
 
 1.  **Modified `src/learnx_parser/slide_parser.py`:**
-    -   Renamed `extract_images` to `extract_media` to accommodate other media types in the future.
-    -   Added a new method `extract_hyperlinks` that searches for `<a:hlinkClick>` elements and resolves their `r:id` using the relationships. For the current sample, this method will return an empty list.
-    -   Created a `parse_slide` method that calls `extract_shapes_and_text`, `extract_media`, and `extract_hyperlinks` and returns a dictionary containing all extracted data.
+    - Enhanced `_parse_shape_tree` to correctly extract `Transform` data for `Picture` objects.
+    - Added logic to extract `BlipFill` data for `Picture` objects.
+    - Implemented `extract_hyperlinks` to parse `<a:hlinkClick>` elements and resolve their targets.
+    - Ensured `parse_slide` collects and returns `Picture` and `Hyperlink` objects within the `Slide` dataclass.
 
-2.  **Modified `tests/test_slide_parser.py`:**
-    -   Updated `test_extract_images` to `test_extract_media`.
-    -   Added `test_extract_hyperlinks` which asserts that `extract_hyperlinks` returns an empty list for the current sample slide.
-    -   Added `test_parse_slide` to verify that the `parse_slide` method returns a dictionary with the expected keys (`shapes`, `media`, `hyperlinks`) and that the extracted data is not empty (for shapes and media) or is empty (for hyperlinks).
+2.  **Modified `src/learnx_parser/pptx_parser.py`:**
+    - Added `_copy_media_for_slide` method to handle copying of image files based on `Picture.blip_fill.path`.
+    - Integrated `_copy_media_for_slide` into `parse_presentation` to ensure media is copied for each slide.
+
+3.  **Modified `src/learnx_parser/html_writer.py`:**
+    - Updated `write_slide_html` to iterate over `slide.pictures` and render `<img>` tags with correct `src` and `style` attributes.
+    - Added logic to render `<a>` tags for `TextRun` objects that have an associated `Hyperlink`.
+
+4.  **Modified `tests/test_pptx_parser.py`:**
+    - Updated assertions to check for the existence of media files in the new slide-specific output directories.
+    - Adjusted JSON content assertions to reflect that `media` is no longer a top-level key in the JSON output, but rather part of `Picture` objects.
+
+### What was challenging:
+
+- Ensuring correct path resolution for media files across different components (`SlideParser`, `PptxParser`, `HtmlWriter`).
+- Debugging the `0x0` image size issue, which led to the discovery of missing `xfrm` data in the sample PPTX and the implementation of a temporary default size.
+- Coordinating media copying between `HtmlWriter` (which previously handled it) and `PptxParser` (which now handles it).
 
 ### Future work:
 
-With the extraction of shapes, text, images, and a placeholder for links complete, the next step is to implement the `write_html_output` functionality. This will involve taking the structured data extracted by the `SlideParser` and converting it into a clean HTML representation.
+- This task is complete. The next step is to update `tasks/json_writer_module.md` to reflect the completed work and then proceed with further integration and testing of the overall `PptxParser` functionality.

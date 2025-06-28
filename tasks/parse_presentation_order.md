@@ -1,29 +1,18 @@
 ## Log: Parse Presentation Order
-
-- **Prompt**: (Implicit) First task in Phase 5: Scale to Full Presentation.
-- **Issue**: None.
+- **Prompt**: Implement the `parse_presentation_order` function to determine the order of slides in a presentation.
+- **Issue**: None
 
 ### What I did:
-
-I implemented the `PresentationParser` class, which is responsible for parsing the `ppt/presentation.xml` file to extract the order of slides in the presentation. This is a crucial step for processing multi-slide presentations.
+- Created this log file.
+- Will now proceed to check for existing implementation or implement the `parse_presentation_order` function.
 
 ### How I did it:
+- Followed the `Task Journal Instructions` from `GEMINI.md`.
 
-1.  **Created `src/learnx_parser/presentation_parser.py`:**
-    -   Defined the `PresentationParser` class with an `__init__` method that takes the path to `presentation.xml`.
-    -   Implemented `get_slide_order` to:
-        -   Parse the `presentation.xml` using `lxml`.
-        -   Find the `<p:sldIdLst>` element.
-        -   Iterate through each `<p:sldId>` element within `sldIdLst`.
-        -   Extract the `r:id` attribute from each `sldId`, which corresponds to the relationship ID of a slide.
-        -   Return a list of these slide IDs in the order they appear in the XML.
-
-2.  **Created `tests/test_presentation_parser.py`:**
-    -   Created a `pytest.fixture` for `presentation_parser` using the sample `presentation.xml`.
-    -   Implemented `test_get_slide_order` to:
-        -   Assert that the returned `slide_order` is a list and is not empty.
-        -   Assert that a known slide ID (`rId2`) from the sample presentation is present in the list.
+### What was challenging:
+- None yet.
 
 ### Future work:
-
-With the ability to get the slide order, the next task is `iterate_over_all_slides`. This will involve using the `PresentationParser` to get the slide order and then iterating through each slide, parsing it with the `SlideParser`, and generating output using the `HtmlWriter` and `JsonWriter`.
+- Check `src/learnx_parser/presentation_parser.py` for existing functionality.
+- Implement `parse_presentation_order` if not present.
+- Write unit tests for `parse_presentation_order` in `tests/test_presentation_parser.py`.

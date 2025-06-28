@@ -1,0 +1,83 @@
+{
+    "slide_number": 3,
+    "common_slide_data": {
+        "background_color": null,
+        "background_gradient_fill": null
+    },
+    "shapes": [
+        {
+            "type": "shape",
+            "id": "2",
+            "name": "Title 1",
+            "transform": {
+                "x": 1280159,
+                "y": 3386775,
+                "cx": 8311102,
+                "cy": 3080335,
+                "rot": 0,
+                "flipH": false,
+                "flipV": false
+            },
+            "prst_geom": null,
+            "fill": null,
+            "line": null,
+            "text_frame": {
+                "paragraphs": [
+                    {
+                        "text_runs": [
+                            {
+                                "text": "The power of communication",
+                                "properties": {
+                                    "font_size": null,
+                                    "bold": false,
+                                    "italic": false,
+                                    "color": null,
+                                    "scheme_color": null,
+                                    "font_face": null,
+                                    "underline": false
+                                }
+                            }
+                        ],
+                        "properties": {
+                            "align": null,
+                            "indent": null
+                        }
+                    }
+                ]
+            },
+            "ph_type": "ctrTitle",
+            "ph_idx": null,
+            "ph_orient": null,
+            "ph_sz": null
+        }
+    ],
+    "pictures": [
+        {
+            "id": "7",
+            "name": "Picture Placeholder 8",
+            "path": "/ppt/media/image24.png",
+            "transform": {
+                "x": 8197587,
+                "y": 411831,
+                "cx": 3521337,
+                "cy": 3521344,
+                "rot": 0,
+                "flipH": false,
+                "flipV": false
+            },
+            "blip_fill": {
+                "path": "/ppt/media/image24.png",
+                "rot_with_shape": true,
+                "src_rect_t": null,
+                "src_rect_b": null,
+                "src_rect_l": 23,
+                "src_rect_r": 23
+            },
+            "ph_type": "pic",
+            "ph_idx": 13
+        }
+    ],
+    "group_shapes": [],
+    "graphic_frames": [],
+    "hyperlinks": []
+}

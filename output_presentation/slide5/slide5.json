@@ -1,0 +1,188 @@
+{
+    "slide_number": 5,
+    "common_slide_data": {
+        "background_color": null,
+        "background_gradient_fill": null
+    },
+    "shapes": [
+        {
+            "type": "shape",
+            "id": "12",
+            "name": "Title 11",
+            "transform": {
+                "x": 4114800,
+                "y": 640080,
+                "cx": 7498080,
+                "cy": 1280160,
+                "rot": 0,
+                "flipH": false,
+                "flipV": false
+            },
+            "prst_geom": null,
+            "fill": null,
+            "line": null,
+            "text_frame": {
+                "paragraphs": [
+                    {
+                        "text_runs": [
+                            {
+                                "text": "Engaging the audience",
+                                "properties": {
+                                    "font_size": null,
+                                    "bold": false,
+                                    "italic": false,
+                                    "color": null,
+                                    "scheme_color": null,
+                                    "font_face": null,
+                                    "underline": false
+                                }
+                            }
+                        ],
+                        "properties": {
+                            "align": null,
+                            "indent": null
+                        }
+                    }
+                ]
+            },
+            "ph_type": "title",
+            "ph_idx": null,
+            "ph_orient": null,
+            "ph_sz": null
+        },
+        {
+            "type": "shape",
+            "id": "3",
+            "name": "Content Placeholder 2",
+            "transform": {
+                "x": 0,
+                "y": 0,
+                "cx": 0,
+                "cy": 0,
+                "rot": 0,
+                "flipH": false,
+                "flipV": false
+            },
+            "prst_geom": null,
+            "fill": null,
+            "line": null,
+            "text_frame": {
+                "paragraphs": [
+                    {
+                        "text_runs": [
+                            {
+                                "text": "Make eye contact with your audience to create a sense of intimacy and involvement",
+                                "properties": {
+                                    "font_size": null,
+                                    "bold": false,
+                                    "italic": false,
+                                    "color": null,
+                                    "scheme_color": null,
+                                    "font_face": null,
+                                    "underline": false
+                                }
+                            }
+                        ],
+                        "properties": {
+                            "align": null,
+                            "indent": null
+                        }
+                    },
+                    {
+                        "text_runs": [
+                            {
+                                "text": "Weave relatable stories into your presentation using narratives that\u00a0make your message memorable and impactful",
+                                "properties": {
+                                    "font_size": null,
+                                    "bold": false,
+                                    "italic": false,
+                                    "color": null,
+                                    "scheme_color": null,
+                                    "font_face": null,
+                                    "underline": false
+                                }
+                            }
+                        ],
+                        "properties": {
+                            "align": null,
+                            "indent": null
+                        }
+                    },
+                    {
+                        "text_runs": [
+                            {
+                                "text": "Encourage questions and provide thoughtful responses to\u00a0enhance audience participation",
+                                "properties": {
+                                    "font_size": null,
+                                    "bold": false,
+                                    "italic": false,
+                                    "color": null,
+                                    "scheme_color": null,
+                                    "font_face": null,
+                                    "underline": false
+                                }
+                            }
+                        ],
+                        "properties": {
+                            "align": null,
+                            "indent": null
+                        }
+                    },
+                    {
+                        "text_runs": [
+                            {
+                                "text": "Use live polls or surveys to gather audience opinions, promoting engagement and making sure\u00a0the audience feel involved",
+                                "properties": {
+                                    "font_size": null,
+                                    "bold": false,
+                                    "italic": false,
+                                    "color": null,
+                                    "scheme_color": null,
+                                    "font_face": null,
+                                    "underline": false
+                                }
+                            }
+                        ],
+                        "properties": {
+                            "align": null,
+                            "indent": null
+                        }
+                    }
+                ]
+            },
+            "ph_type": null,
+            "ph_idx": 1,
+            "ph_orient": null,
+            "ph_sz": null
+        }
+    ],
+    "pictures": [
+        {
+            "id": "13",
+            "name": "Picture Placeholder 12",
+            "path": "/ppt/media/image42.png",
+            "transform": {
+                "x": 1317615,
+                "y": 895646,
+                "cx": 1956925,
+                "cy": 1956928,
+                "rot": 0,
+                "flipH": false,
+                "flipV": false
+            },
+            "blip_fill": {
+                "path": "/ppt/media/image42.png",
+                "rot_with_shape": false,
+                "src_rect_t": null,
+                "src_rect_b": null,
+                "src_rect_l": null,
+                "src_rect_r": null
+            },
+            "ph_type": "pic",
+            "ph_idx": 13
+        }
+    ],
+    "group_shapes": [],
+    "graphic_frames": [],
+    "hyperlinks": []
+}

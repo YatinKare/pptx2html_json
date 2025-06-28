@@ -9,7 +9,7 @@ def slide_data():
     slide_xml_path = os.path.abspath("temp_pptx/ppt/slides/slide23.xml")
     slide_rels_path = os.path.abspath("temp_pptx/ppt/slides/_rels/slide23.xml.rels")
     parser = SlideParser(slide_xml_path, slide_rels_path)
-    return parser.parse_slide()
+    return parser.parse_slide(slide_number=23)
 
 @pytest.fixture
 def json_writer():
@@ -32,12 +32,12 @@ def test_write_slide_json(slide_data, json_writer):
 
     # Basic checks for JSON content
     assert "shapes" in json_content
-    assert "media" in json_content
+    
     assert "hyperlinks" in json_content
     assert len(json_content["shapes"]) > 0
-    assert len(json_content["media"]) > 0
+    
     assert len(json_content["hyperlinks"]) == 0
 
     # Check for specific data points
-    assert any("Agenda" in shape["text"] for shape in json_content["shapes"])
-    assert any("/ppt/media/image1.png" in item["path"] for item in json_content["media"])
+    assert any("Agenda" in run["text"] for shape in json_content["shapes"] if shape.get("text_frame") for paragraph in shape["text_frame"]["paragraphs"] for run in paragraph["text_runs"])
+    

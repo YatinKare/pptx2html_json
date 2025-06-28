@@ -1,0 +1,10 @@
+{
+  "overrides": {
+    "@sylphlab/tools-pdf": {
+      "mupdf": "1.3.6"
+    }
+  },
+  "dependencies": {
+    "@sylphlab/tools-pdf-mcp": "^0.5.1"
+  }
+}

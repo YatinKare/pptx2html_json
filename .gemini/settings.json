@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "pdf-reader": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-v",
+        "~/Documents/Github/pptx2html_json/example:/pdfs",
+        "mcp/pdf-reader"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

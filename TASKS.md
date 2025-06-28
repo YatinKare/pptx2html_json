@@ -1,81 +1,84 @@
-# Project Tasks
+## Project Tasks
 
 This file tracks the high-level tasks and sub-tasks for building the LearnX PowerPoint Parser.
 
-## Phase 1: Understanding & Grounding
-**Goal**: Full comprehension of `.pptx` and XML schema.
+## 📋 Gemini Workflow Overview (Revised)
 
-*   [x] **Task: `inspect_pptx_structure`**
-    *   [x] Sub-task: Obtain a sample `.pptx` file from the user.
-    *   [x] Sub-task: Unzip the `.pptx` file into a temporary directory (`/tmp/pptx_unpacked`).
-    *   [x] Sub-task: List the full directory structure of the unpacked content.
-    *   [x] Sub-task: Document the high-level file/folder structure (e.g., `_rels`, `docProps`, `ppt`).
-*   [x] **Task: `map_xml_to_slide_elements`**
-    *   [x] Sub-task: Analyze the content of `ppt/presentation.xml` to understand presentation-level properties.
-    *   [x] Sub-task: Analyze the content of `ppt/slides/_rels/slideX.xml.rels` to understand slide relationships.
-    *   [x] Sub-task: Analyze the content of `ppt/slides/slideX.xml` to identify core shape, text, and image tags.
-*   [x] **Task: `cross_reference_with_ecma_pdf`**
-    *   [x] Sub-task: Search for the ECMA-376 Part 1 PDF online.
-    *   [x] Sub-task: Download or link to the PDF for reference.
-    *   [x] Sub-task: Correlate key XML tags (e.g., `<p:sp>`, `<a:t>`) with their definitions in the specification.
-*   [x] **Task: `write_schema_notes`**
-    *   [x] Sub-task: Create the `docs/` directory.
-    *   [x] Sub-task: Create `docs/schema_notes.md`.
-    *   [x] Sub-task: Synthesize findings into a structured document explaining the mapping from XML to slide content, with examples.
+### ❗️ Start Here: Setup + Planning Phase (Completed)
 
----
+### 🔹 Phase 1: Advanced Property Resolution (Core)
+**Goal**: Implement a robust mechanism to resolve inherited properties for slide elements.
 
-## Phase 2: Project Bootstrapping
-**Goal**: Setup workspace, tooling, and environment.
+*   [ ] **Task: `understand_pptx_inheritance_model`**
+    *   [ ] Sub-task: Review ECMA-376 Part 1 (Section 19.3.1.16 `p:ph` and 19.3.1.17 `p:spPr`) and other relevant sections for property inheritance rules (e.g., from slide master, slide layout, theme).
+    *   [ ] Sub-task: Identify key XML files involved in inheritance: `theme*.xml`, `slideLayout*.xml`, `slideMaster*.xml`, `presProps.xml`, `viewProps.xml`.
+    *   [ ] Sub-task: Document the inheritance hierarchy for common properties (position, size, font, color) in `docs/inheritance_model.md`.
+*   [ ] **Task: `implement_style_resolver_base`**
+    *   [ ] Sub-task: Create `src/learnx_parser/style_resolver.py`.
+    *   [ ] Sub-task: Implement a base `StyleResolver` class that can load and store properties from XML elements.
+    *   [ ] Sub-task: Add methods to merge properties based on a defined inheritance order.
+    *   [ ] Sub-task: Write unit tests for `StyleResolver`'s property merging logic.
+*   [ ] **Task: `extract_theme_properties`**
+    *   [ ] Sub-task: Modify `StyleResolver` to parse `ppt/theme/theme*.xml` to extract default text styles, colors, and other theme-level properties.
+    *   [ ] Sub-task: Write unit tests to verify theme property extraction.
+*   [ ] **Task: `extract_master_properties`**
+    *   [ ] Sub-task: Modify `StyleResolver` to parse `ppt/slideMasters/slideMaster*.xml` to extract master slide properties, including placeholders and their default styles.
+    *   [ ] Sub-task: Write unit tests to verify master property extraction and merging with theme properties.
+*   [x] **Task: `extract_layout_properties`**
+    *   [x] Sub-task: Modify `StyleResolver` to parse `ppt/slideLayouts/slideLayout*.xml` to extract layout-specific properties and placeholder information.
+    *   [x] Sub-task: Write unit tests to verify layout property extraction and merging with master/theme properties.
+*   [x] **Task: `integrate_property_lookup`**
+    *   [x] Sub-task: Modify `SlideParser` to accept `StyleResolver` instance.
+    *   [x] Sub-task: Update `SlideParser.extract_shapes_and_text` to use `StyleResolver` to look up effective properties for each shape and text run, considering inheritance from slide, layout, and master.
+    *   [x] Sub-task: Update `SlideParser.extract_media` to use `StyleResolver` for image positioning if defined by placeholders.
+    *   [x] Sub-task: Update `tests/test_slide_parser.py` to reflect the new property extraction.
 
-*   [x] `init_uv_project`
-*   [x] `setup_git_repo`
-*   [x] `configure_pyproject.toml`
-*   [x] `create_base_folders`
+### 🔹 Phase 2: Enhanced Slide Content Extraction
+**Goal**: Integrate the property resolution into the `SlideParser` to extract a richer set of data.
 
----
+*   [ ] **Task: `extract_full_text_properties`**
+    *   [ ] Sub-task: Enhance `SlideParser` to extract more text properties: font family (`a:font`), color (`a:solidFill`, `a:schemeClr`), alignment (`a:pPr algn`), line spacing (`a:lnSpc`), paragraph indentation (`a:pPr marL`).
+    *   [ ] Sub-task: Update `tests/test_slide_parser.py` to assert these new properties.
+*   [ ] **Task: `extract_shape_geometry`**
+    *   [ ] Sub-task: Ensure `SlideParser` accurately extracts shape geometry (position and size) from `p:spPr/a:xfrm` and resolves inherited values.
+    *   [ ] Sub-task: Update `tests/test_slide_parser.py` to verify accurate geometry extraction.
+*   [ ] **Task: `extract_slide_background`**
+    *   [ ] Sub-task: Modify `SlideParser` to extract slide background properties (solid fill, gradient fill, picture fill) from `p:bg` elements, considering inheritance.
+    *   [ ] Sub-task: Update `tests/test_slide_parser.py` to verify background extraction.
 
-## Phase 3: Single Slide Parser Prototype
-**Goal**: Parse 1 slide → HTML + media
+### 🔹 Phase 3: Comprehensive HTML Generation
+**Goal**: Update the `HtmlWriter` to utilize the richer extracted data to produce visually accurate HTML.
 
-*   [x] `parse_slide_xml`
-*   [x] `extract_shapes_and_text`
-*   [x] `extract_images_and_links`
-*   [x] `write_html_output`
-*   [x] `validate_media_extraction`
+*   [ ] **Task: `render_accurate_text_styles`**
+    *   [ ] Sub-task: Modify `HtmlWriter` to apply all extracted text properties (font family, color, alignment, line spacing, etc.) to the generated HTML.
+    *   [ ] Sub-task: Update `tests/test_html_writer.py` to verify these styles.
+*   [ ] **Task: `render_accurate_shape_positions`**
+    *   [ ] Sub-task: Modify `HtmlWriter` to use the resolved `x`, `y`, `cx`, `cy` values for positioning and sizing HTML elements, ensuring accurate layout.
+    *   [ ] Sub-task: Update `tests/test_html_writer.py` to verify accurate positioning.
+*   [ ] **Task: `render_slide_background`**
+    *   [ ] Sub-task: Modify `HtmlWriter` to render the extracted slide background (e.g., using CSS for solid colors or gradients, or `<img>` for background images).
+    *   [ ] Sub-task: Update `tests/test_html_writer.py` to verify background rendering.
 
----
+### 🔹 Phase 4: Refactoring and Modularity
+**Goal**: Review the codebase for further modularization and adherence to best practices.
 
-## Phase 4: JSON Representation
-**Goal**: Provide alternate JSON output for programmatic use.
+*   [ ] **Task: `refactor_xml_parsing_helpers`**
+    *   [ ] Sub-task: Create a utility module (e.g., `src/learnx_parser/xml_utils.py`) for common XML parsing patterns (e.g., finding elements with namespaces, getting attributes safely).
+    *   [ ] Sub-task: Refactor `SlideParser`, `PresentationParser`, and `StyleResolver` to use these utilities.
+    *   [ ] Sub-task: Ensure existing tests still pass.
+*   [ ] **Task: `centralize_constants`**
+    *   [ ] Sub-task: Create a `src/learnx_parser/constants.py` module for OpenXML namespaces, relationship types, and other magic strings.
+    *   [ ] Sub-task: Replace hardcoded strings with constants across the codebase.
+    *   [ ] Sub-task: Ensure existing tests still pass.
 
-*   [x] `json_writer_module`
-*   [x] `test_json_output`
+### 🔹 Phase 5: Visual Verification & Refinement
+**Goal**: Implement automated or semi-automated visual testing and refine the parsing/rendering.
 
----
-
-## Phase 5: Scale to Full Presentation
-**Goal**: Parse all slides in order.
-
-*   [x] `parse_presentation_order`
-*   [x] `iterate_over_all_slides`
-*   [x] `batch_html_output`
-*   [x] `batch_json_output`
-
----
-
-## Phase 6: API Layer
-**Goal**: Provide clean API entrypoints.
-
-*   [x] `define_parse_pptx_entrypoint`
-*   [x] `validate_file_outputs_in_tests`
-*   [ ] `test_multilingual_text`
-
----
-
-## Phase 7: Publishing & Docs
-**Goal**: Finalize for PyPI and external usage.
-
-*   [x] `validate_uv_add_install`
-*   [x] `publish_package (if needed)`
-*   [x] `write_readme_and_usage_example`
+*   [ ] **Task: `implement_visual_comparison_tool`**
+    *   [ ] Sub-task: Research Python libraries for image comparison (e.g., `Pillow`, `scikit-image`).
+    *   [ ] Sub-task: Develop a script that takes a generated HTML file, renders it to an image (e.g., using `selenium` with a headless browser), and compares it to a reference screenshot.
+    *   [ ] Sub-task: Integrate this into the testing workflow (perhaps as a separate `uv run visual_test` command).
+*   [ ] **Task: `refine_rendering_based_on_visuals`**
+    *   [ ] Sub-task: Analyze visual discrepancies identified by the comparison tool.
+    *   [ ] Sub-task: Iteratively refine `SlideParser` and `HtmlWriter` to address these discrepancies (e.g., font rendering, spacing, exact positioning).
+    *   [ ] Sub-task: Update tests as necessary.
