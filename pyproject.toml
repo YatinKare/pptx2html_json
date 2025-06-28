@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
-    { name = "Yatin Kumar", email = "yatin.kumar.dev@gmail.com" },
+    { name = "Yatin Kare", email = "yatin.kare@gmail.com" },
 ]
 
 classifiers = [
