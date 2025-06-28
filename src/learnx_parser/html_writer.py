@@ -52,7 +52,17 @@ class HtmlWriter:
             left = f"{blip_fill.src_rect_l / 1000:.2f}%" if blip_fill.src_rect_l is not None else "0%"
             right = f"{blip_fill.src_rect_r / 1000:.2f}%" if blip_fill.src_rect_r is not None else "0%"
             return f"clip-path: inset({top} {right} {bottom} {left});"
-        return ""
+
+    def _get_shape_style_css(self, element: Shape) -> str:
+        shape_style = ""
+        if element.fill:
+            if isinstance(element.fill, SolidFill):
+                shape_style += f"background-color: #{element.fill.color};"
+            elif isinstance(element.fill, GradientFill):
+                shape_style += self._get_gradient_css(element.fill)
+        if element.line:
+            shape_style += f"border: {self._emu_to_px(element.line.width)}px solid #{element.line.color};"
+        return shape_style
 
     def _render_graphic_frame_html(self, element: GraphicFrame) -> str:
         x = self._emu_to_px(element.transform.x)
@@ -92,14 +102,7 @@ class HtmlWriter:
         cx = self._emu_to_px(element.transform.cx)
         cy = self._emu_to_px(element.transform.cy)
 
-        shape_style = ""
-        if element.fill:
-            if isinstance(element.fill, SolidFill):
-                shape_style += f"background-color: #{element.fill.color};"
-            elif isinstance(element.fill, GradientFill):
-                shape_style += self._get_gradient_css(element.fill)
-        if element.line:
-            shape_style += f"border: {self._emu_to_px(element.line.width)}px solid #{element.line.color};"
+        shape_style = self._get_shape_style_css(element)
 
         text_content_html = ""
         if element.text_frame:
