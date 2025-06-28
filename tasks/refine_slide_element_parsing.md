@@ -1,4 +1,4 @@
-## Log: Refactor HtmlWriter - Extract _render_shape_html, _render_picture_html, _render_group_shape_html, _render_graphic_frame_html, _get_shape_style_css, and _get_paragraph_style_css
+## Log: Refactor HtmlWriter - Extract _render_shape_html, _render_picture_html, _render_group_shape_html, _render_graphic_frame_html, _get_shape_style_css, _get_paragraph_style_css, and _get_run_style_css
 
 ### What I did:
 1.  Extracted the HTML rendering logic for `Shape` elements from `write_slide_html` into a new private method `_render_shape_html`. The `write_slide_html` method now calls this new helper method when it encounters a `Shape` element.
@@ -7,6 +7,7 @@
 4.  Extracted the HTML rendering logic for `GraphicFrame` elements from `write_slide_html` into a new private method `_render_graphic_frame_html`. The `write_slide_html` method now calls this new helper method when it encounters a `GraphicFrame` element.
 5.  Extracted the CSS styling logic for `Shape` elements from `_render_shape_html` into a new private method `_get_shape_style_css`. The `_render_shape_html` method now calls this new helper method to get the shape style CSS.
 6.  Extracted the CSS styling logic for `Paragraph` elements from `_render_shape_html` into a new private method `_get_paragraph_style_css`. The `_render_shape_html` method now calls this new helper method to get the paragraph style CSS.
+7.  Extracted the CSS styling logic for `Run` elements from `_render_shape_html` into a new private method `_get_run_style_css`. The `_render_shape_html` method now calls this new helper method to get the run style CSS.
 
 ### How I did it:
 1.  Identified the block of code within `write_slide_html` responsible for rendering `Shape` elements.
@@ -27,10 +28,13 @@
 16. Identified the block of code within `_render_shape_html` responsible for generating paragraph style CSS.
 17. Moved this code into a new method `_get_paragraph_style_css` within the `HtmlWriter` class, which takes a `Paragraph` object as an argument.
 18. Modified `_render_shape_html` to call `self._get_paragraph_style_css(paragraph)` and assign the returned CSS string to `paragraph_style`.
-19. Ran existing unit tests (`uv run pytest tests/test_html_writer.py`) to ensure no regressions were introduced.
+19. Identified the block of code within `_render_shape_html` responsible for generating run style CSS.
+20. Moved this code into a new method `_get_run_style_css` within the `HtmlWriter` class, which takes a `TextRun` object as an argument.
+21. Modified `_render_shape_html` to call `self._get_run_style_css(run)` and assign the returned CSS string to `run_style`.
+22. Ran existing unit tests (`uv run pytest tests/test_html_writer.py`) to ensure no regressions were introduced.
 
 ### What was challenging:
 None for this step.
 
 ### Future work:
-Continue refactoring `html_writer.py` by extracting styling helper methods like `_get_run_style_css`.
+Continue refactoring `html_writer.py` to improve modularity and readability.

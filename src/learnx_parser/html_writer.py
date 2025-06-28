@@ -72,6 +72,25 @@ class HtmlWriter:
             paragraph_style += f"padding-left: {self._emu_to_px(paragraph.properties.indent)}px;"
         return paragraph_style
 
+    def _get_run_style_css(self, run: TextRun) -> str:
+        run_style = ""
+        if run.properties:
+            if run.properties.font_size:
+                run_style += f"font-size: {self._emu_to_px(run.properties.font_size)}px;"
+            if run.properties.bold:
+                run_style += "font-weight: bold;"
+            if run.properties.italic:
+                run_style += "font-style: italic;"
+            if run.properties.underline:
+                run_style += "text-decoration: underline;"
+            if run.properties.color:
+                run_style += f"color: #{run.properties.color};"
+            elif run.properties.scheme_color:
+                run_style += f"color: var(--{run.properties.scheme_color}-color, black);"
+            if run.properties.font_face:
+                run_style += f"font-family: '{run.properties.font_face}';"
+        return run_style
+
     def _render_graphic_frame_html(self, element: GraphicFrame) -> str:
         x = self._emu_to_px(element.transform.x)
         y = self._emu_to_px(element.transform.y)
@@ -119,22 +138,7 @@ class HtmlWriter:
 
                 text_runs_html = ""
                 for run in paragraph.text_runs:
-                    run_style = ""
-                    if run.properties:
-                        if run.properties.font_size:
-                            run_style += f"font-size: {self._emu_to_px(run.properties.font_size)}px;"
-                        if run.properties.bold:
-                            run_style += "font-weight: bold;"
-                        if run.properties.italic:
-                            run_style += "font-style: italic;"
-                        if run.properties.underline:
-                            run_style += "text-decoration: underline;"
-                        if run.properties.color:
-                            run_style += f"color: #{run.properties.color};"
-                        elif run.properties.scheme_color:
-                            run_style += f"color: var(--{run.properties.scheme_color}-color, black);"
-                        if run.properties.font_face:
-                            run_style += f"font-family: '{run.properties.font_face}';"
+                    run_style = self._get_run_style_css(run)
 
                     text_runs_html += f"<span style=\"{run_style}\">{run.text}</span>"
                 text_content_html += f"<p style=\"{paragraph_style}\">{text_runs_html}</p>"
