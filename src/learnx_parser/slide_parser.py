@@ -172,37 +172,8 @@ class SlideParser:
                         line.scheme_color = scheme_clr_elem.get("val")
         return line
 
-    def _parse_shape_element(self, shape_element) -> Shape:
-        shape_id = shape_element.find(".//p:cNvPr", namespaces=self.nsmap).get("id")
-        shape_name = shape_element.find(".//p:cNvPr", namespaces=self.nsmap).get("name")
-        
-        # Extract placeholder information
-        ph_elem = shape_element.find(".//p:nvPr/p:ph", namespaces=self.nsmap)
-        ph_type = ph_elem.get("type") if ph_elem is not None else None
-        ph_idx = int(ph_elem.get("idx")) if ph_elem is not None and ph_elem.get("idx") is not None else None
-        ph_orient = ph_elem.get("orient") if ph_elem is not None else None
-        ph_sz = ph_elem.get("sz") if ph_elem is not None else None
-
-        transform = self._extract_transform(shape_element)
-        fill = None
-        line = None
+    def _extract_text_frame_properties(self, shape_element) -> TextFrame:
         text_frame = TextFrame()
-        prst_geom_val = None
-
-        sp_pr = shape_element.find(".//p:spPr", namespaces=self.nsmap)
-        if sp_pr is not None:
-            # Extract geometry
-            prst_geom = sp_pr.find(".//a:prstGeom", namespaces=self.nsmap)
-            if prst_geom is not None:
-                prst_geom_val = prst_geom.get("prst")
-
-            # Extract fills
-            fill = self._extract_fill_properties(sp_pr)
-
-            # Extract lines
-            line = self._extract_line_properties(sp_pr)
-
-        # Extract text and run properties
         for p_tag in shape_element.findall(".//a:p", namespaces=self.nsmap):
             paragraph_obj = Paragraph()
             
@@ -253,6 +224,39 @@ class SlideParser:
                     paragraph_obj.text_runs.append(TextRun(text=text_content, properties=run_properties))
             if paragraph_obj.text_runs: # Only add if there's actual text in the paragraph
                 text_frame.paragraphs.append(paragraph_obj)
+        return text_frame
+
+    def _parse_shape_element(self, shape_element) -> Shape:
+        shape_id = shape_element.find(".//p:cNvPr", namespaces=self.nsmap).get("id")
+        shape_name = shape_element.find(".//p:cNvPr", namespaces=self.nsmap).get("name")
+        
+        # Extract placeholder information
+        ph_elem = shape_element.find(".//p:nvPr/p:ph", namespaces=self.nsmap)
+        ph_type = ph_elem.get("type") if ph_elem is not None else None
+        ph_idx = int(ph_elem.get("idx")) if ph_elem is not None and ph_elem.get("idx") is not None else None
+        ph_orient = ph_elem.get("orient") if ph_elem is not None else None
+        ph_sz = ph_elem.get("sz") if ph_elem is not None else None
+
+        transform = self._extract_transform(shape_element)
+        fill = None
+        line = None
+        text_frame = TextFrame()
+        prst_geom_val = None
+
+        sp_pr = shape_element.find(".//p:spPr", namespaces=self.nsmap)
+        if sp_pr is not None:
+            # Extract geometry
+            prst_geom = sp_pr.find(".//a:prstGeom", namespaces=self.nsmap)
+            if prst_geom is not None:
+                prst_geom_val = prst_geom.get("prst")
+
+            # Extract fills
+            fill = self._extract_fill_properties(sp_pr)
+
+            # Extract lines
+            line = self._extract_line_properties(sp_pr)
+
+        text_frame = self._extract_text_frame_properties(shape_element)
 
         return Shape(type="shape", id=shape_id, name=shape_name, transform=transform, prst_geom=prst_geom_val, fill=fill, line=line, text_frame=text_frame, ph_type=ph_type, ph_idx=ph_idx, ph_orient=ph_orient, ph_sz=ph_sz)
 
