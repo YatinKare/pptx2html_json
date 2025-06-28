@@ -115,6 +115,137 @@ class SlideParser:
         
         return transform
 
+    def _parse_shape_element(self, shape_element) -> Shape:
+        shape_id = shape_element.find(".//p:cNvPr", namespaces=self.nsmap).get("id")
+        shape_name = shape_element.find(".//p:cNvPr", namespaces=self.nsmap).get("name")
+        
+        # Extract placeholder information
+        ph_elem = shape_element.find(".//p:nvPr/p:ph", namespaces=self.nsmap)
+        ph_type = ph_elem.get("type") if ph_elem is not None else None
+        ph_idx = int(ph_elem.get("idx")) if ph_elem is not None and ph_elem.get("idx") is not None else None
+        ph_orient = ph_elem.get("orient") if ph_elem is not None else None
+        ph_sz = ph_elem.get("sz") if ph_elem is not None else None
+
+        transform = self._extract_transform(shape_element)
+        fill = None
+        line = None
+        text_frame = TextFrame()
+        prst_geom_val = None
+
+        sp_pr = shape_element.find(".//p:spPr", namespaces=self.nsmap)
+        if sp_pr is not None:
+            # Extract geometry
+            prst_geom = sp_pr.find(".//a:prstGeom", namespaces=self.nsmap)
+            if prst_geom is not None:
+                prst_geom_val = prst_geom.get("prst")
+
+            # Extract fills
+            solid_fill_elem = sp_pr.find(".//a:solidFill", namespaces=self.nsmap)
+            if solid_fill_elem is not None:
+                fill = SolidFill()
+                srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
+                if srgb_clr_elem is not None:
+                    fill.color = srgb_clr_elem.get("val")
+                else:
+                    scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
+                    if scheme_clr_elem is not None:
+                        fill.scheme_color = scheme_clr_elem.get("val")
+            else:
+                grad_fill_elem = sp_pr.find(".//a:gradFill", namespaces=self.nsmap)
+                if grad_fill_elem is not None:
+                    grad_fill = GradientFill()
+                    grad_fill.angle = int(grad_fill_elem.get("ang", 0)) if grad_fill_elem.get("ang") is not None else None
+                    grad_fill.scaled = grad_fill_elem.get("scaled", "0") == "1"
+                    
+                    gs_lst_elem = grad_fill_elem.find(".//a:gsLst", namespaces=self.nsmap)
+                    if gs_lst_elem is not None:
+                        for gs_elem in gs_lst_elem.findall(".//a:gs", namespaces=self.nsmap):
+                            pos = int(gs_elem.get("pos", 0))
+                            gs_color = None
+                            gs_scheme_color = None
+                            srgb_clr_elem = gs_elem.find(".//a:srgbClr", namespaces=self.nsmap)
+                            if srgb_clr_elem is not None:
+                                gs_color = srgb_clr_elem.get("val")
+                            else:
+                                scheme_clr_elem = gs_elem.find(".//a:schemeClr", namespaces=self.nsmap)
+                                if scheme_clr_elem is not None:
+                                    gs_scheme_color = scheme_clr_elem.get("val")
+                            grad_fill.stops.append(GradientStop(pos=pos, color=gs_color, scheme_color=gs_scheme_color))
+                    fill = grad_fill
+
+            # Extract lines
+            ln_elem = sp_pr.find(".//a:ln", namespaces=self.nsmap)
+            if ln_elem is not None:
+                line = Line()
+                line.width = int(ln_elem.get("w", 0))
+                line.cap = ln_elem.get("cap")
+                line.cmpd = ln_elem.get("cmpd")
+                line.algn = ln_elem.get("algn")
+
+                solid_fill_elem = ln_elem.find(".//a:solidFill", namespaces=self.nsmap)
+                if solid_fill_elem is not None:
+                    srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
+                    if srgb_clr_elem is not None:
+                        line.color = srgb_clr_elem.get("val")
+                    else:
+                        scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
+                        if scheme_clr_elem is not None:
+                            line.scheme_color = scheme_clr_elem.get("val")
+
+        # Extract text and run properties
+        for p_tag in shape_element.findall(".//a:p", namespaces=self.nsmap):
+            paragraph_obj = Paragraph()
+            
+            # Extract paragraph properties
+            p_pr_tag = p_tag.find(".//a:pPr", namespaces=self.nsmap)
+            if p_pr_tag is not None:
+                if p_pr_tag.get("algn") is not None:
+                    paragraph_obj.properties.align = p_pr_tag.get("algn")
+                if p_pr_tag.get("indent") is not None:
+                    paragraph_obj.properties.indent = int(p_pr_tag.get("indent"))
+
+            for r_tag in p_tag.findall(".//a:r", namespaces=self.nsmap):
+                run_text_elem = r_tag.find(".//a:t", namespaces=self.nsmap)
+                if run_text_elem is not None and run_text_elem.text is not None:
+                    text_content = run_text_elem.text
+                    run_properties = RunProperties()
+
+                    rpr_tag = r_tag.find(".//a:rPr", namespaces=self.nsmap)
+                    if rpr_tag is not None:
+                        if rpr_tag.get("sz") is not None:
+                            run_properties.font_size = int(rpr_tag.get("sz"))
+                        if rpr_tag.get("b") == "1":
+                            run_properties.bold = True
+                        if rpr_tag.get("i") == "1":
+                            run_properties.italic = True
+                        
+                        # Extract color
+                        solid_fill_elem = rpr_tag.find(".//a:solidFill", namespaces=self.nsmap)
+                        if solid_fill_elem is not None:
+                            srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
+                            if srgb_clr_elem is not None:
+                                run_properties.color = srgb_clr_elem.get("val")
+                            else:
+                                scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
+                                if scheme_clr_elem is not None:
+                                    run_properties.scheme_color = scheme_clr_elem.get("val")
+
+                        # Extract font face
+                        latin_font_elem = rpr_tag.find(".//a:latin", namespaces=self.nsmap)
+                        if latin_font_elem is not None:
+                            run_properties.font_face = latin_font_elem.get("typeface")
+
+                        # Extract underline
+                        u_elem = rpr_tag.find(".//a:u", namespaces=self.nsmap)
+                        if u_elem is not None:
+                            run_properties.underline = True
+
+                    paragraph_obj.text_runs.append(TextRun(text=text_content, properties=run_properties))
+            if paragraph_obj.text_runs: # Only add if there's actual text in the paragraph
+                text_frame.paragraphs.append(paragraph_obj)
+
+        return Shape(type="shape", id=shape_id, name=shape_name, transform=transform, prst_geom=prst_geom_val, fill=fill, line=line, text_frame=text_frame, ph_type=ph_type, ph_idx=ph_idx, ph_orient=ph_orient, ph_sz=ph_sz)
+
     def _parse_shape_tree(self, sp_tree_root):
         shapes = []
         pictures = []
@@ -123,136 +254,8 @@ class SlideParser:
 
         for child in sp_tree_root:
             if child.tag == "{http://schemas.openxmlformats.org/presentationml/2006/main}sp":
-                shape_id = child.find(".//p:cNvPr", namespaces=self.nsmap).get("id")
-                shape_name = child.find(".//p:cNvPr", namespaces=self.nsmap).get("name")
-                
-                # Extract placeholder information
-                ph_elem = child.find(".//p:nvPr/p:ph", namespaces=self.nsmap)
-                ph_type = ph_elem.get("type") if ph_elem is not None else None
-                ph_idx = int(ph_elem.get("idx")) if ph_elem is not None and ph_elem.get("idx") is not None else None
-                ph_orient = ph_elem.get("orient") if ph_elem is not None else None
-                ph_sz = ph_elem.get("sz") if ph_elem is not None else None
-
-                transform = self._extract_transform(child)
-                fill = None
-                line = None
-                text_frame = TextFrame()
-                prst_geom_val = None
-
-                # Extract position and size
-                sp_pr = child.find(".//p:spPr", namespaces=self.nsmap)
-                if sp_pr is not None:
-                    # Extract geometry
-                    prst_geom = sp_pr.find(".//a:prstGeom", namespaces=self.nsmap)
-                    if prst_geom is not None:
-                        prst_geom_val = prst_geom.get("prst")
-
-                    # Extract fills
-                    solid_fill_elem = sp_pr.find(".//a:solidFill", namespaces=self.nsmap)
-                    if solid_fill_elem is not None:
-                        fill = SolidFill()
-                        srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
-                        if srgb_clr_elem is not None:
-                            fill.color = srgb_clr_elem.get("val")
-                        else:
-                            scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
-                            if scheme_clr_elem is not None:
-                                fill.scheme_color = scheme_clr_elem.get("val")
-                    else:
-                        grad_fill_elem = sp_pr.find(".//a:gradFill", namespaces=self.nsmap)
-                        if grad_fill_elem is not None:
-                            grad_fill = GradientFill()
-                            grad_fill.angle = int(grad_fill_elem.get("ang", 0)) if grad_fill_elem.get("ang") is not None else None
-                            grad_fill.scaled = grad_fill_elem.get("scaled", "0") == "1"
-                            
-                            gs_lst_elem = grad_fill_elem.find(".//a:gsLst", namespaces=self.nsmap)
-                            if gs_lst_elem is not None:
-                                for gs_elem in gs_lst_elem.findall(".//a:gs", namespaces=self.nsmap):
-                                    pos = int(gs_elem.get("pos", 0))
-                                    gs_color = None
-                                    gs_scheme_color = None
-                                    srgb_clr_elem = gs_elem.find(".//a:srgbClr", namespaces=self.nsmap)
-                                    if srgb_clr_elem is not None:
-                                        gs_color = srgb_clr_elem.get("val")
-                                    else:
-                                        scheme_clr_elem = gs_elem.find(".//a:schemeClr", namespaces=self.nsmap)
-                                        if scheme_clr_elem is not None:
-                                            gs_scheme_color = scheme_clr_elem.get("val")
-                                    grad_fill.stops.append(GradientStop(pos=pos, color=gs_color, scheme_color=gs_scheme_color))
-                            fill = grad_fill
-
-                    # Extract lines
-                    ln_elem = sp_pr.find(".//a:ln", namespaces=self.nsmap)
-                    if ln_elem is not None:
-                        line = Line()
-                        line.width = int(ln_elem.get("w", 0))
-                        line.cap = ln_elem.get("cap")
-                        line.cmpd = ln_elem.get("cmpd")
-                        line.algn = ln_elem.get("algn")
-
-                        solid_fill_elem = ln_elem.find(".//a:solidFill", namespaces=self.nsmap)
-                        if solid_fill_elem is not None:
-                            srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
-                            if srgb_clr_elem is not None:
-                                line.color = srgb_clr_elem.get("val")
-                            else:
-                                scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
-                                if scheme_clr_elem is not None:
-                                    line.scheme_color = scheme_clr_elem.get("val")
-
-                # Extract text and run properties
-                for p_tag in child.findall(".//a:p", namespaces=self.nsmap):
-                    paragraph_obj = Paragraph()
-                    
-                    # Extract paragraph properties
-                    p_pr_tag = p_tag.find(".//a:pPr", namespaces=self.nsmap)
-                    if p_pr_tag is not None:
-                        if p_pr_tag.get("algn") is not None:
-                            paragraph_obj.properties.align = p_pr_tag.get("algn")
-                        if p_pr_tag.get("indent") is not None:
-                            paragraph_obj.properties.indent = int(p_pr_tag.get("indent"))
-
-                    for r_tag in p_tag.findall(".//a:r", namespaces=self.nsmap):
-                        run_text_elem = r_tag.find(".//a:t", namespaces=self.nsmap)
-                        if run_text_elem is not None and run_text_elem.text is not None:
-                            text_content = run_text_elem.text
-                            run_properties = RunProperties()
-
-                            rpr_tag = r_tag.find(".//a:rPr", namespaces=self.nsmap)
-                            if rpr_tag is not None:
-                                if rpr_tag.get("sz") is not None:
-                                    run_properties.font_size = int(rpr_tag.get("sz"))
-                                if rpr_tag.get("b") == "1":
-                                    run_properties.bold = True
-                                if rpr_tag.get("i") == "1":
-                                    run_properties.italic = True
-                                
-                                # Extract color
-                                solid_fill_elem = rpr_tag.find(".//a:solidFill", namespaces=self.nsmap)
-                                if solid_fill_elem is not None:
-                                    srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
-                                    if srgb_clr_elem is not None:
-                                        run_properties.color = srgb_clr_elem.get("val")
-                                    else:
-                                        scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
-                                        if scheme_clr_elem is not None:
-                                            run_properties.scheme_color = scheme_clr_elem.get("val")
-
-                                # Extract font face
-                                latin_font_elem = rpr_tag.find(".//a:latin", namespaces=self.nsmap)
-                                if latin_font_elem is not None:
-                                    run_properties.font_face = latin_font_elem.get("typeface")
-
-                                # Extract underline
-                                u_elem = rpr_tag.find(".//a:u", namespaces=self.nsmap)
-                                if u_elem is not None:
-                                    run_properties.underline = True
-
-                            paragraph_obj.text_runs.append(TextRun(text=text_content, properties=run_properties))
-                    if paragraph_obj.text_runs: # Only add if there's actual text in the paragraph
-                        text_frame.paragraphs.append(paragraph_obj)
-
-                shapes.append(Shape(type="shape", id=shape_id, name=shape_name, transform=transform, prst_geom=prst_geom_val, fill=fill, line=line, text_frame=text_frame, ph_type=ph_type, ph_idx=ph_idx, ph_orient=ph_orient, ph_sz=ph_sz))
+                shape = self._parse_shape_element(child)
+                shapes.append(shape)
 
             elif child.tag == "{http://schemas.openxmlformats.org/presentationml/2006/main}pic":
                 pic_id = child.find(".//p:nvPicPr/p:cNvPr", namespaces=self.nsmap).get("id")
