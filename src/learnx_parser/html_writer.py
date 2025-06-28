@@ -64,6 +64,14 @@ class HtmlWriter:
             shape_style += f"border: {self._emu_to_px(element.line.width)}px solid #{element.line.color};"
         return shape_style
 
+    def _get_paragraph_style_css(self, paragraph: Paragraph) -> str:
+        paragraph_style = ""
+        if paragraph.properties and paragraph.properties.align:
+            paragraph_style += f"text-align: {paragraph.properties.align};"
+        if paragraph.properties and paragraph.properties.indent is not None:
+            paragraph_style += f"padding-left: {self._emu_to_px(paragraph.properties.indent)}px;"
+        return paragraph_style
+
     def _render_graphic_frame_html(self, element: GraphicFrame) -> str:
         x = self._emu_to_px(element.transform.x)
         y = self._emu_to_px(element.transform.y)
@@ -107,11 +115,7 @@ class HtmlWriter:
         text_content_html = ""
         if element.text_frame:
             for paragraph in element.text_frame.paragraphs:
-                paragraph_style = ""
-                if paragraph.properties and paragraph.properties.align:
-                    paragraph_style += f"text-align: {paragraph.properties.align};"
-                if paragraph.properties and paragraph.properties.indent is not None:
-                    paragraph_style += f"padding-left: {self._emu_to_px(paragraph.properties.indent)}px;"
+                paragraph_style = self._get_paragraph_style_css(paragraph)
 
                 text_runs_html = ""
                 for run in paragraph.text_runs:
