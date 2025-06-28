@@ -10,3 +10,8 @@ wheels/
 .venv
 
 temp_pptx/
+
+tasks/
+.gemini/
+example/
+
