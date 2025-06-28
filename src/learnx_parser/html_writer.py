@@ -52,7 +52,19 @@ class HtmlWriter:
             left = f"{blip_fill.src_rect_l / 1000:.2f}%" if blip_fill.src_rect_l is not None else "0%"
             right = f"{blip_fill.src_rect_r / 1000:.2f}%" if blip_fill.src_rect_r is not None else "0%"
             return f"clip-path: inset({top} {right} {bottom} {left});"
+        return f"clip-path: inset({top} {right} {bottom} {left});"
         return ""
+
+    def _render_group_shape_html(self, element: GroupShape) -> str:
+        x = self._emu_to_px(element.transform.x)
+        y = self._emu_to_px(element.transform.y)
+        cx = self._emu_to_px(element.transform.cx)
+        cy = self._emu_to_px(element.transform.cy)
+        return f"""
+        <div class="group-shape" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px;">
+            <!-- Grouped elements would go here -->
+        </div>
+"""
 
     def _render_picture_html(self, element: Picture) -> str:
         x = self._emu_to_px(element.transform.x)
@@ -157,16 +169,7 @@ class HtmlWriter:
             elif isinstance(element, Picture):
                 html_content += self._render_picture_html(element)
             elif isinstance(element, GroupShape):
-                # For GroupShape, create a container div and recursively render its children
-                # This is a simplified approach and might need more complex styling for accurate group rendering
-                group_content_html = ""
-                # Recursively render children - this would require a helper method or refactoring
-                # For now, we'll just create a div for the group itself
-                html_content += f"""
-        <div class="group-shape" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px;">
-            <!-- Grouped elements would go here -->
-        </div>
-"""
+                html_content += self._render_group_shape_html(element)
             elif isinstance(element, GraphicFrame):
                 html_content += f"""
         <div class="graphic-frame" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px;">
