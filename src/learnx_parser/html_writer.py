@@ -52,8 +52,18 @@ class HtmlWriter:
             left = f"{blip_fill.src_rect_l / 1000:.2f}%" if blip_fill.src_rect_l is not None else "0%"
             right = f"{blip_fill.src_rect_r / 1000:.2f}%" if blip_fill.src_rect_r is not None else "0%"
             return f"clip-path: inset({top} {right} {bottom} {left});"
-        return f"clip-path: inset({top} {right} {bottom} {left});"
         return ""
+
+    def _render_graphic_frame_html(self, element: GraphicFrame) -> str:
+        x = self._emu_to_px(element.transform.x)
+        y = self._emu_to_px(element.transform.y)
+        cx = self._emu_to_px(element.transform.cx)
+        cy = self._emu_to_px(element.transform.cy)
+        return f"""
+        <div class="graphic-frame" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px;">
+            <!-- Graphic Frame content (e.g., charts, tables) would go here -->
+        </div>
+"""
 
     def _render_group_shape_html(self, element: GroupShape) -> str:
         x = self._emu_to_px(element.transform.x)
@@ -171,11 +181,7 @@ class HtmlWriter:
             elif isinstance(element, GroupShape):
                 html_content += self._render_group_shape_html(element)
             elif isinstance(element, GraphicFrame):
-                html_content += f"""
-        <div class="graphic-frame" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px;">
-            <!-- Graphic Frame content (e.g., charts, tables) would go here -->
-        </div>
-"""
+                html_content += self._render_graphic_frame_html(element)
 
         html_content += """
     </div>
