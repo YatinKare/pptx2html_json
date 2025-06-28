@@ -113,7 +113,43 @@ class SlideParser:
             transform.flipH = xfrm.get("flipH", "0") == "1"
             transform.flipV = xfrm.get("flipV", "0") == "1"
         
-        return transform
+        return Transform(x=0, y=0, cx=0, cy=0)
+
+    def _extract_fill_properties(self, sp_pr_element):
+        fill = None
+        solid_fill_elem = sp_pr_element.find(".//a:solidFill", namespaces=self.nsmap)
+        if solid_fill_elem is not None:
+            fill = SolidFill()
+            srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
+            if srgb_clr_elem is not None:
+                fill.color = srgb_clr_elem.get("val")
+            else:
+                scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
+                if scheme_clr_elem is not None:
+                    fill.scheme_color = scheme_clr_elem.get("val")
+        else:
+            grad_fill_elem = sp_pr_element.find(".//a:gradFill", namespaces=self.nsmap)
+            if grad_fill_elem is not None:
+                grad_fill = GradientFill()
+                grad_fill.angle = int(grad_fill_elem.get("ang", 0)) if grad_fill_elem.get("ang") is not None else None
+                grad_fill.scaled = grad_fill_elem.get("scaled", "0") == "1"
+                
+                gs_lst_elem = grad_fill_elem.find(".//a:gsLst", namespaces=self.nsmap)
+                if gs_lst_elem is not None:
+                    for gs_elem in gs_lst_elem.findall(".//a:gs", namespaces=self.nsmap):
+                        pos = int(gs_elem.get("pos", 0))
+                        gs_color = None
+                        gs_scheme_color = None
+                        srgb_clr_elem = gs_elem.find(".//a:srgbClr", namespaces=self.nsmap)
+                        if srgb_clr_elem is not None:
+                            gs_color = srgb_clr_elem.get("val")
+                        else:
+                            scheme_clr_elem = gs_elem.find(".//a:schemeClr", namespaces=self.nsmap)
+                            if scheme_clr_elem is not None:
+                                gs_scheme_color = scheme_clr_elem.get("val")
+                        grad_fill.stops.append(GradientStop(pos=pos, color=gs_color, scheme_color=gs_scheme_color))
+                fill = grad_fill
+        return fill
 
     def _parse_shape_element(self, shape_element) -> Shape:
         shape_id = shape_element.find(".//p:cNvPr", namespaces=self.nsmap).get("id")
@@ -140,38 +176,7 @@ class SlideParser:
                 prst_geom_val = prst_geom.get("prst")
 
             # Extract fills
-            solid_fill_elem = sp_pr.find(".//a:solidFill", namespaces=self.nsmap)
-            if solid_fill_elem is not None:
-                fill = SolidFill()
-                srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
-                if srgb_clr_elem is not None:
-                    fill.color = srgb_clr_elem.get("val")
-                else:
-                    scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
-                    if scheme_clr_elem is not None:
-                        fill.scheme_color = scheme_clr_elem.get("val")
-            else:
-                grad_fill_elem = sp_pr.find(".//a:gradFill", namespaces=self.nsmap)
-                if grad_fill_elem is not None:
-                    grad_fill = GradientFill()
-                    grad_fill.angle = int(grad_fill_elem.get("ang", 0)) if grad_fill_elem.get("ang") is not None else None
-                    grad_fill.scaled = grad_fill_elem.get("scaled", "0") == "1"
-                    
-                    gs_lst_elem = grad_fill_elem.find(".//a:gsLst", namespaces=self.nsmap)
-                    if gs_lst_elem is not None:
-                        for gs_elem in gs_lst_elem.findall(".//a:gs", namespaces=self.nsmap):
-                            pos = int(gs_elem.get("pos", 0))
-                            gs_color = None
-                            gs_scheme_color = None
-                            srgb_clr_elem = gs_elem.find(".//a:srgbClr", namespaces=self.nsmap)
-                            if srgb_clr_elem is not None:
-                                gs_color = srgb_clr_elem.get("val")
-                            else:
-                                scheme_clr_elem = gs_elem.find(".//a:schemeClr", namespaces=self.nsmap)
-                                if scheme_clr_elem is not None:
-                                    gs_scheme_color = scheme_clr_elem.get("val")
-                            grad_fill.stops.append(GradientStop(pos=pos, color=gs_color, scheme_color=gs_scheme_color))
-                    fill = grad_fill
+            fill = self._extract_fill_properties(sp_pr)
 
             # Extract lines
             ln_elem = sp_pr.find(".//a:ln", namespaces=self.nsmap)
