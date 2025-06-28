@@ -54,6 +54,58 @@ class HtmlWriter:
             return f"clip-path: inset({top} {right} {bottom} {left});"
         return ""
 
+    def _render_shape_html(self, element: Shape) -> str:
+        x = self._emu_to_px(element.transform.x)
+        y = self._emu_to_px(element.transform.y)
+        cx = self._emu_to_px(element.transform.cx)
+        cy = self._emu_to_px(element.transform.cy)
+
+        shape_style = ""
+        if element.fill:
+            if isinstance(element.fill, SolidFill):
+                shape_style += f"background-color: #{element.fill.color};"
+            elif isinstance(element.fill, GradientFill):
+                shape_style += self._get_gradient_css(element.fill)
+        if element.line:
+            shape_style += f"border: {self._emu_to_px(element.line.width)}px solid #{element.line.color};"
+
+        text_content_html = ""
+        if element.text_frame:
+            for paragraph in element.text_frame.paragraphs:
+                paragraph_style = ""
+                if paragraph.properties and paragraph.properties.align:
+                    paragraph_style += f"text-align: {paragraph.properties.align};"
+                if paragraph.properties and paragraph.properties.indent is not None:
+                    paragraph_style += f"padding-left: {self._emu_to_px(paragraph.properties.indent)}px;"
+
+                text_runs_html = ""
+                for run in paragraph.text_runs:
+                    run_style = ""
+                    if run.properties:
+                        if run.properties.font_size:
+                            run_style += f"font-size: {self._emu_to_px(run.properties.font_size)}px;"
+                        if run.properties.bold:
+                            run_style += "font-weight: bold;"
+                        if run.properties.italic:
+                            run_style += "font-style: italic;"
+                        if run.properties.underline:
+                            run_style += "text-decoration: underline;"
+                        if run.properties.color:
+                            run_style += f"color: #{run.properties.color};"
+                        elif run.properties.scheme_color:
+                            run_style += f"color: var(--{run.properties.scheme_color}-color, black);"
+                        if run.properties.font_face:
+                            run_style += f"font-family: '{run.properties.font_face}';"
+
+                    text_runs_html += f"<span style=\"{run_style}\">{run.text}</span>"
+                text_content_html += f"<p style=\"{paragraph_style}\">{text_runs_html}</p>"
+
+        return f"""
+        <div class="shape" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px; {shape_style} {self._get_transform_css(element.transform)}">
+            <div class="text-content">{text_content_html}</div>
+        </div>
+"""
+
     def write_slide_html(self, slide: Slide, slide_number: int):
         html_content = """<!DOCTYPE html>
 <html>
@@ -91,51 +143,7 @@ class HtmlWriter:
             cy = self._emu_to_px(element.transform.cy)
 
             if isinstance(element, Shape):
-                shape_style = ""
-                if element.fill:
-                    if isinstance(element.fill, SolidFill):
-                        shape_style += f"background-color: #{element.fill.color};"
-                    elif isinstance(element.fill, GradientFill):
-                        shape_style += self._get_gradient_css(element.fill)
-                if element.line:
-                    shape_style += f"border: {self._emu_to_px(element.line.width)}px solid #{element.line.color};"
-
-                text_content_html = ""
-                if element.text_frame:
-                    for paragraph in element.text_frame.paragraphs:
-                        paragraph_style = ""
-                        if paragraph.properties and paragraph.properties.align:
-                            paragraph_style += f"text-align: {paragraph.properties.align};"
-                        if paragraph.properties and paragraph.properties.indent is not None:
-                            paragraph_style += f"padding-left: {self._emu_to_px(paragraph.properties.indent)}px;"
-
-                        text_runs_html = ""
-                        for run in paragraph.text_runs:
-                            run_style = ""
-                            if run.properties:
-                                if run.properties.font_size:
-                                    run_style += f"font-size: {self._emu_to_px(run.properties.font_size)}px;"
-                                if run.properties.bold:
-                                    run_style += "font-weight: bold;"
-                                if run.properties.italic:
-                                    run_style += "font-style: italic;"
-                                if run.properties.underline:
-                                    run_style += "text-decoration: underline;"
-                                if run.properties.color:
-                                    run_style += f"color: #{run.properties.color};"
-                                elif run.properties.scheme_color:
-                                    run_style += f"color: var(--{run.properties.scheme_color}-color, black);"
-                                if run.properties.font_face:
-                                    run_style += f"font-family: '{run.properties.font_face}';"
-
-                            text_runs_html += f"<span style=\"{run_style}\">{run.text}</span>"
-                        text_content_html += f"<p style=\"{paragraph_style}\">{text_runs_html}</p>"
-
-                html_content += f"""
-        <div class="shape" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px; {shape_style} {self._get_transform_css(element.transform)}">
-            <div class="text-content">{text_content_html}</div>
-        </div>
-"""
+                html_content += self._render_shape_html(element)
             elif isinstance(element, Picture):
                 image_src = os.path.join("media", os.path.basename(element.blip_fill.path))
                 html_content += f"""
