@@ -175,56 +175,60 @@ class SlideParser:
     def _extract_text_frame_properties(self, shape_element) -> TextFrame:
         text_frame = TextFrame()
         for p_tag in shape_element.findall(".//a:p", namespaces=self.nsmap):
-            paragraph_obj = Paragraph()
-            
-            # Extract paragraph properties
-            p_pr_tag = p_tag.find(".//a:pPr", namespaces=self.nsmap)
-            if p_pr_tag is not None:
-                if p_pr_tag.get("algn") is not None:
-                    paragraph_obj.properties.align = p_pr_tag.get("algn")
-                if p_pr_tag.get("indent") is not None:
-                    paragraph_obj.properties.indent = int(p_pr_tag.get("indent"))
-
-            for r_tag in p_tag.findall(".//a:r", namespaces=self.nsmap):
-                run_text_elem = r_tag.find(".//a:t", namespaces=self.nsmap)
-                if run_text_elem is not None and run_text_elem.text is not None:
-                    text_content = run_text_elem.text
-                    run_properties = RunProperties()
-
-                    rpr_tag = r_tag.find(".//a:rPr", namespaces=self.nsmap)
-                    if rpr_tag is not None:
-                        if rpr_tag.get("sz") is not None:
-                            run_properties.font_size = int(rpr_tag.get("sz"))
-                        if rpr_tag.get("b") == "1":
-                            run_properties.bold = True
-                        if rpr_tag.get("i") == "1":
-                            run_properties.italic = True
-                        
-                        # Extract color
-                        solid_fill_elem = rpr_tag.find(".//a:solidFill", namespaces=self.nsmap)
-                        if solid_fill_elem is not None:
-                            srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
-                            if srgb_clr_elem is not None:
-                                run_properties.color = srgb_clr_elem.get("val")
-                            else:
-                                scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
-                                if scheme_clr_elem is not None:
-                                    run_properties.scheme_color = scheme_clr_elem.get("val")
-
-                        # Extract font face
-                        latin_font_elem = rpr_tag.find(".//a:latin", namespaces=self.nsmap)
-                        if latin_font_elem is not None:
-                            run_properties.font_face = latin_font_elem.get("typeface")
-
-                        # Extract underline
-                        u_elem = rpr_tag.find(".//a:u", namespaces=self.nsmap)
-                        if u_elem is not None:
-                            run_properties.underline = True
-
-                    paragraph_obj.text_runs.append(TextRun(text=text_content, properties=run_properties))
+            paragraph_obj = self._extract_paragraph_properties(p_tag)
             if paragraph_obj.text_runs: # Only add if there's actual text in the paragraph
                 text_frame.paragraphs.append(paragraph_obj)
         return text_frame
+
+    def _extract_paragraph_properties(self, p_tag) -> Paragraph:
+        paragraph_obj = Paragraph()
+        
+        # Extract paragraph properties
+        p_pr_tag = p_tag.find(".//a:pPr", namespaces=self.nsmap)
+        if p_pr_tag is not None:
+            if p_pr_tag.get("algn") is not None:
+                paragraph_obj.properties.align = p_pr_tag.get("algn")
+            if p_pr_tag.get("indent") is not None:
+                paragraph_obj.properties.indent = int(p_pr_tag.get("indent"))
+
+        for r_tag in p_tag.findall(".//a:r", namespaces=self.nsmap):
+            run_text_elem = r_tag.find(".//a:t", namespaces=self.nsmap)
+            if run_text_elem is not None and run_text_elem.text is not None:
+                text_content = run_text_elem.text
+                run_properties = RunProperties()
+
+                rpr_tag = r_tag.find(".//a:rPr", namespaces=self.nsmap)
+                if rpr_tag is not None:
+                    if rpr_tag.get("sz") is not None:
+                        run_properties.font_size = int(rpr_tag.get("sz"))
+                    if rpr_tag.get("b") == "1":
+                        run_properties.bold = True
+                    if rpr_tag.get("i") == "1":
+                        run_properties.italic = True
+                    
+                    # Extract color
+                    solid_fill_elem = rpr_tag.find(".//a:solidFill", namespaces=self.nsmap)
+                    if solid_fill_elem is not None:
+                        srgb_clr_elem = solid_fill_elem.find(".//a:srgbClr", namespaces=self.nsmap)
+                        if srgb_clr_elem is not None:
+                            run_properties.color = srgb_clr_elem.get("val")
+                        else:
+                            scheme_clr_elem = solid_fill_elem.find(".//a:schemeClr", namespaces=self.nsmap)
+                            if scheme_clr_elem is not None:
+                                run_properties.scheme_color = scheme_clr_elem.get("val")
+
+                    # Extract font face
+                    latin_font_elem = rpr_tag.find(".//a:latin", namespaces=self.nsmap)
+                    if latin_font_elem is not None:
+                        run_properties.font_face = latin_font_elem.get("typeface")
+
+                    # Extract underline
+                    u_elem = rpr_tag.find(".//a:u", namespaces=self.nsmap)
+                    if u_elem is not None:
+                        run_properties.underline = True
+
+                paragraph_obj.text_runs.append(TextRun(text=text_content, properties=run_properties))
+        return paragraph_obj
 
     def _parse_shape_element(self, shape_element) -> Shape:
         shape_id = shape_element.find(".//p:cNvPr", namespaces=self.nsmap).get("id")
