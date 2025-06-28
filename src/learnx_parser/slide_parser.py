@@ -279,6 +279,14 @@ class SlideParser:
 
         return Picture(id=pic_id, name=pic_name, path=pic_path, transform=transform, blip_fill=blip_fill_obj, ph_type=ph_type, ph_idx=ph_idx)
 
+    def _parse_group_shape_element(self, group_shape_element) -> GroupShape:
+        grp_id = group_shape_element.find(".//p:nvGrpSpPr/p:cNvPr", namespaces=self.nsmap).get("id")
+        grp_name = group_shape_element.find(".//p:nvGrpSpPr/p:cNvPr", namespaces=self.nsmap).get("name")
+        
+        transform = self._extract_transform(group_shape_element)
+        shapes, pictures, group_shapes, graphic_frames = self._parse_shape_tree(group_shape_element)
+        return GroupShape(id=grp_id, name=grp_name, transform=transform, children=(shapes, pictures, group_shapes, graphic_frames))
+
     def _parse_shape_tree(self, sp_tree_root):
         shapes = []
         pictures = []
@@ -295,11 +303,8 @@ class SlideParser:
                 pictures.append(picture)
 
             elif child.tag == "{http://schemas.openxmlformats.org/presentationml/2006/main}grpSp":
-                grp_id = child.find(".//p:nvGrpSpPr/p:cNvPr", namespaces=self.nsmap).get("id")
-                grp_name = child.find(".//p:nvGrpSpPr/p:cNvPr", namespaces=self.nsmap).get("name")
-                
-                transform = self._extract_transform(child)
-                group_shapes.append(GroupShape(id=grp_id, name=grp_name, transform=transform, children=self._parse_shape_tree(child)))
+                group_shape = self._parse_group_shape_element(child)
+                group_shapes.append(group_shape)
 
             elif child.tag == "{http://schemas.openxmlformats.org/presentationml/2006/main}graphicFrame":
                 graphic_frame_id = child.find(".//p:nvGraphicFramePr/p:cNvPr", namespaces=self.nsmap).get("id")
