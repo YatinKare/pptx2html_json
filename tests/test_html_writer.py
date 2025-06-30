@@ -3,7 +3,7 @@ import pytest
 import re
 from learnx_parser.slide_parser import SlideParser
 from learnx_parser.html_writer import HtmlWriter
-from learnx_parser.data_models import Picture, Transform, BlipFill
+from learnx_parser.data_models import Picture, Transform, BlipFill, Shape, Slide
 
 @pytest.fixture
 def slide_data():
@@ -86,3 +86,52 @@ def test_image_transform_and_crop_css(slide_data, html_writer):
         right = f"{picture_obj.blip_fill.src_rect_r / 1000:.2f}%" if picture_obj.blip_fill.src_rect_r is not None else "0%"
         expected_clip_path_css = f"clip-path: inset({top} {right} {bottom} {left});"
         assert expected_clip_path_css in img_style, "Expected clip-path CSS not found in image style."
+
+def test_shape_position_and_size_css(html_writer):
+    # Create a dummy Slide object with a shape
+    dummy_shape = Shape(
+        type="shape",
+        id="1",
+        name="Test Shape",
+        transform=Transform(x=914400, y=685800, cx=1828800, cy=1371600), # 1 inch x 1 inch at 1 inch, 1 inch
+        text_frame=None
+    )
+    dummy_slide = Slide(
+        slide_number=99,
+        shapes=[dummy_shape],
+        pictures=[],
+        group_shapes=[],
+        graphic_frames=[]
+    )
+
+    output_file = html_writer.write_slide_html(dummy_slide, 99)
+
+    with open(output_file, "r", encoding="utf-8") as f:
+        html_content = f.read()
+
+    # Find the shape element
+    shape_match = re.search(r'<div class="shape" id="shape-1" style="(.*?)">', html_content)
+    assert shape_match is not None, "Shape div not found in HTML"
+    shape_style = shape_match.group(1)
+
+    # Assert position and size CSS
+    # EMUs to pixels conversion: 914400 EMUs = 1 inch = 96 pixels
+    # 1 inch = 914400 EMUs
+    # 1 pixel = 9525 EMUs
+    # 1 EMU = 1 / 9525 pixels
+    # 1 EMU = 1 / 914400 inches
+    # 1 inch = 914400 EMUs
+    # 1 pixel = 1 / 96 inches
+    # 914400 EMUs / 96 pixels = 9525 EMUs/pixel
+
+    # Convert EMUs to pixels (1 inch = 914400 EMUs, 1 inch = 96 pixels)
+    # So, 1 EMU = 96 / 914400 pixels = 1 / 9525 pixels
+    expected_left = round(dummy_shape.transform.x / 9525, 2)
+    expected_top = round(dummy_shape.transform.y / 9525, 2)
+    expected_width = round(dummy_shape.transform.cx / 9525, 2)
+    expected_height = round(dummy_shape.transform.cy / 9525, 2)
+
+    assert f"left: {int(expected_left)}px;" in shape_style
+    assert f"top: {int(expected_top)}px;" in shape_style
+    assert f"width: {int(expected_width)}px;" in shape_style
+    assert f"height: {int(expected_height)}px;" in shape_style

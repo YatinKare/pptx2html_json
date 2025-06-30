@@ -55,10 +55,10 @@
             "id": "4",
             "name": "Content Placeholder 3",
             "transform": {
-                "x": 0,
-                "y": 0,
-                "cx": 0,
-                "cy": 0,
+                "x": 1280160,
+                "y": 2327440,
+                "cx": 4846320,
+                "cy": 4040574,
                 "rot": 0,
                 "flipH": false,
                 "flipV": false
@@ -160,10 +160,10 @@
             "id": "6",
             "name": "Content Placeholder 5",
             "transform": {
-                "x": 0,
-                "y": 0,
-                "cx": 0,
-                "cy": 0,
+                "x": 6723402,
+                "y": 2327441,
+                "cx": 4846320,
+                "cy": 4040574,
                 "rot": 0,
                 "flipH": false,
                 "flipV": false

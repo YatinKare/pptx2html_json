@@ -1,0 +1,11 @@
+<p:grpSp xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+    <p:nvGrpSpPr>
+        <p:cNvPr id="1" name="flex-container"/>
+    </p:nvGrpSpPr>
+    <p:grpSpPr>
+        <a:xfrm xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+            <a:off x="100" y="200"/>
+            <a:ext cx="300" cy="400"/>
+        </a:xfrm>
+    </p:grpSpPr>
+</p:grpSp>

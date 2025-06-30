@@ -1,18 +1,33 @@
-# Python-generated files
+# Gitignore for pptx2html_json project
+
+# Python
 __pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# Virtual environments
-.venv
+# OS generated files
+.DS_Store
+Thumbs.db
 
-temp_pptx/
+# uv lock file
+uv.lock
 
-tasks/
-.gemini/
-example/
+# IDE specific files
+.idea/
+.vscode/
 
-.env
+# Generated output
+output_presentation/
+output_presentation_test/
+
+# Dependency files not managed by uv
+requirements.txt

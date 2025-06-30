@@ -14,106 +14,40 @@ Build a robust, fully-tested, importable Python package that:
 
 ---
 
-## 📋 Gemini Workflow Overview
+## 📋 Gemini Project Workflow Overview
+You and the user will be making multiple versions of this package/tool that constantly improves over time. First some terminology:
 
-### ❗️ Start Here: Setup + Planning Phase
+- Version: A fully running usable package that has no errors and has been tested thoroughly.
+- Phase: Part of a version where different stages are used to achieve a feature or group of features for the version.
+- Task: Part of a Phase to achieve either planning/reading a section of documentation or code to get a better understanding or writing code using the specified task workflow defined later.
+- Subtask: Part of a task that is very simplistic and easily obtainable, even a junior dev could do it. 
 
-Before generating any code:
-1. **Unpack a sample `.pptx`** file and inspect all XML components
-2. **Cross-reference each part with the ECMA-376 Part 1 PDF**
-3. **Write a grounding doc**: `docs/schema_notes.md`, which includes:
-   - Breakdown of slide elements from `ppt/slides/*.xml`
-   - Mapping of tags like `<p:sp>`, `<a:t>`, `<p:pic>` to slide content
-   - Explanation of how relationships resolve to media (`.rels` files)
-   - Examples from the `.pptx` sample for each major element
-4. Only begin writing code **after this is complete and saved**
+For each new version it will look like this:
 
----
+1. User prompts the issues from their testing/the last version.
+2. You create a new version{{version_number}} folder in the tasks/ folder.
+   - 2.1 Create a new plan.md in that version folder. It should have Phases. Each phase will have 2-5 tasks. And each task will have 2-10 subtasks.:
+      - 2.1.1 Phase 1: Planning and understanding the XML documentation.
+         - `docs/` is where there is llm generated documentation for a high level understanding. **you will NOT assume anything about the documentation**. When you are parsing documentation, don't look for specific tags like `<example:xmltag>` instead you should be looking for keywords that relate to the specific search. If it is not specified in the docs, you should also look on the web. Either way, after you have identified the specific documentation you should ALWAYS cross reference it in the temp_pptx directory which is the decompiled example/galaxy_presentation.pptx file.
+         - You will understand and if needed create documentation in `docs/` for yourself for each non-correlated task.
+      - 2.1.2 Phase 2-(N-1): Achieving the Goal.
+         - There can be how many ever phases needed.
+      - 2.1.3 Phase N: Testing and Validation:
+         - This is **NOT** pytest. This is user testing where you will actually use `main.py` to simulate what it would look like to use the package.
+         - The user will provide feedback in terms of screenshots.
+         - The project must be buildable.
 
-## 🧠 Defined Project Workflow
+### Phase Workflow
+1. Read the subtasks
+2. Start Coding. Always double check that you haven't deleted or changed more code than you meant to.
+3. Test using the uv pytest combination.
+4. Debug the testing
+5. After successful testing has been achieved, go to next subtask
+6. After all subtasks are sucessful write a NEW log report (specified below)
+7. commit your changes using git.
+8. go to next task.
+9. When you are done with the task, make sure everything is committed and push to GitHub.
 
-### 🔹 Phase 1: Understanding & Grounding
-**Goal**: Full comprehension of `.pptx` and XML schema.
-
-Example Tasks:
-- `inspect_pptx_structure`
-- `map_xml_to_slide_elements`
-- `cross_reference_with_ecma_pdf`
-- `write_schema_notes`
-
-Artifacts:
-- `docs/schema_notes.md`
-- `REMINDERS.md`
-- `write_readme_and_usage_example`
-
----
-
-### 🔹 Phase 2: Project Bootstrapping
-**Goal**: Setup workspace, tooling, and environment.
-
-Example Tasks:
-- `init_uv_project`
-- `setup_git_repo`
-- `configure_pyproject.toml`
-- `create_base_folders`: `src/`, `tests/`, `learnx_parser/`, etc.
-
----
-
-### ✅ Phase 3: Single Slide Parser Prototype (Completed)
-**Goal**: Parse 1 slide → HTML + media
-
-Example Tasks:
-- `parse_slide_xml`
-- `extract_shapes_and_text`
-- `extract_images_and_links`
-- `write_html_output`
-- `validate_media_extraction`
-
-Artifacts:
-- `learnx_parser/core/slide_parser.py`
-- `learnx_parser/output/html_writer.py`
-- `tests/test_slide_parser.py`
-
----
-
-### ✅ Phase 4: JSON Representation (Completed)
-**Goal**: Provide alternate JSON output for programmatic use.
-
-Example Tasks:
-- `json_writer_module`
-- `test_json_output`
-
----
-
-### 🔹 Phase 5: Scale to Full Presentation
-**Goal**: Parse all slides in order.
-
-Example Tasks:
-- `parse_presentation_order`
-- `iterate_over_all_slides`
-- `batch_html_output`
-- `batch_json_output`
-
----
-
-### 🔹 Phase 6: API Layer
-**Goal**: Provide clean API entrypoints.
-
-Example Tasks:
-- `define_parse_pptx_entrypoint`
-- `validate_file_outputs_in_tests`
-- `test_multilingual_text`
-
----
-
-### 🔹 Phase 7: Publishing & Docs
-**Goal**: Finalize for PyPI and external usage.
-
-Example Tasks:
-- `validate_uv_add_install`
-- `publish_package (if needed)`
-
----
 
 ## 📦 Tooling Rules
 
@@ -140,10 +74,11 @@ lecture_output/
 
 ## 📓 Task Journal Instructions
 
+This is to track our progress. You should **NEVER** updated your task journal it is a READ ONLY file. 
 At the end of every task (whether code or planning), update:
 
 ```
-tasks/<task_name>.md
+tasks/<task_name>_<task_number>.md
 ```
 
 ### Template:
@@ -181,7 +116,7 @@ Good luck.
 
 ---
 
-## 🧠 Revised Project Workflow (Addressing Visual Inaccuracies)
+## 🧠 Example Project Workflow (Addressing Visual Inaccuracies)
 
 ### **Phase 1: Enhanced XML Parsing & Intermediate Representation**
 

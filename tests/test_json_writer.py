@@ -8,7 +8,7 @@ from learnx_parser.json_writer import JsonWriter
 def slide_data():
     slide_xml_path = os.path.abspath("temp_pptx/ppt/slides/slide23.xml")
     slide_rels_path = os.path.abspath("temp_pptx/ppt/slides/_rels/slide23.xml.rels")
-    parser = SlideParser(slide_xml_path, slide_rels_path)
+    parser = SlideParser(slide_xml_path, slide_rels_path, os.path.abspath("temp_pptx"))
     return parser.parse_slide(slide_number=23)
 
 @pytest.fixture

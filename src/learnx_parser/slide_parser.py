@@ -84,15 +84,13 @@ class SlideParser:
         return common_slide_data
 
     def _extract_transform(self, element_root) -> Transform:
-        transform = Transform(x=0, y=0, cx=0, cy=0) # Initialize with default zero values
-        # Look for spPr for shapes and pictures, or directly for graphicFrame
+        transform = Transform()
         sp_pr = element_root.find(".//p:spPr", namespaces=self.nsmap)
         xfrm = None
 
         if sp_pr is not None:
             xfrm = sp_pr.find(".//a:xfrm", namespaces=self.nsmap)
         elif element_root.tag == "{http://schemas.openxmlformats.org/presentationml/2006/main}graphicFrame":
-            # For graphicFrame, xfrm is directly under the graphicFrame element
             xfrm = element_root.find(".//a:xfrm", namespaces=self.nsmap)
 
         if xfrm is not None:
@@ -102,18 +100,14 @@ class SlideParser:
                 transform.x = int(off.get("x", 0))
                 transform.y = int(off.get("y", 0))
             if ext is not None:
-                cx_val = int(ext.get("cx", 0))
-                cy_val = int(ext.get("cy", 0))
-                if cx_val != 0: # Only override if non-zero value is found
-                    transform.cx = cx_val
-                if cy_val != 0: # Only override if non-zero value is found
-                    transform.cy = cy_val
+                transform.cx = int(ext.get("cx", 0))
+                transform.cy = int(ext.get("cy", 0))
 
             transform.rot = int(xfrm.get("rot", 0)) if xfrm.get("rot") is not None else 0
             transform.flipH = xfrm.get("flipH", "0") == "1"
             transform.flipV = xfrm.get("flipV", "0") == "1"
         
-        return Transform(x=0, y=0, cx=0, cy=0)
+        return transform
 
     def _extract_fill_properties(self, sp_pr_element):
         fill = None
@@ -303,9 +297,13 @@ class SlideParser:
         grp_id = group_shape_element.find(".//p:nvGrpSpPr/p:cNvPr", namespaces=self.nsmap).get("id")
         grp_name = group_shape_element.find(".//p:nvGrpSpPr/p:cNvPr", namespaces=self.nsmap).get("name")
         
+        is_flex_container = False
+        if grp_name and "flex-container" in grp_name:
+            is_flex_container = True
+
         transform = self._extract_transform(group_shape_element)
         shapes, pictures, group_shapes, graphic_frames = self._parse_shape_tree(group_shape_element)
-        return GroupShape(id=grp_id, name=grp_name, transform=transform, children=(shapes, pictures, group_shapes, graphic_frames))
+        return GroupShape(id=grp_id, name=grp_name, transform=transform, children=(shapes, pictures, group_shapes, graphic_frames), is_flex_container=is_flex_container)
 
     def _parse_graphic_frame_element(self, graphic_frame_element) -> GraphicFrame:
         graphic_frame_id = graphic_frame_element.find(".//p:nvGraphicFramePr/p:cNvPr", namespaces=self.nsmap).get("id")

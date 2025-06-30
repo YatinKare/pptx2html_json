@@ -11,8 +11,7 @@ class HtmlWriter:
         self.pptx_unpacked_path = pptx_unpacked_path
 
     def _emu_to_px(self, emu):
-        # 1 EMUs = 1/914400 inches, 1 inch = 96 pixels (standard for web)
-        return round(emu / 914400 * 96)
+        return round(emu / 9525)
 
     def _get_gradient_css(self, gradient_fill: GradientFill):
         if not gradient_fill or not gradient_fill.stops:
@@ -91,9 +90,23 @@ class HtmlWriter:
                 run_style += f"font-family: '{run.properties.font_face}';"
         return run_style
 
-    def _render_graphic_frame_html(self, element: GraphicFrame) -> str:
-        x = self._emu_to_px(element.transform.x)
-        y = self._emu_to_px(element.transform.y)
+    def _get_flex_properties_from_name(self, name: str) -> str:
+        flex_style = ""
+        if "flex-row" in name:
+            flex_style += "flex-direction: row;"
+        if "flex-col" in name:
+            flex_style += "flex-direction: column;"
+        if "justify-center" in name:
+            flex_style += "justify-content: center;"
+        if "justify-between" in name:
+            flex_style += "justify-content: space-between;"
+        if "items-center" in name:
+            flex_style += "align-items: center;"
+        return flex_style
+
+    def _render_graphic_frame_html(self, element: GraphicFrame, parent_x: int = 0, parent_y: int = 0) -> str:
+        x = self._emu_to_px(element.transform.x - parent_x)
+        y = self._emu_to_px(element.transform.y - parent_y)
         cx = self._emu_to_px(element.transform.cx)
         cy = self._emu_to_px(element.transform.cy)
         return f"""
@@ -102,20 +115,36 @@ class HtmlWriter:
         </div>
 """
 
-    def _render_group_shape_html(self, element: GroupShape) -> str:
-        x = self._emu_to_px(element.transform.x)
-        y = self._emu_to_px(element.transform.y)
+    def _render_group_shape_html(self, element: GroupShape, parent_x: int = 0, parent_y: int = 0) -> str:
+        relative_x = self._emu_to_px(element.transform.x - parent_x)
+        relative_y = self._emu_to_px(element.transform.y - parent_y)
         cx = self._emu_to_px(element.transform.cx)
         cy = self._emu_to_px(element.transform.cy)
+
+        group_style = ""
+        if element.is_flex_container:
+            group_style += "display: flex; "
+            group_style += self._get_flex_properties_from_name(element.name)
+
+        children_html = ""
+        for child in element.children[0]: # shapes
+            children_html += self._render_shape_html(child, element.transform.x, element.transform.y)
+        for child in element.children[1]: # pictures
+            children_html += self._render_picture_html(child, element.transform.x, element.transform.y)
+        for child in element.children[2]: # group_shapes
+            children_html += self._render_group_shape_html(child, element.transform.x, element.transform.y)
+        for child in element.children[3]: # graphic_frames
+            children_html += self._render_graphic_frame_html(child, element.transform.x, element.transform.y)
+
         return f"""
-        <div class="group-shape" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px;">
-            <!-- Grouped elements would go here -->
+        <div class="group-shape" style="left: {relative_x}px; top: {relative_y}px; width: {cx}px; height: {cy}px; {group_style}">
+            {children_html}
         </div>
 """
 
-    def _render_picture_html(self, element: Picture) -> str:
-        x = self._emu_to_px(element.transform.x)
-        y = self._emu_to_px(element.transform.y)
+    def _render_picture_html(self, element: Picture, parent_x: int = 0, parent_y: int = 0) -> str:
+        x = self._emu_to_px(element.transform.x - parent_x)
+        y = self._emu_to_px(element.transform.y - parent_y)
         cx = self._emu_to_px(element.transform.cx)
         cy = self._emu_to_px(element.transform.cy)
         image_src = os.path.join("media", os.path.basename(element.blip_fill.path))
@@ -123,9 +152,9 @@ class HtmlWriter:
         <img class="image" src="{image_src}" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px; {self._get_transform_css(element.transform)} {self._get_image_crop_css(element.blip_fill)}" />
 """
 
-    def _render_shape_html(self, element: Shape) -> str:
-        x = self._emu_to_px(element.transform.x)
-        y = self._emu_to_px(element.transform.y)
+    def _render_shape_html(self, element: Shape, parent_x: int = 0, parent_y: int = 0) -> str:
+        x = self._emu_to_px(element.transform.x - parent_x)
+        y = self._emu_to_px(element.transform.y - parent_y)
         cx = self._emu_to_px(element.transform.cx)
         cy = self._emu_to_px(element.transform.cy)
 
@@ -144,10 +173,74 @@ class HtmlWriter:
                 text_content_html += f"<p style=\"{paragraph_style}\">{text_runs_html}</p>"
 
         return f"""
-        <div class="shape" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px; {shape_style} {self._get_transform_css(element.transform)}">
+        <div class="shape" id="shape-{element.id}" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px; {shape_style} {self._get_transform_css(element.transform)}">
             <div class="text-content">{text_content_html}</div>
         </div>
 """
+
+    def _render_slide_content(self, slide: Slide) -> str:
+        content_html = ""
+        title_html = ""
+        main_content_html = ""
+        image_html = ""
+        text_html = ""
+
+        title_shape = None
+        main_image = None
+        body_shape = None
+
+        # Identify elements based on placeholder types
+        for shape in slide.shapes:
+            if shape.ph_type == "title":
+                title_shape = shape
+            elif shape.ph_type == "body":
+                body_shape = shape
+        for picture in slide.pictures:
+            if picture.ph_type == "pic":
+                main_image = picture
+
+        # Render title if present
+        if title_shape:
+            title_html = self._render_shape_html(title_shape, 0, 0) # Title is always absolute to slide
+
+        # Determine layout for main content (image and body text)
+        if main_image and body_shape:
+            # Check if they are side-by-side (image on left, text on right)
+            # This is a heuristic based on their x-coordinates
+            if main_image.transform.x < body_shape.transform.x:
+                # Image is on the left, text is on the right
+                # Create a flex container for these two elements
+                main_content_html += f"""
+        <div class="flex-row-container" style="display: flex; position: absolute; left: {self._emu_to_px(min(main_image.transform.x, body_shape.transform.x))}px; top: {self._emu_to_px(min(main_image.transform.y, body_shape.transform.y))}px; width: {self._emu_to_px(max(main_image.transform.x + main_image.transform.cx, body_shape.transform.x + body_shape.transform.cx) - min(main_image.transform.x, body_shape.transform.x))}px; height: {self._emu_to_px(max(main_image.transform.y + main_image.transform.cy, body_shape.transform.y + body_shape.transform.cy) - min(main_image.transform.y, body_shape.transform.y))}px;">
+            {self._render_picture_html(main_image, min(main_image.transform.x, body_shape.transform.x), min(main_image.transform.y, body_shape.transform.y))}
+            {self._render_shape_html(body_shape, min(main_image.transform.x, body_shape.transform.x), min(main_image.transform.y, body_shape.transform.y))}
+        </div>
+"""
+            else:
+                # Default to absolute positioning if not a clear side-by-side
+                image_html = self._render_picture_html(main_image, 0, 0)
+                text_html = self._render_shape_html(body_shape, 0, 0)
+                main_content_html += image_html + text_html
+        elif main_image:
+            image_html = self._render_picture_html(main_image, 0, 0)
+            main_content_html += image_html
+        elif body_shape:
+            text_html = self._render_shape_html(body_shape, 0, 0)
+            main_content_html += text_html
+
+        # Add any other shapes or graphic frames that are not part of the main content
+        for element in slide.shapes + slide.pictures + slide.group_shapes + slide.graphic_frames:
+            if element != title_shape and element != main_image and element != body_shape:
+                if isinstance(element, Shape):
+                    content_html += self._render_shape_html(element, 0, 0)
+                elif isinstance(element, Picture):
+                    content_html += self._render_picture_html(element, 0, 0)
+                elif isinstance(element, GroupShape):
+                    content_html += self._render_group_shape_html(element, 0, 0)
+                elif isinstance(element, GraphicFrame):
+                    content_html += self._render_graphic_frame_html(element, 0, 0)
+
+        return title_html + main_content_html + content_html
 
     def write_slide_html(self, slide: Slide, slide_number: int):
         html_content = """<!DOCTYPE html>
@@ -165,34 +258,7 @@ class HtmlWriter:
 <body>
     <div class="slide-container">
 """
-
-        all_elements = []
-        for shape in slide.shapes:
-            all_elements.append(shape)
-        for picture in slide.pictures:
-            all_elements.append(picture)
-        for group_shape in slide.group_shapes:
-            all_elements.append(group_shape)
-        for graphic_frame in slide.graphic_frames:
-            all_elements.append(graphic_frame)
-
-        # Sort elements by their y-coordinate to maintain some visual order
-        all_elements.sort(key=lambda e: e.transform.y)
-
-        for element in all_elements:
-            x = self._emu_to_px(element.transform.x)
-            y = self._emu_to_px(element.transform.y)
-            cx = self._emu_to_px(element.transform.cx)
-            cy = self._emu_to_px(element.transform.cy)
-
-            if isinstance(element, Shape):
-                html_content += self._render_shape_html(element)
-            elif isinstance(element, Picture):
-                html_content += self._render_picture_html(element)
-            elif isinstance(element, GroupShape):
-                html_content += self._render_group_shape_html(element)
-            elif isinstance(element, GraphicFrame):
-                html_content += self._render_graphic_frame_html(element)
+        html_content += self._render_slide_content(slide)
 
         html_content += """
     </div>

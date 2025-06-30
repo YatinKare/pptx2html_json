@@ -110,6 +110,7 @@ class GroupShape:
     name: Optional[str] = None
     transform: Transform = field(default_factory=Transform)
     children: List[Any] = field(default_factory=list) # Can contain Shape, Picture, GroupShape
+    is_flex_container: bool = False
 
 @dataclass
 class GraphicFrame:
