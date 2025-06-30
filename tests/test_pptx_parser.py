@@ -42,14 +42,19 @@ def test_parse_presentation(pptx_parser):
         with open(html_file, "r", encoding="utf-8") as f:
             html_content = f.read()
             assert "<!DOCTYPE html>" in html_content
-            assert "<div class=\"slide-container\">" in html_content
+            assert "<div class=\"slide-container" in html_content
 
         # Basic check for content in JSON
         with open(json_file, "r", encoding="utf-8") as f:
             json_content = json.load(f)
-            assert "shapes" in json_content
-            # The 'media' key is no longer directly in slide_data for JSON, it's within Picture objects
-            # assert "media" in json_content
+            assert "elements" in json_content
+            # Check if there are any shapes or pictures within the elements list
+            has_shapes_or_pictures = False
+            for element in json_content["elements"]:
+                if element["type"] == "shape" or element["type"] == "picture" or element["type"] == "placeholder_container":
+                    has_shapes_or_pictures = True
+                    break
+            assert has_shapes_or_pictures
 
     # Check if media files are copied to slide-specific media directories
     for i in range(1, expected_slide_count + 1):

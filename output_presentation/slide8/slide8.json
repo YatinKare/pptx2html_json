@@ -4,7 +4,7 @@
         "background_color": null,
         "background_gradient_fill": null
     },
-    "shapes": [
+    "elements": [
         {
             "type": "shape",
             "id": "2",
@@ -285,9 +285,5 @@
             "ph_orient": null,
             "ph_sz": "quarter"
         }
-    ],
-    "pictures": [],
-    "group_shapes": [],
-    "graphic_frames": [],
-    "hyperlinks": []
+    ]
 }

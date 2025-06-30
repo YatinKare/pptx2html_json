@@ -33,6 +33,7 @@ class PptxParser:
 
     def parse_presentation(self):
         slide_r_ids = self.presentation_parser.get_slide_order()
+        slide_width, slide_height = self.presentation_parser.get_slide_size()
         
         # Parse presentation.xml.rels to map r:id to slide paths
         presentation_rels_path = os.path.join(self.pptx_unpacked_path, "ppt", "_rels", "presentation.xml.rels")
@@ -67,7 +68,7 @@ class PptxParser:
                 # Some slides might not have a rels file if they don't link to anything
                 slide_rels_path = None # Pass None if rels file doesn't exist
 
-            slide_parser = SlideParser(slide_xml_path, slide_rels_path, self.pptx_unpacked_path)
+            slide_parser = SlideParser(slide_xml_path, slide_rels_path, self.pptx_unpacked_path, slide_width, slide_height)
             slide_data = slide_parser.parse_slide(slide_number=slide_number)
 
             # Copy media files for the current slide

@@ -9,7 +9,9 @@ def slide_parser():
     slide_xml_path = os.path.abspath("temp_pptx/ppt/slides/slide23.xml")
     slide_rels_path = os.path.abspath("temp_pptx/ppt/slides/_rels/slide23.xml.rels")
     pptx_unpacked_path = os.path.abspath("temp_pptx")
-    return SlideParser(slide_xml_path, slide_rels_path, pptx_unpacked_path)
+    slide_width = 12192000  # Example width in EMUs from presentation.xml
+    slide_height = 6858000  # Example height in EMUs from presentation.xml
+    return SlideParser(slide_xml_path, slide_rels_path, pptx_unpacked_path, slide_width, slide_height)
 
 def test_parse_slide_common_data(slide_parser):
     slide_obj = slide_parser.parse_slide(slide_number=23)
@@ -19,7 +21,7 @@ def test_parse_slide_common_data(slide_parser):
     # Test for gradient fill in slideLayout133.xml (background)
     slide_xml_path_grad = os.path.abspath("temp_pptx/ppt/slideLayouts/slideLayout133.xml")
     slide_rels_path_grad = os.path.abspath("temp_pptx/ppt/slideLayouts/_rels/slideLayout133.xml.rels")
-    parser_grad = SlideParser(slide_xml_path_grad, slide_rels_path_grad, os.path.abspath("temp_pptx"))
+    parser_grad = SlideParser(slide_xml_path_grad, slide_rels_path_grad, os.path.abspath("temp_pptx"), slide_width=12192000, slide_height=6858000)
     slide_obj_grad = parser_grad.parse_slide(slide_number=0) # Slide number doesn't matter for layout
 
     assert slide_obj_grad.common_slide_data.background_color is None # Background color is not directly set, but via gradFill

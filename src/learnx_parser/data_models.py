@@ -12,6 +12,28 @@ class Transform:
     flipV: bool = False
 
 @dataclass
+class LayoutPlaceholder:
+    ph_type: Optional[str] = None
+    ph_idx: Optional[int] = None
+    transform: Transform = field(default_factory=Transform)
+
+@dataclass
+class SlideLayout:
+    name: Optional[str] = None
+    type: Optional[str] = None # e.g., 'title', 'picTx', 'secHead', 'tx'
+    placeholders: List[LayoutPlaceholder] = field(default_factory=list)
+
+@dataclass
+class Transform:
+    x: int = 0
+    y: int = 0
+    cx: int = 0
+    cy: int = 0
+    rot: int = 0
+    flipH: bool = False
+    flipV: bool = False
+
+@dataclass
 class SolidFill:
     color: Optional[str] = None
     scheme_color: Optional[str] = None
@@ -93,6 +115,8 @@ class Hyperlink:
 class CommonSlideData:
     background_color: Optional[str] = None
     background_gradient_fill: Optional[GradientFill] = None
+    cx: int = 0
+    cy: int = 0
 
 @dataclass
 class Picture:
@@ -142,4 +166,5 @@ class Slide:
     group_shapes: List[GroupShape] = field(default_factory=list)
     graphic_frames: List[GraphicFrame] = field(default_factory=list)
     hyperlinks: List[Hyperlink] = field(default_factory=list)
+    slide_layout: Optional[SlideLayout] = None
 

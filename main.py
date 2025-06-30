@@ -3,12 +3,12 @@ from learnx_parser import parse_pptx
 
 def main():
     pptx_file = "./example/Galaxy presentation.pptx"
-    output_dir = "./output_presentation"
+    output_dir = "./output_presentation_test"
 
     # Parse the PPTX file
     parse_pptx(pptx_file, output_dir)
 
-    print("Parsing complete. Check the 'output_presentation' directory.")
+    print("Parsing complete. Check the 'output_presentation_test' directory.")
 
 
 if __name__ == "__main__":

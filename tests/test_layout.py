@@ -35,7 +35,7 @@ class TestLayout(unittest.TestCase):
             f.write(slide_xml)
 
         # Create a dummy SlideParser instance
-        parser = SlideParser(slide_xml_path="test_slide.xml", slide_rels_path="", pptx_unpacked_path="")
+        parser = SlideParser(slide_xml_path="test_slide.xml", slide_rels_path="", pptx_unpacked_path="", slide_width=12192000, slide_height=6858000)
 
         # Parse the slide
         slide = parser.parse_slide(slide_number=1)

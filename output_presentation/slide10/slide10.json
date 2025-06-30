@@ -4,7 +4,7 @@
         "background_color": null,
         "background_gradient_fill": null
     },
-    "shapes": [
+    "elements": [
         {
             "type": "shape",
             "id": "8",
@@ -114,11 +114,7 @@
             "ph_idx": 1,
             "ph_orient": null,
             "ph_sz": null
-        }
-    ],
-    "pictures": [],
-    "group_shapes": [],
-    "graphic_frames": [
+        },
         {
             "id": "6",
             "name": "Table Placeholder 2",
@@ -132,6 +128,5 @@
                 "flipV": false
             }
         }
-    ],
-    "hyperlinks": []
+    ]
 }

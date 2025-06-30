@@ -24,7 +24,7 @@ from learnx_parser.data_models import (
 from learnx_parser.slide_layout_parser import SlideLayoutParser
 
 class SlideParser:
-    def __init__(self, slide_xml_path, slide_rels_path, pptx_unpacked_path):
+    def __init__(self, slide_xml_path, slide_rels_path, pptx_unpacked_path, slide_width, slide_height):
         self.slide_xml_path = slide_xml_path
         self.slide_rels_path = slide_rels_path
         self.tree = etree.parse(self.slide_xml_path)
@@ -32,6 +32,8 @@ class SlideParser:
         self.rels = self._parse_rels()
         self.nsmap = self.root.nsmap # Store namespace map for easier access
         self.pptx_unpacked_path = pptx_unpacked_path
+        self.slide_width = slide_width
+        self.slide_height = slide_height
 
     def _parse_rels(self):
         rels = {}
@@ -42,7 +44,7 @@ class SlideParser:
         return rels
 
     def _extract_common_slide_data(self) -> CommonSlideData:
-        common_slide_data = CommonSlideData()
+        common_slide_data = CommonSlideData(cx=self.slide_width, cy=self.slide_height)
 
         # Extract background properties from p:cSld
         c_sld_elem = self.root.find(".//p:cSld", namespaces=self.nsmap)
@@ -364,8 +366,10 @@ class SlideParser:
                 slide_layout_path = os.path.join(self.pptx_unpacked_path, slide_layout_target.lstrip("/").replace("../", ""))
 
         slide_layout_parser = None
+        slide_layout_obj = None
         if slide_layout_path and os.path.exists(slide_layout_path):
             slide_layout_parser = SlideLayoutParser(slide_layout_path)
+            slide_layout_obj = slide_layout_parser.parse_layout()
 
         sp_tree_root = self.root.find(".//p:spTree", namespaces=self.nsmap)
         if sp_tree_root is None:
@@ -374,17 +378,22 @@ class SlideParser:
         shapes, pictures, group_shapes, graphic_frames = self._parse_shape_tree(sp_tree_root)
 
         # Apply inherited transforms from slide layout for placeholders
-        if slide_layout_parser:
-            for shape in shapes:
-                if shape.ph_type and not (shape.transform.x or shape.transform.y or shape.transform.cx or shape.transform.cy):
-                    inherited_transform = slide_layout_parser.get_placeholder_transform(shape.ph_type, str(shape.ph_idx) if shape.ph_idx is not None else None)
-                    if inherited_transform:
-                        shape.transform = inherited_transform
-            for picture in pictures:
-                if picture.ph_type and not (picture.transform.x or picture.transform.y or picture.transform.cx or picture.transform.cy):
-                    inherited_transform = slide_layout_parser.get_placeholder_transform(picture.ph_type, str(picture.ph_idx) if picture.ph_idx is not None else None)
-                    if inherited_transform:
-                        picture.transform = inherited_transform
+        if slide_layout_obj:
+            for layout_ph in slide_layout_obj.placeholders:
+                # Find matching shape or picture on the slide
+                found_element = None
+                for shape in shapes:
+                    if shape.ph_type == layout_ph.ph_type and (layout_ph.ph_idx is None or shape.ph_idx == layout_ph.ph_idx):
+                        found_element = shape
+                        break
+                if not found_element:
+                    for picture in pictures:
+                        if picture.ph_type == layout_ph.ph_type and (layout_ph.ph_idx is None or picture.ph_idx == layout_ph.ph_idx):
+                            found_element = picture
+                            break
+                
+                if found_element and not (found_element.transform.x or found_element.transform.y or found_element.transform.cx or found_element.transform.cy):
+                    found_element.transform = layout_ph.transform
 
         return Slide(
             slide_number=slide_number,
@@ -393,5 +402,6 @@ class SlideParser:
             pictures=pictures,
             group_shapes=group_shapes,
             graphic_frames=graphic_frames,
-            hyperlinks=self.extract_hyperlinks()
+            hyperlinks=self.extract_hyperlinks(),
+            slide_layout=slide_layout_obj
         )

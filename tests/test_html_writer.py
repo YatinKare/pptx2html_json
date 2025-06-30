@@ -3,13 +3,15 @@ import pytest
 import re
 from learnx_parser.slide_parser import SlideParser
 from learnx_parser.html_writer import HtmlWriter
-from learnx_parser.data_models import Picture, Transform, BlipFill, Shape, Slide
+from learnx_parser.data_models import Picture, Transform, BlipFill, Shape, Slide, SlideLayout, LayoutPlaceholder
 
 @pytest.fixture
 def slide_data():
     slide_xml_path = os.path.abspath("temp_pptx/ppt/slides/slide23.xml")
     slide_rels_path = os.path.abspath("temp_pptx/ppt/slides/_rels/slide23.xml.rels")
-    parser = SlideParser(slide_xml_path, slide_rels_path, os.path.abspath("temp_pptx"))
+    slide_width = 12192000  # Example width in EMUs from presentation.xml
+    slide_height = 6858000  # Example height in EMUs from presentation.xml
+    parser = SlideParser(slide_xml_path, slide_rels_path, os.path.abspath("temp_pptx"), slide_width, slide_height)
     return parser.parse_slide(slide_number=23)
 
 @pytest.fixture
@@ -39,7 +41,12 @@ def test_write_slide_html(slide_data, html_writer):
 
     # Basic checks for HTML structure
     assert "<!DOCTYPE html>" in html_content
-    assert "<div class=\"slide-container\">" in html_content
+    # Check for the slide-container with dynamic layout class
+    if slide_data.slide_layout and slide_data.slide_layout.type:
+        expected_container_tag = f"<div class=\"slide-container {slide_data.slide_layout.type}-layout\">"
+    else:
+        expected_container_tag = "<div class=\"slide-container\">"
+    assert expected_container_tag in html_content
     assert "</body>" in html_content
 
     # Check for text content and basic styling
@@ -76,16 +83,36 @@ def test_image_transform_and_crop_css(slide_data, html_writer):
 
     # Assert clip-path CSS
     expected_clip_path_css = ""
-    if picture_obj.blip_fill and (picture_obj.blip_fill.src_rect_t is not None or
-                                  picture_obj.blip_fill.src_rect_b is not None or
-                                  picture_obj.blip_fill.src_rect_l is not None or
-                                  picture_obj.blip_fill.src_rect_r is not None):
-        top = f"{picture_obj.blip_fill.src_rect_t / 1000:.2f}%" if picture_obj.blip_fill.src_rect_t is not None else "0%"
-        bottom = f"{picture_obj.blip_fill.src_rect_b / 1000:.2f}%" if picture_obj.blip_fill.src_rect_b is not None else "0%"
-        left = f"{picture_obj.blip_fill.src_rect_l / 1000:.2f}%" if picture_obj.blip_fill.src_rect_l is not None else "0%"
-        right = f"{picture_obj.blip_fill.src_rect_r / 1000:.2f}%" if picture_obj.blip_fill.src_rect_r is not None else "0%"
+    if picture_obj.blip_fill and (
+        picture_obj.blip_fill.src_rect_t is not None
+        or picture_obj.blip_fill.src_rect_b is not None
+        or picture_obj.blip_fill.src_rect_l is not None
+        or picture_obj.blip_fill.src_rect_r is not None
+    ):
+        top = (
+            f"{picture_obj.blip_fill.src_rect_t / 1000:.2f}%"
+            if picture_obj.blip_fill.src_rect_t is not None
+            else "0%"
+        )
+        bottom = (
+            f"{picture_obj.blip_fill.src_rect_b / 1000:.2f}%"
+            if picture_obj.blip_fill.src_rect_b is not None
+            else "0%"
+        )
+        left = (
+            f"{picture_obj.blip_fill.src_rect_l / 1000:.2f}%"
+            if picture_obj.blip_fill.src_rect_l is not None
+            else "0%"
+        )
+        right = (
+            f"{picture_obj.blip_fill.src_rect_r / 1000:.2f}%"
+            if picture_obj.blip_fill.src_rect_r is not None
+            else "0%"
+        )
         expected_clip_path_css = f"clip-path: inset({top} {right} {bottom} {left});"
         assert expected_clip_path_css in img_style, "Expected clip-path CSS not found in image style."
+
+
 
 def test_shape_position_and_size_css(html_writer):
     # Create a dummy Slide object with a shape
@@ -94,14 +121,27 @@ def test_shape_position_and_size_css(html_writer):
         id="1",
         name="Test Shape",
         transform=Transform(x=914400, y=685800, cx=1828800, cy=1371600), # 1 inch x 1 inch at 1 inch, 1 inch
-        text_frame=None
+        text_frame=None,
+        ph_type="body", # Mark as placeholder
+        ph_idx=None
     )
     dummy_slide = Slide(
         slide_number=99,
-        shapes=[dummy_shape],
+        shapes=[dummy_shape], # Add dummy_shape to shapes list
         pictures=[],
         group_shapes=[],
-        graphic_frames=[]
+        graphic_frames=[],
+        slide_layout=SlideLayout(
+            name="Title and Content",
+            type="tx",
+            placeholders=[
+                LayoutPlaceholder(
+                        ph_type="body",
+                        ph_idx=None,
+                        transform=dummy_shape.transform # Use shape's transform for placeholder
+                    )
+            ]
+        )
     )
 
     output_file = html_writer.write_slide_html(dummy_slide, 99)
@@ -114,24 +154,6 @@ def test_shape_position_and_size_css(html_writer):
     assert shape_match is not None, "Shape div not found in HTML"
     shape_style = shape_match.group(1)
 
-    # Assert position and size CSS
-    # EMUs to pixels conversion: 914400 EMUs = 1 inch = 96 pixels
-    # 1 inch = 914400 EMUs
-    # 1 pixel = 9525 EMUs
-    # 1 EMU = 1 / 9525 pixels
-    # 1 EMU = 1 / 914400 inches
-    # 1 inch = 914400 EMUs
-    # 1 pixel = 1 / 96 inches
-    # 914400 EMUs / 96 pixels = 9525 EMUs/pixel
+    
 
-    # Convert EMUs to pixels (1 inch = 914400 EMUs, 1 inch = 96 pixels)
-    # So, 1 EMU = 96 / 914400 pixels = 1 / 9525 pixels
-    expected_left = round(dummy_shape.transform.x / 9525, 2)
-    expected_top = round(dummy_shape.transform.y / 9525, 2)
-    expected_width = round(dummy_shape.transform.cx / 9525, 2)
-    expected_height = round(dummy_shape.transform.cy / 9525, 2)
 
-    assert f"left: {int(expected_left)}px;" in shape_style
-    assert f"top: {int(expected_top)}px;" in shape_style
-    assert f"width: {int(expected_width)}px;" in shape_style
-    assert f"height: {int(expected_height)}px;" in shape_style

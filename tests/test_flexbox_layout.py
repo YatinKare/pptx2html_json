@@ -28,7 +28,7 @@ class TestFlexboxLayout(unittest.TestCase):
             f.write(group_shape_xml)
 
         # Create a dummy SlideParser instance
-        slide_parser = SlideParser(slide_xml_path=temp_slide_xml_path, slide_rels_path="", pptx_unpacked_path="")
+        slide_parser = SlideParser(slide_xml_path=temp_slide_xml_path, slide_rels_path="", pptx_unpacked_path="", slide_width=12192000, slide_height=6858000)
         
         # Parse the group shape element
         group_shape = slide_parser._parse_group_shape_element(etree.fromstring(group_shape_xml))
@@ -99,7 +99,7 @@ class TestFlexboxLayout(unittest.TestCase):
         )
 
         # Create an HtmlWriter instance
-        html_writer = HtmlWriter()
+        html_writer = HtmlWriter(pptx_unpacked_path="temp_pptx")
 
         # Render the HTML for the slide
         output_file = html_writer.write_slide_html(dummy_slide, 999)

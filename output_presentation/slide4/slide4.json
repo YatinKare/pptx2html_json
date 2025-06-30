@@ -4,7 +4,7 @@
         "background_color": null,
         "background_gradient_fill": null
     },
-    "shapes": [
+    "elements": [
         {
             "type": "shape",
             "id": "2",
@@ -94,9 +94,7 @@
             "ph_idx": 1,
             "ph_orient": null,
             "ph_sz": null
-        }
-    ],
-    "pictures": [
+        },
         {
             "id": "6",
             "name": "Picture Placeholder 21",
@@ -121,8 +119,5 @@
             "ph_type": "pic",
             "ph_idx": 13
         }
-    ],
-    "group_shapes": [],
-    "graphic_frames": [],
-    "hyperlinks": []
+    ]
 }

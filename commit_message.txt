@@ -1,0 +1,14 @@
+feat: Implement basic slide layout inference and relative positioning
+
+This commit introduces initial logic for inferring slide layouts and rendering elements with relative positioning, even when not explicitly grouped in PowerPoint.
+
+Key changes include:
+- Refactored `html_writer.py` to introduce `_render_slide_content` for layout inference.
+- Implemented a heuristic in `_render_slide_content` to detect and render "title + image-left + text-right" layouts using flexbox.
+- Adjusted rendering functions (`_render_graphic_frame_html`, `_render_group_shape_html`, `_render_picture_html`, `_render_shape_html`) to calculate positions relative to their parent containers.
+- Updated `test_flexbox_layout.py` with a new test case (`test_nested_flexbox_layout_html_output`) to validate nested element rendering and relative positioning.
+- Fixed `TypeError` in `test_json_writer.py` by providing `pptx_unpacked_path` to `SlideParser`.
+- Corrected `NameError` and `AttributeError` in `test_flexbox_layout.py` by adding missing imports (`Picture`, `Shape`, `Slide`, `BlipFill`, `re`).
+- Updated `.gitignore` to exclude generated output directories and `requirements.txt`.
+- Bumped project version to 0.2.0 in `pyproject.toml`.
+- Added comprehensive OOXML documentation files under `docs/ooxml_docs_v2/` and removed outdated documentation files.

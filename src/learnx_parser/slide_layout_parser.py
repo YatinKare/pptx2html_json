@@ -1,6 +1,6 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from lxml import etree
-from learnx_parser.data_models import Transform
+from learnx_parser.data_models import Transform, SlideLayout, LayoutPlaceholder
 
 class SlideLayoutParser:
     def __init__(self, layout_xml_path):
@@ -8,7 +8,6 @@ class SlideLayoutParser:
         self.tree = etree.parse(self.layout_xml_path)
         self.root = self.tree.getroot()
         self.nsmap = self.root.nsmap
-        self.placeholders = self._parse_placeholders()
 
     def _extract_transform(self, element_root) -> Transform:
         transform = Transform(x=0, y=0, cx=914400, cy=914400) # Default values
@@ -40,28 +39,55 @@ class SlideLayoutParser:
             transform.flipV = xfrm.get("flipV", "0") == "1"
         return transform
 
-    def _parse_placeholders(self) -> Dict[str, Transform]:
-        placeholders = {}
+    def _parse_placeholders(self) -> List[LayoutPlaceholder]:
+        placeholders = []
         # Search for all shapes and pictures that are placeholders
         for sp_elem in self.root.findall(".//p:sp", namespaces=self.nsmap):
             ph_elem = sp_elem.find(".//p:nvPr/p:ph", namespaces=self.nsmap)
             if ph_elem is not None:
                 ph_type = ph_elem.get("type")
-                ph_idx = ph_elem.get("idx")
-                # Create a unique key for the placeholder (type + idx if available, otherwise just type)
-                key = f"{ph_type}_{ph_idx}" if ph_idx is not None else ph_type
-                placeholders[key] = self._extract_transform(sp_elem)
+                ph_idx = int(ph_elem.get("idx")) if ph_elem.get("idx") is not None else None
+                transform = self._extract_transform(sp_elem)
+                placeholders.append(LayoutPlaceholder(ph_type=ph_type, ph_idx=ph_idx, transform=transform))
         
         for pic_elem in self.root.findall(".//p:pic", namespaces=self.nsmap):
             ph_elem = pic_elem.find(".//p:nvPicPr/p:nvPr/p:ph", namespaces=self.nsmap)
             if ph_elem is not None:
                 ph_type = ph_elem.get("type")
-                ph_idx = ph_elem.get("idx")
-                key = f"{ph_type}_{ph_idx}" if ph_idx is not None else ph_type
-                placeholders[key] = self._extract_transform(pic_elem)
+                ph_idx = int(ph_elem.get("idx")) if ph_elem.get("idx") is not None else None
+                transform = self._extract_transform(pic_elem)
+                placeholders.append(LayoutPlaceholder(ph_type=ph_type, ph_idx=ph_idx, transform=transform))
 
         return placeholders
 
-    def get_placeholder_transform(self, ph_type: str, ph_idx: Optional[str] = None) -> Optional[Transform]:
-        key = f"{ph_type}_{ph_idx}" if ph_idx is not None else ph_type
-        return self.placeholders.get(key)
+    def _infer_layout_type(self, placeholders: List[LayoutPlaceholder]) -> Optional[str]:
+        ph_types = {ph.ph_type for ph in placeholders if ph.ph_type is not None}
+
+        if "title" in ph_types and "body" in ph_types and "pic" in ph_types:
+            return "picTx" # Title, Picture and Text
+        elif "title" in ph_types and "body" in ph_types:
+            return "tx" # Title and Text
+        elif "title" in ph_types and len(ph_types) == 1:
+            return "titleOnly" # Only a title
+        elif not ph_types:
+            return "blank" # No placeholders
+        
+        # Add more heuristics for other common layouts as needed
+        return None
+
+    def parse_layout(self) -> SlideLayout:
+        layout_name = self.root.find(".//p:cSld", namespaces=self.nsmap).get("name")
+        layout_type = self.root.get("type")
+        if layout_type is None:
+            # Try to get from matchingName if 'type' is not directly on sldLayout
+            matching_name = self.root.get("matchingName")
+            if matching_name is not None:
+                layout_type = matching_name.replace(" ", "").replace("-", "").lower()
+
+        placeholders = self._parse_placeholders()
+        
+        # If layout_type is still None, infer from placeholders
+        if layout_type is None:
+            layout_type = self._infer_layout_type(placeholders)
+
+        return SlideLayout(name=layout_name, type=layout_type, placeholders=placeholders)
