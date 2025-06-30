@@ -99,7 +99,7 @@ class TestFlexboxLayout(unittest.TestCase):
         )
 
         # Create an HtmlWriter instance
-        html_writer = HtmlWriter(pptx_unpacked_path="temp_pptx")
+        html_writer = HtmlWriter(output_directory="./test_output", pptx_unpacked_path="temp_pptx")
 
         # Render the HTML for the slide
         output_file = html_writer.write_slide_html(dummy_slide, 999)
@@ -133,7 +133,7 @@ class TestFlexboxLayout(unittest.TestCase):
 
         # Clean up dummy files
         import shutil
-        shutil.rmtree(html_writer.output_dir)
+        shutil.rmtree(html_writer.output_directory)
 
 if __name__ == '__main__':
     unittest.main()

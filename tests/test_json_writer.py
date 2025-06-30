@@ -17,7 +17,7 @@ def json_writer():
     # Use a temporary directory for output during tests
     output_dir = "./test_output"
     os.makedirs(output_dir, exist_ok=True)
-    yield JsonWriter(output_dir=output_dir)
+    yield JsonWriter(output_directory=output_dir)
     # Clean up after test
     import shutil
     shutil.rmtree(output_dir)

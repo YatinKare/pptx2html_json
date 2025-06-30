@@ -20,7 +20,7 @@ def html_writer():
     output_base_dir = "./test_output"
     # Ensure the base output directory exists
     os.makedirs(output_base_dir, exist_ok=True)
-    writer = HtmlWriter(output_dir=output_base_dir, pptx_unpacked_path=os.path.abspath("temp_pptx"))
+    writer = HtmlWriter(output_directory=output_base_dir, pptx_unpacked_path=os.path.abspath("temp_pptx"))
     yield writer
     # Clean up after test
     import shutil
@@ -31,7 +31,7 @@ def test_write_slide_html(slide_data, html_writer):
     slide_number = 23
     output_file = html_writer.write_slide_html(slide_data, slide_number)
 
-    expected_output_dir = os.path.join(html_writer.output_dir, f"slide{slide_number}")
+    expected_output_dir = os.path.join(html_writer.output_directory, f"slide{slide_number}")
     expected_file_path = os.path.join(expected_output_dir, f"slide{slide_number}.html")
 
     assert os.path.exists(expected_file_path)

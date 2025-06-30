@@ -13,8 +13,9 @@ class DataclassJSONEncoder(json.JSONEncoder):
 
 
 class JsonWriter:
-    def __init__(self, output_dir="./output"):
-        self.output_dir = output_dir
+    def __init__(self, output_directory="./output"):
+        # Directory where the generated JSON output will be saved
+        self.output_directory = output_directory
 
     def _process_slide_for_json(self, slide: Slide) -> dict:
         processed_elements = []
@@ -87,10 +88,10 @@ class JsonWriter:
 
     def write_slide_json(self, slide_data, slide_number):
         processed_slide_data = self._process_slide_for_json(slide_data)
-        slide_output_dir = os.path.join(self.output_dir, f"slide{slide_number}")
-        os.makedirs(slide_output_dir, exist_ok=True)
+        slide_output_directory = os.path.join(self.output_directory, f"slide{slide_number}")
+        os.makedirs(slide_output_directory, exist_ok=True)
 
-        output_file_path = os.path.join(slide_output_dir, f"slide{slide_number}.json")
+        output_file_path = os.path.join(slide_output_directory, f"slide{slide_number}.json")
         with open(output_file_path, "w", encoding="utf-8") as f:
             json.dump(processed_slide_data, f, indent=4, cls=DataclassJSONEncoder)
         return output_file_path
