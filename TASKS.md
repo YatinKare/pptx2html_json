@@ -49,9 +49,9 @@ This file tracks the high-level tasks and sub-tasks for building the LearnX Powe
 ### 🔹 Phase 3: Comprehensive HTML Generation
 **Goal**: Update the `HtmlWriter` to utilize the richer extracted data to produce visually accurate HTML.
 
-*   [ ] **Task: `render_accurate_text_styles`**
-    *   [ ] Sub-task: Modify `HtmlWriter` to apply all extracted text properties (font family, color, alignment, line spacing, etc.) to the generated HTML.
-    *   [ ] Sub-task: Update `tests/test_html_writer.py` to verify these styles.
+*   [x] **Task: `render_accurate_text_styles`**
+    *   [x] Sub-task: Modify `HtmlWriter` to apply all extracted text properties (font family, color, alignment, line spacing, etc.) to the generated HTML.
+    *   [x] Sub-task: Update `tests/test_html_writer.py` to verify these styles.
 *   [ ] **Task: `render_accurate_shape_positions`**
     *   [ ] Sub-task: Modify `HtmlWriter` to use the resolved `x`, `y`, `cx`, `cy` values for positioning and sizing HTML elements, ensuring accurate layout.
     *   [ ] Sub-task: Update `tests/test_html_writer.py` to verify accurate positioning.

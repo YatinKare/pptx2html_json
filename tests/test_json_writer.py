@@ -73,22 +73,22 @@ def test_flexbox_layout_json_output(json_writer):
     assert title_ph_container["type"] == "placeholder_container"
     assert title_ph_container["ph_type"] == "title"
     assert title_ph_container["children"][0]["ph_type"] == "title"
-    assert title_ph_container["children"][0]["transform"]["x"] == 0 # Relative X
-    assert title_ph_container["children"][0]["transform"]["y"] == 0 # Relative Y
+    assert title_ph_container["children"][0]["transform"]["left"] == "0.00%" # Relative X
+    assert title_ph_container["children"][0]["transform"]["top"] == "0.00%" # Relative Y
 
     # Check picture placeholder container
     pic_ph_container = data["elements"][1]
     assert pic_ph_container["type"] == "placeholder_container"
     assert pic_ph_container["ph_type"] == "pic"
     assert pic_ph_container["children"][0]["ph_type"] == "pic"
-    assert pic_ph_container["children"][0]["transform"]["x"] == 0 # Relative X
-    assert pic_ph_container["children"][0]["transform"]["y"] == 0 # Relative Y
+    assert pic_ph_container["children"][0]["transform"]["left"] == "0.00%" # Relative X
+    assert pic_ph_container["children"][0]["transform"]["top"] == "0.00%" # Relative Y
 
     # Check body placeholder container
     body_ph_container = data["elements"][2]
     assert body_ph_container["type"] == "placeholder_container"
     assert body_ph_container["ph_type"] == "body"
     assert body_ph_container["children"][0]["ph_type"] == "body"
-    assert body_ph_container["children"][0]["transform"]["x"] == 0 # Relative X
-    assert body_ph_container["children"][0]["transform"]["y"] == 0 # Relative Y
+    assert body_ph_container["children"][0]["transform"]["left"] == "0.00%" # Relative X
+    assert body_ph_container["children"][0]["transform"]["top"] == "0.00%" # Relative Y
     
