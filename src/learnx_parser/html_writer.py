@@ -264,117 +264,36 @@ class HtmlWriter:
 """
 
     def _render_slide_content(self, slide: Slide) -> str:
-        # Initialize an empty string to accumulate the HTML content for the slide
         content_html = ""
-        
-        # Create a dictionary to quickly look up slide elements by their ID
         slide_elements_by_id = {el.id: el for el in slide.shapes + slide.pictures + slide.group_shapes + slide.graphic_frames if el.id is not None}
-        # Keep track of elements that have already been rendered as part of a layout
         used_element_ids = set()
 
-        # Initialize a dictionary to map placeholder types (e.g., 'title', 'body') to actual slide elements
         placeholder_elements = {}
-        # If the slide has a defined layout, process its placeholders
         if slide.slide_layout:
             for layout_ph in slide.slide_layout.placeholders:
                 for element_id, element in slide_elements_by_id.items():
-                    # Match slide elements to layout placeholders based on type and index
                     if hasattr(element, 'ph_type') and element.ph_type == layout_ph.ph_type and (layout_ph.ph_idx is None or (hasattr(element, 'ph_idx') and element.ph_idx == layout_ph.ph_idx)):
-                        placeholder_elements[layout_ph.ph_type] = element # Store the actual element
+                        placeholder_elements[layout_ph.ph_type] = element
                         break
 
-        # Handle different slide layout types with specific Flexbox structures
-        if slide.slide_layout and slide.slide_layout.type == "picTx": # Layout for Title, Picture and Text
-            title_element = placeholder_elements.get("title")
-            pic_element = placeholder_elements.get("pic")
-            body_element = placeholder_elements.get("body")
+        layout_type = slide.slide_layout.type if slide.slide_layout else None
 
-            # Render the title within a dedicated title container
-            if title_element:
-                content_html += f"""
-        <div class="title-container">
-            {self._render_shape_html(title_element, use_absolute_pos=False)}
-        </div>
-"""
-                used_element_ids.add(title_element.id)
+        layout_handlers = {
+            "picTx": self._render_picTx_layout,
+            "tx": self._render_tx_layout,
+            "obj": self._render_obj_layout,
+            "titleOnly": self._render_titleOnly_layout,
+            "blank": self._render_blank_layout,
+            "title": self._render_title_layout,
+            "titlePic": self._render_titlePic_layout,
+        }
 
-            # Render the picture and body text within a flex container for side-by-side layout
-            if pic_element and body_element:
-                content_html += f"""
-        <div class="content-flex-container">
-            {self._render_picture_html(pic_element, use_absolute_pos=False)}
-            {self._render_shape_html(body_element, use_absolute_pos=False)}
-        </div>
-"""
-                used_element_ids.add(pic_element.id)
-                used_element_ids.add(body_element.id)
+        handler = layout_handlers.get(layout_type, self._render_generic_layout)
+        handler_html, handler_used_element_ids = handler(slide, placeholder_elements)
+        content_html += handler_html
+        used_element_ids.update(handler_used_element_ids)
 
-        elif slide.slide_layout and slide.slide_layout.type == "tx": # Layout for Title and Text
-            title_element = placeholder_elements.get("title")
-            body_element = placeholder_elements.get("body")
-
-            # Render the title within a dedicated title container
-            if title_element:
-                content_html += f"""
-        <div class="title-container">
-            {self._render_shape_html(title_element, use_absolute_pos=False)}
-        </div>
-"""
-                used_element_ids.add(title_element.id)
-
-            # Render the body text within a flex container
-            if body_element:
-                content_html += f"""
-        <div class="content-flex-container">
-            {self._render_shape_html(body_element, use_absolute_pos=False)}
-        </div>
-"""
-                used_element_ids.add(body_element.id)
-
-        else: # Fallback to absolute positioning for other layouts or unhandled types
-            if slide.slide_layout and slide.slide_layout.placeholders:
-                for layout_ph in slide.slide_layout.placeholders:
-                    found_element = None
-                    for element_id, element in slide_elements_by_id.items():
-                        if hasattr(element, 'ph_type') and element.ph_type == layout_ph.ph_type and \
-                           (layout_ph.ph_idx is None or (hasattr(element, 'ph_idx') and element.ph_idx == layout_ph.ph_idx)):
-                            found_element = element
-                            break
-
-                    if found_element:
-                        # Calculate placeholder's transform relative to the slide root for absolute positioning
-                        relative_ph_transform_to_root = Transform(
-                            x=layout_ph.transform.x,
-                            y=layout_ph.transform.y,
-                            cx=layout_ph.transform.cx,
-                            cy=layout_ph.transform.cy,
-                            rot=layout_ph.transform.rot,
-                            flipH=layout_ph.transform.flipH,
-                            flipV=layout_ph.transform.flipV
-                        )
-
-                        element_html = ""
-                        # Render the found element (shape, picture, group shape, or graphic frame)
-                        if isinstance(found_element, Shape):
-                            element_html = self._render_shape_html(found_element, parent_x=layout_ph.transform.x, parent_y=layout_ph.transform.y)
-                        elif isinstance(found_element, Picture):
-                            element_html = self._render_picture_html(found_element, parent_x=layout_ph.transform.x, parent_y=layout_ph.transform.y)
-                        elif isinstance(found_element, GroupShape):
-                            element_html = self._render_group_shape_html(found_element, parent_x=layout_ph.transform.x, parent_y=layout_ph.transform.y)
-                        elif isinstance(found_element, GraphicFrame):
-                            element_html = self._render_graphic_frame_html(found_element, parent_x=layout_ph.transform.x, parent_y=layout_ph.transform.y)
-
-                        # Wrap the element HTML in a placeholder container div with absolute positioning
-                        content_html += f"""
-        <div class="placeholder-container" data-ph-type="{layout_ph.ph_type}" data-ph-idx="{layout_ph.ph_idx}" style="left: {self._emu_to_px(relative_ph_transform_to_root.x)}px; top: {self._emu_to_px(relative_ph_transform_to_root.y)}px; width: {self._emu_to_px(relative_ph_transform_to_root.cx)}px; height: {self._emu_to_px(relative_ph_transform_to_root.cy)}px;">
-            {element_html}
-        </div>
-"""
-                    # Add the element's ID to the set of used elements
-                    if found_element and found_element.id is not None:
-                            used_element_ids.add(found_element.id)
-
-        # Add any remaining elements that were not part of any specific layout (e.g., floating elements)
+        # Add any remaining elements that were not part of any specific layout
         all_slide_elements = slide.shapes + slide.pictures + slide.group_shapes + slide.graphic_frames
         for element in all_slide_elements:
             if element.id is not None and element.id not in used_element_ids:
@@ -388,6 +307,170 @@ class HtmlWriter:
                     content_html += self._render_graphic_frame_html(element, 0, 0)
 
         return content_html
+
+    def _render_picTx_layout(self, slide: Slide, placeholder_elements: dict) -> tuple[str, set]:
+        content_html = ""
+        used_element_ids = set()
+
+        title_element = placeholder_elements.get("title")
+        pic_element = placeholder_elements.get("pic")
+        body_element = placeholder_elements.get("body")
+
+        if title_element:
+            content_html += f'''
+    <div class="title-container">
+        {self._render_shape_html(title_element, use_absolute_pos=False)}
+    </div>
+'''
+            used_element_ids.add(title_element.id)
+
+        if pic_element and body_element:
+            content_html += f'''
+    <div class="content-flex-container">
+        {self._render_picture_html(pic_element, use_absolute_pos=False)}
+        {self._render_shape_html(body_element, use_absolute_pos=False)}
+    </div>
+'''
+            used_element_ids.add(pic_element.id)
+            used_element_ids.add(body_element.id)
+
+        return content_html, used_element_ids
+
+    def _render_tx_layout(self, slide: Slide, placeholder_elements: dict) -> tuple[str, set]:
+        content_html = ""
+        used_element_ids = set()
+
+        title_element = placeholder_elements.get("title")
+        body_element = placeholder_elements.get("body")
+
+        if title_element:
+            content_html += f'''
+    <div class="title-container">
+        {self._render_shape_html(title_element, use_absolute_pos=False)}
+    </div>
+'''
+            used_element_ids.add(title_element.id)
+
+        if body_element:
+            content_html += f'''
+    <div class="content-flex-container">
+        {self._render_shape_html(body_element, use_absolute_pos=False)}
+    </div>
+'''
+            used_element_ids.add(body_element.id)
+
+        return content_html, used_element_ids
+
+    def _render_obj_layout(self, slide: Slide, placeholder_elements: dict) -> tuple[str, set]:
+        return self._render_tx_layout(slide, placeholder_elements) # Same as tx
+
+    def _render_titleOnly_layout(self, slide: Slide, placeholder_elements: dict) -> tuple[str, set]:
+        content_html = ""
+        used_element_ids = set()
+
+        title_element = placeholder_elements.get("title") or placeholder_elements.get("ctrTitle")
+
+        if title_element:
+            content_html += f'''
+    <div class="title-container">
+        {self._render_shape_html(title_element, use_absolute_pos=False)}
+    </div>
+'''
+            used_element_ids.add(title_element.id)
+
+        return content_html, used_element_ids
+
+    def _render_blank_layout(self, slide: Slide, placeholder_elements: dict) -> tuple[str, set]:
+        return "", set()
+
+    def _render_title_layout(self, slide: Slide, placeholder_elements: dict) -> tuple[str, set]:
+        content_html = ""
+        used_element_ids = set()
+
+        title_element = placeholder_elements.get("ctrTitle")
+        subtitle_element = placeholder_elements.get("subTitle")
+
+        if title_element:
+            content_html += f'''
+    <div class="title-container">
+        {self._render_shape_html(title_element, use_absolute_pos=False)}
+    </div>
+'''
+            used_element_ids.add(title_element.id)
+
+        if subtitle_element:
+            content_html += f'''
+    <div class="content-flex-container">
+        {self._render_shape_html(subtitle_element, use_absolute_pos=False)}
+    </div>
+'''
+            used_element_ids.add(subtitle_element.id)
+
+        return content_html, used_element_ids
+
+    def _render_titlePic_layout(self, slide: Slide, placeholder_elements: dict) -> tuple[str, set]:
+        content_html = ""
+        used_element_ids = set()
+
+        title_element = placeholder_elements.get("title") or placeholder_elements.get("ctrTitle")
+        pic_element = placeholder_elements.get("pic")
+        body_element = placeholder_elements.get("body")
+
+        if title_element:
+            content_html += f'''
+    <div class="title-container">
+        {self._render_shape_html(title_element, use_absolute_pos=False)}
+    </div>
+'''
+            used_element_ids.add(title_element.id)
+
+        # Create a flex container for the picture and body elements
+        content_html += f'''
+    <div class="content-flex-container">
+'''
+        if pic_element:
+            content_html += f'''
+        {self._render_picture_html(pic_element, use_absolute_pos=False)}
+'''
+            used_element_ids.add(pic_element.id)
+
+        if body_element:
+            content_html += f'''
+        {self._render_shape_html(body_element, use_absolute_pos=False)}
+'''
+            used_element_ids.add(body_element.id)
+
+        content_html += f'''
+    </div>
+'''
+
+        return content_html, used_element_ids
+
+    def _render_generic_layout(self, slide: Slide, placeholder_elements: dict) -> tuple[str, set]:
+        content_html = ""
+        used_element_ids = set()
+
+        all_slide_elements = slide.shapes + slide.pictures + slide.group_shapes + slide.graphic_frames
+
+        for element in all_slide_elements:
+            if element.id is not None and element.id not in used_element_ids:
+                content_html += f'''
+    <div class="generic-container" style="display: flex; justify-content: center; align-items: center;">
+'''
+                if isinstance(element, Shape):
+                    content_html += self._render_shape_html(element, use_absolute_pos=False)
+                elif isinstance(element, Picture):
+                    content_html += self._render_picture_html(element, use_absolute_pos=False)
+                elif isinstance(element, GroupShape):
+                    content_html += self._render_group_shape_html(element, use_absolute_pos=False)
+                elif isinstance(element, GraphicFrame):
+                    content_html += self._render_graphic_frame_html(element, use_absolute_pos=False)
+                content_html += f'''
+    </div>
+'''
+                used_element_ids.add(element.id)
+
+        return content_html, used_element_ids
 
     def write_slide_html(self, slide: Slide, slide_number: int):
         # Determine the layout class for the slide container based on the slide layout type
@@ -406,6 +489,7 @@ class HtmlWriter:
         /* Layout-specific CSS */
         .slide-container.picTx-layout .content-flex-container {{ display: flex; flex-direction: row; justify-content: space-around; align-items: center; flex: 1; }}
         .slide-container.tx-layout .content-flex-container {{ display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; }}
+        .slide-container.titlePic-layout .content-flex-container {{ display: flex; flex-direction: row; justify-content: space-around; align-items: center; flex: 1; }}
         .title-container {{ display: flex; justify-content: center; align-items: center; flex: 0 0 auto; }}
         .content-flex-container {{ display: flex; flex: 1; }}
     </style>

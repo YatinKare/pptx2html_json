@@ -17,21 +17,20 @@ class JsonWriter:
         # Directory where the generated JSON output will be saved
         self.output_directory = output_directory
 
+    
+
     def _process_slide_for_json(self, slide: Slide) -> dict:
         processed_elements = []
         used_element_ids = set()
 
+        slide_cx = slide.common_slide_data.cx
+        slide_cy = slide.common_slide_data.cy
+
         # Create a dictionary to quickly look up slide elements by their ID
         slide_elements_by_id = {el.id: el for el in slide.shapes + slide.pictures + slide.group_shapes + slide.graphic_frames if el.id is not None}
 
-        # Define a root container for the slide, with 0,0 coordinates
-        # The slide_root_transform itself will have absolute coordinates (0,0) and the slide's dimensions
-        slide_root_transform = Transform(x=0, y=0, cx=slide.common_slide_data.cx, cy=slide.common_slide_data.cy)
-
         if slide.slide_layout:
-            # Process elements based on slide layout placeholders
             for layout_ph in slide.slide_layout.placeholders:
-                # Find the actual slide element corresponding to this placeholder
                 found_element = None
                 for el_id, element in slide_elements_by_id.items():
                     if hasattr(element, 'ph_type') and element.ph_type == layout_ph.ph_type and \
@@ -40,49 +39,58 @@ class JsonWriter:
                         break
 
                 if found_element:
-                    # Calculate element's transform relative to the placeholder
-                    relative_transform_to_ph = Transform(
-                        x=found_element.transform.x - layout_ph.transform.x,
-                        y=found_element.transform.y - layout_ph.transform.y,
-                        cx=found_element.transform.cx,
-                        cy=found_element.transform.cy,
-                        rot=found_element.transform.rot,
-                        flipH=found_element.transform.flipH,
-                        flipV=found_element.transform.flipV
-                    )
                     element_dict = asdict(found_element)
-                    element_dict["transform"] = asdict(relative_transform_to_ph)
-                    
-                    # Calculate placeholder's transform relative to the slide root
-                    relative_ph_transform_to_root = Transform(
-                        x=layout_ph.transform.x - slide_root_transform.x,
-                        y=layout_ph.transform.y - slide_root_transform.y,
-                        cx=layout_ph.transform.cx,
-                        cy=layout_ph.transform.cy,
-                        rot=layout_ph.transform.rot,
-                        flipH=layout_ph.transform.flipH,
-                        flipV=layout_ph.transform.flipV
-                    )
+                    if found_element.transform and found_element.transform.rot != 0:
+                        element_dict["transform"] = {
+                            "rotation": found_element.transform.rot / 60000.0,
+                        }
+                    else:
+                        element_dict["transform"] = {}
 
                     processed_elements.append({
                         "type": "placeholder_container",
                         "ph_type": layout_ph.ph_type,
                         "ph_idx": layout_ph.ph_idx,
-                        "transform": asdict(relative_ph_transform_to_root), # Placeholder's transform relative to slide root
+                        "transform": {
+                            "rotation": layout_ph.transform.rot / 60000.0,
+                        } if layout_ph.transform and layout_ph.transform.rot != 0 else {},
                         "children": [element_dict]
                     })
                     used_element_ids.add(found_element.id)
 
-        # Add any elements not associated with a placeholder (these will retain their absolute positioning for now)
         all_slide_elements = slide.shapes + slide.pictures + slide.group_shapes + slide.graphic_frames
         for element in all_slide_elements:
             if element.id is not None and element.id not in used_element_ids:
-                processed_elements.append(asdict(element))
+                element_dict = asdict(element)
+                if element.transform and element.transform.rot != 0:
+                    element_dict["transform"] = {
+                        "rotation": element.transform.rot / 60000.0,
+                    }
+                else:
+                    element_dict["transform"] = {}
+                processed_elements.append(element_dict)
+
+        # Remove raw EMU values from common_slide_data
+        processed_common_slide_data = asdict(slide.common_slide_data)
+        del processed_common_slide_data['cx']
+        del processed_common_slide_data['cy']
+
+        processed_slide_layout = None
+        if slide.slide_layout:
+            processed_slide_layout = asdict(slide.slide_layout)
+            if "placeholders" in processed_slide_layout:
+                for placeholder in processed_slide_layout["placeholders"]:
+                    if "transform" in placeholder:
+                        # Create a Transform object from the dictionary
+                        transform_obj = Transform(**placeholder["transform"])
+                        placeholder["transform"] = {
+                            "rotation": transform_obj.rot / 60000.0,
+                        } if transform_obj.rot != 0 else {}
 
         return {
             "slide_number": slide.slide_number,
-            "common_slide_data": asdict(slide.common_slide_data),
-            "slide_layout": asdict(slide.slide_layout) if slide.slide_layout else None,
+            "common_slide_data": processed_common_slide_data,
+            "slide_layout": processed_slide_layout,
             "elements": processed_elements
         }
 

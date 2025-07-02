@@ -108,6 +108,10 @@ class PptxParser:
         self.html_writer.write_slide_html(parsed_slide_data, current_slide_number)
         # Write the parsed slide data to JSON format
         self.json_writer.write_slide_json(parsed_slide_data, current_slide_number)
+        if parsed_slide_data.slide_layout:
+            print(f"Slide {current_slide_number} layout type: {parsed_slide_data.slide_layout.type}")
+        else:
+            print(f"Slide {current_slide_number} has no slide layout.")
 
     def parse_presentation(self):
         # Get the overall slide width and height from the presentation properties

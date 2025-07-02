@@ -49,6 +49,7 @@ class SlideLayoutParser:
                 ph_idx = int(ph_elem.get("idx")) if ph_elem.get("idx") is not None else None
                 transform = self._extract_transform(sp_elem)
                 placeholders.append(LayoutPlaceholder(ph_type=ph_type, ph_idx=ph_idx, transform=transform))
+                print(f"DEBUG: Found shape placeholder: type={ph_type}, idx={ph_idx}")
         
         for pic_elem in self.root.findall(".//p:pic", namespaces=self.nsmap):
             ph_elem = pic_elem.find(".//p:nvPicPr/p:nvPr/p:ph", namespaces=self.nsmap)
@@ -57,20 +58,35 @@ class SlideLayoutParser:
                 ph_idx = int(ph_elem.get("idx")) if ph_elem.get("idx") is not None else None
                 transform = self._extract_transform(pic_elem)
                 placeholders.append(LayoutPlaceholder(ph_type=ph_type, ph_idx=ph_idx, transform=transform))
+                print(f"DEBUG: Found picture placeholder: type={ph_type}, idx={ph_idx}")
 
         return placeholders
 
     def _infer_layout_type(self, placeholders: List[LayoutPlaceholder]) -> Optional[str]:
         ph_types = {ph.ph_type for ph in placeholders if ph.ph_type is not None}
 
-        if "title" in ph_types and "body" in ph_types and "pic" in ph_types:
-            return "picTx" # Title, Picture and Text
-        elif "title" in ph_types and "body" in ph_types:
-            return "tx" # Title and Text
-        elif "title" in ph_types and len(ph_types) == 1:
-            return "titleOnly" # Only a title
+        has_title = "title" in ph_types or "ctrTitle" in ph_types
+        has_body = "body" in ph_types or (None in ph_types and any(ph.ph_idx == 1 for ph in placeholders if ph.ph_type is None))
+        has_pic = "pic" in ph_types
+        has_subtitle = "subTitle" in ph_types
+
+        # Check for specific combinations of placeholders
+        if has_title and has_body and has_pic:
+            return "picTx"  # Title, Picture and Text
+        elif has_title and has_body:
+            return "tx"  # Title and Text
+        elif has_title and has_pic and not has_body:
+            return "titlePic"  # Title and Picture (no body)
+        elif has_title and has_subtitle:
+            return "title"  # Title and Subtitle
+        elif has_title and not has_body and not has_pic and not has_subtitle:
+            return "titleOnly"  # Only a title
         elif not ph_types:
-            return "blank" # No placeholders
+            return "blank"  # No placeholders
+
+        # Fallback for layouts that might have a title and picture, but the body is not explicitly marked as 'body'
+        if has_title and has_pic and (None in ph_types and any(ph.ph_idx == 1 for ph in placeholders if ph.ph_type is None)):
+            return "titlePic" # Title and Picture with a generic body placeholder
         
         # Add more heuristics for other common layouts as needed
         return None
