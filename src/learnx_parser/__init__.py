@@ -1,7 +1,9 @@
 import os
-import zipfile
 import shutil
-from learnx_parser.pptx_parser import PptxParser
+import zipfile
+
+from learnx_parser.services.document_parser import DocumentParser
+
 
 def parse_pptx(pptx_file_path, output_dir="./output"):
     """
@@ -20,11 +22,11 @@ def parse_pptx(pptx_file_path, output_dir="./output"):
 
     try:
         # Unzip the PPTX file
-        with zipfile.ZipFile(pptx_file_path, 'r') as zip_ref:
+        with zipfile.ZipFile(pptx_file_path, "r") as zip_ref:
             zip_ref.extractall(temp_unpacked_dir)
 
-        # Initialize and run the PptxParser
-        parser = PptxParser(temp_unpacked_dir, output_dir)
+        # Initialize and run the DocumentParser
+        parser = DocumentParser(temp_unpacked_dir, output_dir)
         parser.parse_presentation()
 
     finally:

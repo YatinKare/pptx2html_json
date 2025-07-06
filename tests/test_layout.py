@@ -1,9 +1,8 @@
-
-import unittest
 import os
-from lxml import etree
-from learnx_parser.slide_parser import SlideParser
-from learnx_parser.data_models import Transform
+import unittest
+
+from learnx_parser.parsers.slide.base import SlideParser
+
 
 class TestLayout(unittest.TestCase):
     def test_element_position_and_size(self):
@@ -35,7 +34,13 @@ class TestLayout(unittest.TestCase):
             f.write(slide_xml)
 
         # Create a dummy SlideParser instance
-        parser = SlideParser(slide_xml_path="test_slide.xml", slide_rels_path="", pptx_unpacked_path="", slide_width=12192000, slide_height=6858000)
+        parser = SlideParser(
+            slide_xml_path="test_slide.xml",
+            slide_rels_path="",
+            pptx_unpacked_path="",
+            slide_width=12192000,
+            slide_height=6858000,
+        )
 
         # Parse the slide
         slide = parser.parse_slide(slide_number=1)
@@ -51,5 +56,6 @@ class TestLayout(unittest.TestCase):
         # Clean up dummy files
         os.remove("test_slide.xml")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

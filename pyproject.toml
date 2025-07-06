@@ -1,6 +1,6 @@
 [project]
 name = "learnx-parser"
-version = "0.2.2"
+version = "0.2.4"
 description = "A Python package to parse .pptx files and convert them to HTML or JSON."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -25,6 +25,7 @@ dependencies = [
     "lxml",
     "pdfplumber>=0.11.7",
     "pytest>=8.4.1",
+    "jsonschema",
 ]
 
 [project.urls]
@@ -32,3 +33,25 @@ Homepage = "https://github.com/yatink/pptx2html_json"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.1",
+]
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+ignore = ["E501"]

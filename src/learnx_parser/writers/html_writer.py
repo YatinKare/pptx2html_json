@@ -193,7 +193,7 @@ class HtmlWriter:
 """
 
     def _render_group_shape_html(
-        self, element: GroupShape, parent_x: int = 0, parent_y: int = 0
+        self, element: GroupShape, parent_x: int = 0, parent_y: int = 0, use_absolute_pos: bool = True
     ) -> str:
         # Calculate the relative position and size of the group shape in pixels
         # These are relative to its parent container (if any), hence parent_x and parent_y are subtracted.
@@ -250,7 +250,10 @@ class HtmlWriter:
         cx = self._emu_to_px(element.transform.cx)
         cy = self._emu_to_px(element.transform.cy)
         # Construct the image source path, assuming media files are in a 'media' subdirectory
-        image_src = os.path.join("media", os.path.basename(element.blip_fill.path))
+        if element.blip_fill and element.blip_fill.path:
+            image_src = os.path.join("media", os.path.basename(element.blip_fill.path))
+        else:
+            image_src = "placeholder.png"  # Use placeholder when no image data is available
 
         style_attributes = []
         # If absolute positioning is enabled, add left, top, width, and height styles
@@ -262,7 +265,8 @@ class HtmlWriter:
 
         # Add transform (rotation, flip) and image crop (clip-path) CSS properties
         style_attributes.append(self._get_transform_css(element.transform))
-        style_attributes.append(self._get_image_crop_css(element.blip_fill))
+        if element.blip_fill:
+            style_attributes.append(self._get_image_crop_css(element.blip_fill))
 
         # Join all collected style attributes into a single string
         style_string = " ".join(filter(None, style_attributes))

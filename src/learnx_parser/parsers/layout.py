@@ -10,7 +10,7 @@ from learnx_parser.models.core import (
 )
 
 
-class SlideLayoutParser:
+class LayoutParser:
     def __init__(self, layout_xml_path, pptx_unpacked_path=None):
         self.layout_xml_path = layout_xml_path
         self.pptx_unpacked_path = pptx_unpacked_path

@@ -19,16 +19,9 @@ venv/
 .DS_Store
 Thumbs.db
 
-# uv lock file
-uv.lock
-
 # IDE specific files
 .idea/
 .vscode/
-
-# Generated output
-output_presentation/
-output_presentation_test/
 
 # Dependency files not managed by uv
 requirements.txt

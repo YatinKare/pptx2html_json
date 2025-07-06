@@ -1,13 +1,16 @@
 import os
 import shutil
-from lxml import etree
-from learnx_parser.presentation_parser import PresentationParser
-from learnx_parser.slide_parser import SlideParser
-from learnx_parser.html_writer import HtmlWriter
-from learnx_parser.json_writer import JsonWriter
-from learnx_parser.data_models import Slide
 
-class PptxParser:
+from lxml import etree
+
+from learnx_parser.models.core import Slide
+from learnx_parser.parsers.presentation import PresentationParser
+from learnx_parser.parsers.slide.base import SlideParser
+from learnx_parser.writers.html_writer import HtmlWriter
+from learnx_parser.writers.json_writer import JsonWriter
+
+
+class DocumentParser:
     def __init__(self, pptx_unpacked_path, output_dir="./output"):
         # Path to the unpacked PowerPoint presentation directory
         self.pptx_unpacked_path = pptx_unpacked_path
@@ -15,17 +18,23 @@ class PptxParser:
         self.output_dir = output_dir
 
         # Construct the path to the main presentation XML file
-        self.presentation_xml_path = os.path.join(self.pptx_unpacked_path, "ppt", "presentation.xml")
+        self.presentation_xml_path = os.path.join(
+            self.pptx_unpacked_path, "ppt", "presentation.xml"
+        )
         # Initialize the PresentationParser to extract presentation-level data (e.g., slide order, slide size)
         self.presentation_parser = PresentationParser(self.presentation_xml_path)
         # Initialize the HtmlWriter for generating HTML output for each slide
-        self.html_writer = HtmlWriter(output_directory=self.output_dir, pptx_unpacked_path=self.pptx_unpacked_path)
+        self.html_writer = HtmlWriter(
+            output_directory=self.output_dir, pptx_unpacked_path=self.pptx_unpacked_path
+        )
         # Initialize the JsonWriter for generating JSON output for each slide
         self.json_writer = JsonWriter(output_directory=self.output_dir)
 
     def _copy_media_for_slide(self, slide: Slide, slide_number: int):
         # Construct the output directory for media files specific to this slide
-        media_output_directory = os.path.join(self.output_dir, f"slide{slide_number}", "media")
+        media_output_directory = os.path.join(
+            self.output_dir, f"slide{slide_number}", "media"
+        )
         # Create the media output directory if it doesn't exist
         os.makedirs(media_output_directory, exist_ok=True)
 
@@ -34,9 +43,13 @@ class PptxParser:
             # Check if the picture has associated blip fill data (which contains the image path)
             if picture.blip_fill:
                 # Construct the original path of the media file within the unpacked PPTX
-                original_media_path = os.path.join(self.pptx_unpacked_path, picture.blip_fill.path.lstrip("/"))
+                original_media_path = os.path.join(
+                    self.pptx_unpacked_path, picture.blip_fill.path.lstrip("/")
+                )
                 # Construct the destination path for the media file in the output directory
-                destination_media_path = os.path.join(media_output_directory, os.path.basename(picture.blip_fill.path))
+                destination_media_path = os.path.join(
+                    media_output_directory, os.path.basename(picture.blip_fill.path)
+                )
 
                 # Copy the media file if it exists at the original path
                 if os.path.exists(original_media_path):
@@ -48,9 +61,11 @@ class PptxParser:
     def _get_slide_paths_and_rels(self):
         # Get the ordered list of slide relationship IDs from the presentation parser
         slide_r_ids = self.presentation_parser.get_slide_order()
-        
+
         # Construct the path to the main presentation's relationship file
-        presentation_relationships_path = os.path.join(self.pptx_unpacked_path, "ppt", "_rels", "presentation.xml.rels")
+        presentation_relationships_path = os.path.join(
+            self.pptx_unpacked_path, "ppt", "_rels", "presentation.xml.rels"
+        )
         # Parse the relationships XML tree
         relationships_tree = etree.parse(presentation_relationships_path)
         # Initialize a dictionary to store presentation-level relationships (r:id to target path)
@@ -58,7 +73,9 @@ class PptxParser:
         # Iterate through each Relationship element in the relationships XML
         for relationship_element in relationships_tree.findall(".//{*}Relationship"):
             # Store the relationship ID and its target path
-            presentation_relationships[relationship_element.get("Id")] = relationship_element.get("Target")
+            presentation_relationships[relationship_element.get("Id")] = (
+                relationship_element.get("Target")
+            )
 
         slide_paths = []
         # Iterate through each slide relationship ID to resolve its actual file paths
@@ -73,13 +90,17 @@ class PptxParser:
             # Remove leading '/' if present, and replace '../' for relative paths to construct a clean relative path
             slide_xml_relative_path = slide_target.lstrip("/").replace("../", "")
             # Construct the absolute path to the slide's XML file
-            slide_xml_path = os.path.join(self.pptx_unpacked_path, slide_xml_relative_path)
+            slide_xml_path = os.path.join(
+                self.pptx_unpacked_path, slide_xml_relative_path
+            )
 
             # Extract the directory and base name of the slide XML file
             slide_directory = os.path.dirname(slide_xml_path)
             slide_name = os.path.basename(slide_xml_path)
             # Construct the absolute path to the slide's relationship file
-            slide_relationships_path = os.path.join(slide_directory, "_rels", slide_name + ".rels")
+            slide_relationships_path = os.path.join(
+                slide_directory, "_rels", slide_name + ".rels"
+            )
 
             # Check if the slide XML file exists; if not, print a warning and skip
             if not os.path.exists(slide_xml_path):
@@ -88,30 +109,14 @@ class PptxParser:
             # Check if the slide relationships file exists; if not, print a warning and set path to None
             # Some slides might not have a rels file if they don't link to anything
             if not os.path.exists(slide_relationships_path):
-                print(f"Warning: Slide relationships not found: {slide_relationships_path}")
+                print(
+                    f"Warning: Slide relationships not found: {slide_relationships_path}"
+                )
                 slide_relationships_path = None
 
             # Append the resolved slide XML path and its relationships path to the list
             slide_paths.append((slide_xml_path, slide_relationships_path))
         return slide_paths
-
-    def _process_single_slide(self, slide_xml_file_path, slide_relationships_file_path, slide_presentation_width, slide_presentation_height, current_slide_number):
-        # Initialize a SlideParser for the current slide, providing all necessary paths and dimensions
-        current_slide_parser = SlideParser(slide_xml_file_path, slide_relationships_file_path, self.pptx_unpacked_path, slide_presentation_width, slide_presentation_height)
-        # Parse the slide to get its structured data
-        parsed_slide_data = current_slide_parser.parse_slide(slide_number=current_slide_number)
-
-        # Copy any media files associated with this slide to its output directory
-        self._copy_media_for_slide(parsed_slide_data, current_slide_number)
-
-        # Write the parsed slide data to HTML format
-        self.html_writer.write_slide_html(parsed_slide_data, current_slide_number)
-        # Write the parsed slide data to JSON format
-        self.json_writer.write_slide_json(parsed_slide_data, current_slide_number)
-        if parsed_slide_data.slide_layout:
-            print(f"Slide {current_slide_number} layout type: {parsed_slide_data.slide_layout.type}")
-        else:
-            print(f"Slide {current_slide_number} has no slide layout.")
 
     def parse_presentation(self):
         # Get the overall slide width and height from the presentation properties
@@ -119,11 +124,37 @@ class PptxParser:
         # Get a list of all slide XML paths and their corresponding relationship file paths
         slide_paths = self._get_slide_paths_and_rels()
 
+        slides = []
         # Iterate through each slide, processing them one by one
-        for i, (slide_xml_file_path, slide_relationships_file_path) in enumerate(slide_paths):
+        for i, (slide_xml_file_path, slide_relationships_file_path) in enumerate(
+            slide_paths
+        ):
             # Calculate the 1-based slide number
             current_slide_number = i + 1
             # Process the current slide: parse its content, copy media, and write HTML/JSON output
-            self._process_single_slide(slide_xml_file_path, slide_relationships_file_path, slide_width, slide_height, current_slide_number)
+            current_slide_parser = SlideParser(
+                slide_xml_file_path,
+                slide_relationships_file_path,
+                self.pptx_unpacked_path,
+                slide_width,
+                slide_height,
+            )
+            # Parse the slide to get its structured data
+            parsed_slide_data = current_slide_parser.parse_slide(
+                slide_number=current_slide_number
+            )
+            slides.append(parsed_slide_data)
+
+            # Copy any media files associated with this slide to its output directory
+            self._copy_media_for_slide(parsed_slide_data, current_slide_number)
+
+            # Write the parsed slide data to HTML format
+            self.html_writer.write_slide_html(parsed_slide_data, current_slide_number)
+
+        # Create the JSON presentation
+        json_presentation = self.json_writer.transform_to_json_presentation(
+            slides, "galaxy-001", "Galaxy Presentation"
+        )
+        self.json_writer.write_presentation_json(json_presentation)
 
         print(f"Successfully parsed {len(slide_paths)} slides.")

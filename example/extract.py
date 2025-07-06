@@ -1,6 +1,6 @@
-import pdfplumber
-import os
 from pathlib import Path
+
+import pdfplumber
 
 # Path to the input PDF
 pdf_path = "./ISO_IEC_29500-1_2016(en).pdf"
