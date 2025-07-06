@@ -60,7 +60,7 @@ def test_write_slide_json(slide_data, json_writer):
     assert "title" in json_content
     assert json_content["id"] == "test-presentation"
     assert len(json_content["slides"]) == 1
-    
+
     # Check the slide content
     slide_json = json_content["slides"][0]
     assert "elements" in slide_json

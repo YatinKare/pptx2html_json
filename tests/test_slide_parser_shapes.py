@@ -9,16 +9,18 @@ from learnx_parser.models.core import (
     SolidFill,
     TextFrame,
 )
-from learnx_parser.parsers.slide.shapes import (
-    extract_fill_properties,
-    extract_line_properties,
-    extract_transform,
+from learnx_parser.parsers.slide.elements import (
     parse_graphic_frame_element,
     parse_group_shape_element,
     parse_picture_element,
     parse_shape_element,
-    parse_shape_tree,
 )
+from learnx_parser.parsers.slide.properties import (
+    extract_fill_properties,
+    extract_line_properties,
+    extract_transform,
+)
+from learnx_parser.parsers.slide.shapes import parse_shape_tree
 
 
 # Mock parser_instance for functions that require it
@@ -47,13 +49,13 @@ def test_extract_transform(mock_parser_instance):
     </p:spPr>
     """
     element = etree.fromstring(xml_str)
-    
+
     # Set up the mock parser instance with the correct namespace map
     mock_parser_instance.nsmap = {
-        'p': 'http://schemas.openxmlformats.org/presentationml/2006/main',
-        'a': 'http://schemas.openxmlformats.org/drawingml/2006/main'
+        "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
+        "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
     }
-    
+
     transform = extract_transform(mock_parser_instance, element)
     assert transform.x == 100
     assert transform.y == 200
@@ -72,12 +74,12 @@ def test_extract_solid_fill_properties(mock_parser_instance):
     </a:solidFill>
     """
     element = etree.fromstring(xml_str)
-    
+
     # Set up the mock parser instance with the correct namespace map
     mock_parser_instance.nsmap = {
-        'a': 'http://schemas.openxmlformats.org/drawingml/2006/main'
+        "a": "http://schemas.openxmlformats.org/drawingml/2006/main"
     }
-    
+
     fill = extract_fill_properties(mock_parser_instance, element)
     assert isinstance(fill, SolidFill)
     assert fill.color == "FF0000"
@@ -139,13 +141,13 @@ def test_parse_shape_element(mock_parser_instance):
     </p:sp>
     """
     element = etree.fromstring(xml_str)
-    
+
     # Set up the mock parser instance with the correct namespace map
     mock_parser_instance.nsmap = {
-        'p': 'http://schemas.openxmlformats.org/presentationml/2006/main',
-        'a': 'http://schemas.openxmlformats.org/drawingml/2006/main'
+        "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
+        "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
     }
-    
+
     shape = parse_shape_element(mock_parser_instance, element, None)
     assert shape.id == "1"
     assert shape.name == "Shape 1"
@@ -173,15 +175,15 @@ def test_parse_picture_element(mock_parser_instance):
     </p:pic>
     """
     element = etree.fromstring(xml_str)
-    
+
     # Set up the mock parser instance with the correct namespace map and relationships
     mock_parser_instance.nsmap = {
-        'p': 'http://schemas.openxmlformats.org/presentationml/2006/main',
-        'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
-        'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+        "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
+        "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
+        "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
     }
-    mock_parser_instance.rels = {'rId1': '../media/image1.png'}
-    
+    mock_parser_instance.rels = {"rId1": "../media/image1.png"}
+
     picture = parse_picture_element(mock_parser_instance, element)
     assert picture.id == "2"
     assert picture.name == "Picture 1"
@@ -212,8 +214,11 @@ def test_parse_group_shape_element(mock_parser_instance):
     group_shape = parse_group_shape_element(mock_parser_instance, element, None)
     assert group_shape.id == "3"
     assert group_shape.name == "Group 1"
-    assert len(group_shape.children[0]) == 1  # One shape child
-    assert group_shape.children[0][0].name == "Shape in Group"
+    # Children are initialized as empty and populated by parse_shape_tree
+    assert (
+        len(group_shape.children) == 4
+    )  # Four lists: shapes, pictures, group_shapes, graphic_frames
+    assert len(group_shape.children[0]) == 0  # Empty shapes list initially
 
 
 # Test parse_graphic_frame_element

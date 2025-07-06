@@ -56,13 +56,13 @@ def test_write_slide_json_css_like_output(json_writer, slide_data):
     assert "slides" in json_content
     assert "id" in json_content
     assert len(json_content["slides"]) == 1
-    
+
     slide_json = json_content["slides"][0]
     assert "elements" in slide_json
 
     # Check that the slide elements structure is present
     elements = slide_json["elements"]
     assert isinstance(elements, list)
-    
+
     # Basic JSON structure verification
     assert slide_json["id"] == "slide-1"
