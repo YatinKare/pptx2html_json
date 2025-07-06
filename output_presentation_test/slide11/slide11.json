@@ -1,0 +1,395 @@
+{
+    "slide_number": 11,
+    "common_slide_data": {
+        "background_color": null,
+        "background_gradient_fill": null
+    },
+    "slide_layout": {
+        "name": "2_Comparison",
+        "type": "titleOnly",
+        "placeholders": [
+            {
+                "ph_type": "title",
+                "ph_idx": null,
+                "transform": {}
+            },
+            {
+                "ph_type": "sldNum",
+                "ph_idx": 12,
+                "transform": {}
+            },
+            {
+                "ph_type": null,
+                "ph_idx": 2,
+                "transform": {}
+            },
+            {
+                "ph_type": null,
+                "ph_idx": 4,
+                "transform": {}
+            },
+            {
+                "ph_type": "ftr",
+                "ph_idx": 11,
+                "transform": {}
+            }
+        ]
+    },
+    "elements": [
+        {
+            "type": "placeholder_container",
+            "ph_type": "title",
+            "ph_idx": null,
+            "transform": {},
+            "children": [
+                {
+                    "type": "shape",
+                    "id": "25",
+                    "name": "Title 24",
+                    "transform": {},
+                    "prst_geom": null,
+                    "fill": null,
+                    "line": null,
+                    "text_frame": {
+                        "paragraphs": [
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Final tips & takeaways",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            }
+                        ]
+                    },
+                    "ph_type": "title",
+                    "ph_idx": null,
+                    "ph_orient": null,
+                    "ph_sz": null
+                }
+            ]
+        },
+        {
+            "type": "placeholder_container",
+            "ph_type": null,
+            "ph_idx": 2,
+            "transform": {},
+            "children": [
+                {
+                    "type": "shape",
+                    "id": "23",
+                    "name": "Content Placeholder 22",
+                    "transform": {},
+                    "prst_geom": null,
+                    "fill": null,
+                    "line": null,
+                    "text_frame": {
+                        "paragraphs": [
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Consistent rehearsal",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Strengthen your familiarity",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Refine delivery style",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Pacing, tone, and emphasis",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Timing and transitions",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Aim for seamless, professional delivery",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Practice audience",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Enlist colleagues to listen & provide feedback",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            }
+                        ]
+                    },
+                    "ph_type": null,
+                    "ph_idx": 2,
+                    "ph_orient": null,
+                    "ph_sz": "half"
+                }
+            ]
+        },
+        {
+            "type": "placeholder_container",
+            "ph_type": null,
+            "ph_idx": 4,
+            "transform": {},
+            "children": [
+                {
+                    "type": "shape",
+                    "id": "10",
+                    "name": "Content Placeholder 9",
+                    "transform": {},
+                    "prst_geom": null,
+                    "fill": null,
+                    "line": null,
+                    "text_frame": {
+                        "paragraphs": [
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Seek feedback",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Reflect on performance",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Explore new techniques",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Set personal goals",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Iterate and adapt",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            }
+                        ]
+                    },
+                    "ph_type": null,
+                    "ph_idx": 4,
+                    "ph_orient": null,
+                    "ph_sz": "quarter"
+                }
+            ]
+        }
+    ]
+}

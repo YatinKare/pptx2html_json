@@ -1,0 +1,155 @@
+{
+    "slide_number": 10,
+    "common_slide_data": {
+        "background_color": null,
+        "background_gradient_fill": null
+    },
+    "slide_layout": {
+        "name": "Title and image 2",
+        "type": "titleOnly",
+        "placeholders": [
+            {
+                "ph_type": "title",
+                "ph_idx": null,
+                "transform": {}
+            },
+            {
+                "ph_type": "sldNum",
+                "ph_idx": 20,
+                "transform": {}
+            },
+            {
+                "ph_type": null,
+                "ph_idx": 1,
+                "transform": {}
+            },
+            {
+                "ph_type": null,
+                "ph_idx": 21,
+                "transform": {}
+            },
+            {
+                "ph_type": "ftr",
+                "ph_idx": 19,
+                "transform": {}
+            }
+        ]
+    },
+    "elements": [
+        {
+            "type": "placeholder_container",
+            "ph_type": "title",
+            "ph_idx": null,
+            "transform": {},
+            "children": [
+                {
+                    "type": "shape",
+                    "id": "8",
+                    "name": "Title 7",
+                    "transform": {},
+                    "prst_geom": null,
+                    "fill": null,
+                    "line": null,
+                    "text_frame": {
+                        "paragraphs": [
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Dynamic delivery",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            }
+                        ]
+                    },
+                    "ph_type": "title",
+                    "ph_idx": null,
+                    "ph_orient": null,
+                    "ph_sz": null
+                }
+            ]
+        },
+        {
+            "type": "placeholder_container",
+            "ph_type": null,
+            "ph_idx": 1,
+            "transform": {},
+            "children": [
+                {
+                    "type": "shape",
+                    "id": "10",
+                    "name": "Content Placeholder 9",
+                    "transform": {},
+                    "prst_geom": null,
+                    "fill": null,
+                    "line": null,
+                    "text_frame": {
+                        "paragraphs": [
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Learn to infuse energy into your delivery to leave a lasting impression",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "One of the goals of effective communication is to motivate your audience",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            }
+                        ]
+                    },
+                    "ph_type": null,
+                    "ph_idx": 1,
+                    "ph_orient": null,
+                    "ph_sz": null
+                }
+            ]
+        },
+        {
+            "id": "6",
+            "name": "Table Placeholder 2",
+            "transform": {}
+        }
+    ]
+}

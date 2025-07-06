@@ -1,0 +1,214 @@
+{
+    "slide_number": 2,
+    "common_slide_data": {
+        "background_color": null,
+        "background_gradient_fill": null
+    },
+    "slide_layout": {
+        "name": "Title and image",
+        "type": "picTx",
+        "placeholders": [
+            {
+                "ph_type": "title",
+                "ph_idx": null,
+                "transform": {}
+            },
+            {
+                "ph_type": "sldNum",
+                "ph_idx": 20,
+                "transform": {}
+            },
+            {
+                "ph_type": "pic",
+                "ph_idx": 14,
+                "transform": {}
+            },
+            {
+                "ph_type": "body",
+                "ph_idx": 17,
+                "transform": {}
+            },
+            {
+                "ph_type": "ftr",
+                "ph_idx": 19,
+                "transform": {}
+            }
+        ]
+    },
+    "elements": [
+        {
+            "type": "placeholder_container",
+            "ph_type": "title",
+            "ph_idx": null,
+            "transform": {},
+            "children": [
+                {
+                    "type": "shape",
+                    "id": "2",
+                    "name": "Title 1",
+                    "transform": {},
+                    "prst_geom": null,
+                    "fill": null,
+                    "line": null,
+                    "text_frame": {
+                        "paragraphs": [
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Agenda",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            }
+                        ]
+                    },
+                    "ph_type": "title",
+                    "ph_idx": null,
+                    "ph_orient": null,
+                    "ph_sz": null
+                }
+            ]
+        },
+        {
+            "type": "placeholder_container",
+            "ph_type": "pic",
+            "ph_idx": 14,
+            "transform": {},
+            "children": [
+                {
+                    "id": "6",
+                    "name": "Picture Placeholder 5",
+                    "path": "/ppt/media/image1.png",
+                    "transform": {},
+                    "blip_fill": {
+                        "path": "/ppt/media/image1.png",
+                        "rot_with_shape": true,
+                        "src_rect_t": 21,
+                        "src_rect_b": 21,
+                        "src_rect_l": null,
+                        "src_rect_r": null
+                    },
+                    "ph_type": "pic",
+                    "ph_idx": 14
+                }
+            ]
+        },
+        {
+            "type": "placeholder_container",
+            "ph_type": "body",
+            "ph_idx": 17,
+            "transform": {},
+            "children": [
+                {
+                    "type": "shape",
+                    "id": "4",
+                    "name": "Text Placeholder 3",
+                    "transform": {},
+                    "prst_geom": null,
+                    "fill": null,
+                    "line": null,
+                    "text_frame": {
+                        "paragraphs": [
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Topic one",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "\tTopic two",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Topic three",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            },
+                            {
+                                "text_runs": [
+                                    {
+                                        "text": "Topic four",
+                                        "properties": {
+                                            "font_size": null,
+                                            "bold": false,
+                                            "italic": false,
+                                            "color": null,
+                                            "scheme_color": null,
+                                            "font_face": null,
+                                            "underline": false
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "align": null,
+                                    "indent": null
+                                }
+                            }
+                        ]
+                    },
+                    "ph_type": "body",
+                    "ph_idx": 17,
+                    "ph_orient": null,
+                    "ph_sz": "quarter"
+                }
+            ]
+        }
+    ]
+}
