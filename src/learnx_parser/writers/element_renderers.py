@@ -249,6 +249,11 @@ def render_text_frame_html(text_frame) -> str:
     if not text_frame or not text_frame.paragraphs:
         return ""
 
+    # Check if this text frame should be rendered as a bullet list
+    if _should_render_as_bullet_list(text_frame.paragraphs):
+        return _render_as_bullet_list(text_frame.paragraphs)
+    
+    # Default paragraph rendering
     content_html = ""
     for paragraph in text_frame.paragraphs:
         paragraph_style = get_paragraph_style_css(paragraph)
@@ -268,3 +273,62 @@ def render_text_frame_html(text_frame) -> str:
             content_html += f"<p>{paragraph_content}</p>"
 
     return content_html
+
+
+def _should_render_as_bullet_list(paragraphs) -> bool:
+    """Check if paragraphs should be rendered as a bullet list."""
+    if len(paragraphs) <= 1:
+        return False
+    
+    # Get all non-empty paragraph texts
+    all_texts = [
+        "".join([run.text for run in p.text_runs]).strip()
+        for p in paragraphs
+        if "".join([run.text for run in p.text_runs]).strip()
+    ]
+    
+    if len(all_texts) <= 1:
+        return False
+    
+    # Check if texts are list-like (short, similar length)
+    avg_length = sum(len(text) for text in all_texts) / len(all_texts)
+    if avg_length < 50:  # Short items are likely bullets
+        # Check if they start with similar patterns (Topic, etc.)
+        starts_with_topic = any(
+            text.startswith("Topic") for text in all_texts
+        )
+        if starts_with_topic and len(all_texts) >= 3:
+            return True
+    
+    # Check explicit bullet properties
+    for paragraph in paragraphs:
+        if (
+            paragraph.properties.bullet_type is not None
+            and paragraph.properties.bullet_type != "none"
+        ):
+            return True
+        if paragraph.properties.level is not None and paragraph.properties.level > 0:
+            return True
+    
+    return False
+
+
+def _render_as_bullet_list(paragraphs) -> str:
+    """Render paragraphs as an HTML bullet list."""
+    list_items = ""
+    
+    for paragraph in paragraphs:
+        paragraph_text = "".join([run.text for run in paragraph.text_runs]).strip()
+        if paragraph_text:
+            # Apply run styles within list items
+            item_content = ""
+            for run in paragraph.text_runs:
+                run_style = get_run_style_css(run)
+                if run_style:
+                    item_content += f'<span style="{run_style}">{run.text}</span>'
+                else:
+                    item_content += run.text
+            
+            list_items += f"<li>{item_content}</li>"
+    
+    return f"<ul>{list_items}</ul>"

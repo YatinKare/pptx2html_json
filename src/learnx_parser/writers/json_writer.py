@@ -66,23 +66,24 @@ class JsonWriter:
                         if first_run_properties.underline:
                             paragraph_style["underline"] = True
 
-                    is_bullet = (
-                        paragraph.properties.bullet_type is not None
-                        and paragraph.properties.bullet_type != "none"
-                    ) or (
-                        paragraph.properties.level is not None
-                        and paragraph.properties.level > 0
+                    # Enhanced bullet detection logic
+                    is_bullet = self._is_bullet_paragraph(
+                        paragraph, shape.text_frame.paragraphs
                     )
 
                     if is_bullet:
                         # If we were accumulating text box content, finalize it first
                         if current_text_box_content:
-                            elements.append(
-                                JsonElement(
-                                    type="text-box",
-                                    text="\n".join(current_text_box_content),
-                                )
+                            text_style = self._get_text_style(
+                                current_text_box_content, shape.text_frame.paragraphs
                             )
+                            text_element = JsonElement(
+                                type="text-box",
+                                text="\n".join(current_text_box_content),
+                            )
+                            if text_style:
+                                text_element.style = text_style
+                            elements.append(text_element)
                             current_text_box_content = []
 
                         item_data = {"text": paragraph_text}
@@ -112,11 +113,15 @@ class JsonWriter:
                         JsonElement(type="bullet-list", items=current_bullet_items)
                     )
                 elif current_text_box_content:
-                    elements.append(
-                        JsonElement(
-                            type="text-box", text="\n".join(current_text_box_content)
-                        )
+                    text_style = self._get_text_style(
+                        current_text_box_content, shape.text_frame.paragraphs
                     )
+                    text_element = JsonElement(
+                        type="text-box", text="\n".join(current_text_box_content)
+                    )
+                    if text_style:
+                        text_element.style = text_style
+                    elements.append(text_element)
 
         for picture in slide.pictures:
             if picture.path:
@@ -127,8 +132,8 @@ class JsonWriter:
             el for el in elements if el.text or el.src or el.items or el.description
         ]
 
-        # This is a simplified layout mapping. You may need to adjust it based on your needs.
-        layout = slide.slide_layout.type if slide.slide_layout else "custom"
+        # Map PowerPoint layout to semantic layout names
+        layout = self._map_layout_to_semantic_name(slide, elements)
 
         return JsonSlide(
             id=f"slide-{slide.slide_number}", layout=layout, elements=elements
@@ -143,3 +148,136 @@ class JsonWriter:
                 for p in shape.text_frame.paragraphs
             ]
         )
+
+    def _is_bullet_paragraph(self, paragraph, all_paragraphs) -> bool:
+        """Enhanced bullet detection logic"""
+        # Check explicit bullet properties
+        if (
+            paragraph.properties.bullet_type is not None
+            and paragraph.properties.bullet_type != "none"
+        ):
+            return True
+
+        # Check if paragraph has level > 0
+        if paragraph.properties.level is not None and paragraph.properties.level > 0:
+            return True
+
+        # Enhanced heuristic: detect list-like patterns
+        paragraph_text = "".join([run.text for run in paragraph.text_runs]).strip()
+
+        # Skip empty paragraphs
+        if not paragraph_text:
+            return False
+
+        # If this is in a multi-paragraph shape with similar content, check for list patterns
+        if len(all_paragraphs) > 1:
+            # Get all non-empty paragraph texts
+            all_texts = [
+                "".join([run.text for run in p.text_runs]).strip()
+                for p in all_paragraphs
+                if "".join([run.text for run in p.text_runs]).strip()
+            ]
+
+            # If all paragraphs are short and similar in structure, treat as bullets
+            if len(all_texts) > 1:
+                # Check if texts are list-like (short, similar length)
+                avg_length = sum(len(text) for text in all_texts) / len(all_texts)
+                if avg_length < 50:  # Short items are likely bullets
+                    # Check if they start with similar patterns (Topic, etc.)
+                    starts_with_topic = any(
+                        text.startswith("Topic") for text in all_texts
+                    )
+                    if starts_with_topic and len(all_texts) >= 3:
+                        return True
+
+        return False
+
+    def _get_text_style(self, text_content_list, all_paragraphs) -> dict | None:
+        """Extract text style from paragraphs"""
+        if not all_paragraphs:
+            return None
+
+        # Get style from first paragraph with text runs
+        for paragraph in all_paragraphs:
+            if paragraph.text_runs:
+                first_run_properties = paragraph.text_runs[0].properties
+                style = {}
+                if first_run_properties.bold:
+                    style["bold"] = True
+                if first_run_properties.italic:
+                    style["italic"] = True
+                if first_run_properties.font_size:
+                    style["fontSize"] = first_run_properties.font_size
+                if first_run_properties.underline:
+                    style["underline"] = True
+
+                return style if style else None
+
+        return None
+
+    def _map_layout_to_semantic_name(self, slide, elements) -> str:
+        """Map PowerPoint layout names to semantic layout names"""
+        if not slide.slide_layout:
+            return "custom"
+
+        ppt_layout = slide.slide_layout.type
+
+        # Count element types
+        title_count = sum(1 for el in elements if el.type == "title")
+        text_box_count = sum(1 for el in elements if el.type == "text-box")
+        bullet_list_count = sum(1 for el in elements if el.type == "bullet-list")
+        image_count = sum(1 for el in elements if el.type == "image")
+
+        # Map based on PowerPoint layout and content
+        if ppt_layout == "titleOnly":
+            if title_count == 1 and len(elements) == 1:
+                return "title-only"
+            elif title_count == 1 and bullet_list_count > 0:
+                return "title-and-bullets"
+            elif title_count == 1 and text_box_count > 0:
+                return "title-and-content"
+            else:
+                return "title-only"
+
+        elif ppt_layout == "picTx":
+            if image_count > 0 and bullet_list_count > 0:
+                return "side-by-side"
+            elif image_count > 0 and text_box_count > 0:
+                return "image-left"
+            else:
+                return "title-and-content"
+
+        elif ppt_layout == "titlePic":
+            if (
+                image_count > 0
+                and title_count > 0
+                and (text_box_count > 0 or bullet_list_count > 0)
+            ):
+                return "title-and-content"
+            elif image_count > 0 and title_count > 0:
+                return "title-and-image"
+            else:
+                return "title-and-content"
+
+        elif ppt_layout == "title":
+            if bullet_list_count > 0:
+                return "title-and-bullets"
+            elif text_box_count > 0:
+                return "title-and-content"
+            else:
+                return "title-only"
+
+        elif ppt_layout == "obj":
+            return "title-only"
+
+        # Default mapping for unknown layouts
+        if title_count == 1 and len(elements) == 1:
+            return "title-only"
+        elif title_count == 1 and bullet_list_count > 0:
+            return "title-and-bullets"
+        elif title_count == 1 and image_count > 0:
+            return "title-and-image"
+        elif image_count > 0 and (text_box_count > 0 or bullet_list_count > 0):
+            return "image-left"
+        else:
+            return "title-and-content"

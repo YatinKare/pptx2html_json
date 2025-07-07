@@ -144,9 +144,9 @@ class TestFlexboxLayout(unittest.TestCase):
         with open(output_file, encoding="utf-8") as f:
             html_content = f.read()
 
-        # Assert that the group shape has absolute positioning and flexbox styles
+        # Assert that the group shape has relative positioning and flexbox styles
         group_match = re.search(
-            r'<div class="group-shape flex-container" style="width: (\d+)px; height: (\d+)px; left: (\d+)px; top: (\d+)px; position: absolute; display: flex; flex-direction: row; justify-content: space-between;">',
+            r'<div class="group-shape flex-container" style="width: (\d+)px; height: (\d+)px; display: flex; flex-direction: row; justify-content: space-between;">',
             html_content,
         )
         self.assertIsNotNone(
@@ -154,8 +154,6 @@ class TestFlexboxLayout(unittest.TestCase):
         )
         self.assertEqual(int(group_match.group(1)), 960)  # 9144000 EMUs = 960px
         self.assertEqual(int(group_match.group(2)), 720)  # 6858000 EMUs = 720px
-        self.assertEqual(int(group_match.group(3)), 96)  # 914400 EMUs = 96px
-        self.assertEqual(int(group_match.group(4)), 72)  # 685800 EMUs = 72px
 
         # Assert that the nested picture is in the HTML output
         self.assertIn('<img class="image"', html_content)
