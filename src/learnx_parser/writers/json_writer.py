@@ -2,7 +2,13 @@ import json
 import os
 from dataclasses import asdict
 
-from learnx_parser.models.core import JsonElement, JsonPresentation, JsonSlide, Slide
+from learnx_parser.models.core import (
+    JsonElement,
+    JsonPresentation,
+    JsonPresentationWrapper,
+    JsonSlide,
+    Slide,
+)
 
 
 class JsonWriter:
@@ -13,6 +19,9 @@ class JsonWriter:
         output_file_path = os.path.join(self.output_directory, "presentation.json")
         os.makedirs(self.output_directory, exist_ok=True)
 
+        # Wrap presentation in v2 schema format
+        wrapped_presentation = JsonPresentationWrapper(presentation=presentation_data)
+
         # Convert dataclass to dictionary and remove None values recursively
         def remove_none(obj):
             if isinstance(obj, dict):
@@ -22,7 +31,7 @@ class JsonWriter:
             else:
                 return obj
 
-        cleaned_data = remove_none(asdict(presentation_data))
+        cleaned_data = remove_none(asdict(wrapped_presentation))
 
         with open(output_file_path, "w", encoding="utf-8") as f:
             json.dump(cleaned_data, f, indent=2)
@@ -216,9 +225,9 @@ class JsonWriter:
         return None
 
     def _map_layout_to_semantic_name(self, slide, elements) -> str:
-        """Map PowerPoint layout names to semantic layout names"""
+        """Map PowerPoint layout names to JSON Schema v2 compliant layout names"""
         if not slide.slide_layout:
-            return "custom"
+            return "blank"
 
         ppt_layout = slide.slide_layout.type
 
@@ -228,41 +237,37 @@ class JsonWriter:
         bullet_list_count = sum(1 for el in elements if el.type == "bullet-list")
         image_count = sum(1 for el in elements if el.type == "image")
 
-        # Map based on PowerPoint layout and content
+        # Detect if this is a title slide (first slide with title + subtitle pattern)
+        if (slide.slide_number == 1 and title_count >= 1 and 
+            (text_box_count > 0 or len(elements) <= 2)):
+            return "title-slide"
+
+        # Map based on PowerPoint layout and content (v2 compliant names only)
         if ppt_layout == "titleOnly":
             if title_count == 1 and len(elements) == 1:
                 return "title-only"
-            elif title_count == 1 and bullet_list_count > 0:
-                return "title-and-bullets"
-            elif title_count == 1 and text_box_count > 0:
+            elif title_count == 1 and (bullet_list_count > 0 or text_box_count > 0):
                 return "title-and-content"
             else:
                 return "title-only"
 
         elif ppt_layout == "picTx":
-            if image_count > 0 and bullet_list_count > 0:
-                return "side-by-side"
-            elif image_count > 0 and text_box_count > 0:
-                return "image-left"
+            if image_count > 0 and (bullet_list_count > 0 or text_box_count > 0):
+                return "two-content"  # Side-by-side content
             else:
                 return "title-and-content"
 
         elif ppt_layout == "titlePic":
-            if (
-                image_count > 0
-                and title_count > 0
-                and (text_box_count > 0 or bullet_list_count > 0)
-            ):
-                return "title-and-content"
-            elif image_count > 0 and title_count > 0:
-                return "title-and-image"
+            if image_count > 0 and title_count > 0:
+                if text_box_count > 0 or bullet_list_count > 0:
+                    return "title-and-content"
+                else:
+                    return "content-with-caption"  # Image with title as caption
             else:
                 return "title-and-content"
 
         elif ppt_layout == "title":
-            if bullet_list_count > 0:
-                return "title-and-bullets"
-            elif text_box_count > 0:
+            if bullet_list_count > 0 or text_box_count > 0:
                 return "title-and-content"
             else:
                 return "title-only"
@@ -270,14 +275,17 @@ class JsonWriter:
         elif ppt_layout == "obj":
             return "title-only"
 
-        # Default mapping for unknown layouts
+        elif ppt_layout == "blank":
+            return "blank"
+
+        # Default mapping for unknown layouts (v2 compliant)
         if title_count == 1 and len(elements) == 1:
             return "title-only"
-        elif title_count == 1 and bullet_list_count > 0:
-            return "title-and-bullets"
-        elif title_count == 1 and image_count > 0:
-            return "title-and-image"
+        elif title_count >= 1 and (bullet_list_count > 0 or text_box_count > 0):
+            return "title-and-content"
         elif image_count > 0 and (text_box_count > 0 or bullet_list_count > 0):
-            return "image-left"
+            return "content-with-caption"
+        elif len(elements) == 0:
+            return "blank"
         else:
             return "title-and-content"

@@ -49,14 +49,15 @@ def test_parse_presentation(pptx_parser):
     html_file = os.path.join(pptx_parser.output_dir, "slide1", "slide1.html")
     with open(html_file, encoding="utf-8") as f:
         html_content = f.read()
-        assert "<!DOCTYPE html>" in html_content
+        assert "<!doctype html>" in html_content
         assert '<div class="slide-container' in html_content
 
-    # Basic check for content in JSON
+    # Basic check for content in JSON (v2 schema format)
     with open(json_file, encoding="utf-8") as f:
         json_content = json.load(f)
-        assert "slides" in json_content
-        assert len(json_content["slides"]) == expected_slide_count
+        assert "presentation" in json_content
+        assert "slides" in json_content["presentation"]
+        assert len(json_content["presentation"]["slides"]) == expected_slide_count
 
     # Check if media files are copied to slide-specific media directories
     for i in range(1, expected_slide_count + 1):

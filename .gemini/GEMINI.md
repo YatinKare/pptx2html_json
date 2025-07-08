@@ -62,8 +62,9 @@ For each new version it will look like this:
 
 ```
 lecture_output/
+├── presentation.json
 ├── slide1/
-│   ├── slide1.html or slide1.json
+│   ├── slide1.html
 │   └── image1.png, shape2.png
 ├── slide2/
 │   ├── slide2.html

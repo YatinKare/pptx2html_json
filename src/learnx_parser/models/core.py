@@ -205,6 +205,7 @@ class JsonElement:
     alt: str | None = None
     attribution: str | None = None
     description: str | None = None
+    group: str | None = None  # For bullet-list grouping
 
 
 @dataclass
@@ -219,3 +220,8 @@ class JsonPresentation:
     id: str
     title: str
     slides: list[JsonSlide] = field(default_factory=list)
+
+
+@dataclass
+class JsonPresentationWrapper:
+    presentation: JsonPresentation

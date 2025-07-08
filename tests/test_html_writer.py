@@ -2,6 +2,7 @@ import os
 import re
 
 import pytest
+from htpy import div
 
 from learnx_parser.models.core import (
     LayoutPlaceholder,
@@ -63,12 +64,12 @@ def test_write_slide_html(slide_data, html_writer):
         html_content = f.read()
 
     # Basic checks for HTML structure
-    assert "<!DOCTYPE html>" in html_content
+    assert "<!doctype html>" in html_content
     # Check for the slide-container with dynamic layout class
     if slide_data.slide_layout and slide_data.slide_layout.type:
-        expected_container_tag = (
-            f'<div class="slide-container {slide_data.slide_layout.type}-layout">'
-        )
+        # Use htpy for creating the expected class string but extract it manually
+        layout_class = f"slide-container {slide_data.slide_layout.type}-layout"
+        expected_container_tag = f'<div class="{layout_class}">'
     else:
         expected_container_tag = '<div class="slide-container">'
     assert expected_container_tag in html_content
@@ -85,9 +86,9 @@ def test_image_transform_and_crop_css(slide_data, html_writer):
     with open(output_file, encoding="utf-8") as f:
         html_content = f.read()
 
-    # Find the image element
+    # Find the image element (htpy generates without closing slash)
     img_match = re.search(
-        r"<img class=\"image\" src=\".*?\" style=\"(.*?)\" />", html_content
+        r"<img class=\"image\" src=\".*?\" style=\"(.*?)\">", html_content
     )
     assert img_match is not None, "Image tag not found in HTML"
     img_style = img_match.group(1)
@@ -100,47 +101,37 @@ def test_image_transform_and_crop_css(slide_data, html_writer):
     assert picture_obj is not None, "Picture object not found in slide_data"
 
     # Assert transform CSS
-    expected_transform_css = ""
+    transform_parts = []
     if picture_obj.transform.rot != 0:
-        expected_transform_css += f"rotate({picture_obj.transform.rot / 60000:.2f}deg) "
+        rotation_deg = picture_obj.transform.rot / 60000
+        transform_parts.append(f"rotate({rotation_deg:.2f}deg)")
     if picture_obj.transform.flipH:
-        expected_transform_css += "scaleX(-1) "
+        transform_parts.append("scaleX(-1)")
     if picture_obj.transform.flipV:
-        expected_transform_css += "scaleY(-1) "
-    if expected_transform_css:
-        expected_transform_css = f"transform: {expected_transform_css.strip()};"
+        transform_parts.append("scaleY(-1)")
+    
+    if transform_parts:
+        expected_transform_css = f"transform: {' '.join(transform_parts)};"
         assert expected_transform_css in img_style, (
             "Expected transform CSS not found in image style."
         )
 
     # Assert clip-path CSS
-    expected_clip_path_css = ""
     if picture_obj.blip_fill and (
         picture_obj.blip_fill.src_rect_t is not None
         or picture_obj.blip_fill.src_rect_b is not None
         or picture_obj.blip_fill.src_rect_l is not None
         or picture_obj.blip_fill.src_rect_r is not None
     ):
-        top = (
-            f"{picture_obj.blip_fill.src_rect_t / 1000:.2f}%"
-            if picture_obj.blip_fill.src_rect_t is not None
-            else "0%"
-        )
-        bottom = (
-            f"{picture_obj.blip_fill.src_rect_b / 1000:.2f}%"
-            if picture_obj.blip_fill.src_rect_b is not None
-            else "0%"
-        )
-        left = (
-            f"{picture_obj.blip_fill.src_rect_l / 1000:.2f}%"
-            if picture_obj.blip_fill.src_rect_l is not None
-            else "0%"
-        )
-        right = (
-            f"{picture_obj.blip_fill.src_rect_r / 1000:.2f}%"
-            if picture_obj.blip_fill.src_rect_r is not None
-            else "0%"
-        )
+        # Convert coordinates to percentage strings
+        def coord_to_percent(coord):
+            return f"{coord / 1000:.2f}%" if coord is not None else "0%"
+        
+        top = coord_to_percent(picture_obj.blip_fill.src_rect_t)
+        bottom = coord_to_percent(picture_obj.blip_fill.src_rect_b)
+        left = coord_to_percent(picture_obj.blip_fill.src_rect_l)
+        right = coord_to_percent(picture_obj.blip_fill.src_rect_r)
+        
         expected_clip_path_css = f"clip-path: inset({top} {right} {bottom} {left});"
         # Use more flexible assertion due to floating point precision
         assert "clip-path: inset(" in img_style, (
@@ -186,8 +177,8 @@ def test_shape_position_and_size_css(html_writer):
         html_content = f.read()
 
     # Find the shape element (updated pattern for new HTML structure)
-    shape_match = re.search(
-        r'<div class="shape"[^>]*style="([^"]*?)"', html_content
+    shape_match = re.search(r'<div class="shape"[^>]*style="([^"]*?)"', html_content)
+    assert shape_match is not None, (
+        f"Shape div not found in HTML. Content: {html_content[:500]}..."
     )
-    assert shape_match is not None, f"Shape div not found in HTML. Content: {html_content[:500]}..."
     shape_style = shape_match.group(1)

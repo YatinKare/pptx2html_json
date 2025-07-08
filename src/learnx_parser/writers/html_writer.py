@@ -5,6 +5,9 @@ This module contains the main HtmlWriter class that orchestrates HTML generation
 
 import os
 
+from htpy import body, div, head, html, style, title
+from markupsafe import Markup
+
 from learnx_parser.models.core import Slide
 from learnx_parser.writers.css_utils import emu_to_px, get_gradient_css
 from learnx_parser.writers.layout_handlers import render_slide_content
@@ -31,9 +34,9 @@ class HtmlWriter:
             slide_number: The slide number for file naming
         """
         # Determine the layout class for the slide container
-        layout_class = ""
+        layout_classes = ["slide-container"]
         if slide.slide_layout and slide.slide_layout.type:
-            layout_class = f" {slide.slide_layout.type}-layout"
+            layout_classes.append(f"{slide.slide_layout.type}-layout")
 
         # Get slide dimensions
         slide_width = emu_to_px(slide.common_slide_data.cx)
@@ -42,12 +45,8 @@ class HtmlWriter:
         # Generate background CSS
         background_css = self._get_background_css(slide)
 
-        # Generate the HTML structure
-        html_content = f"""<!DOCTYPE html>
-<html>
-<head>
-    <title>Slide {slide_number}</title>
-    <style>
+        # Create CSS content
+        css_content = f"""
         body {{ margin: 0; padding: 0; font-family: sans-serif; overflow: hidden; }}
         .slide-container {{ 
             position: relative; 
@@ -98,20 +97,23 @@ class HtmlWriter:
             display: flex; 
             flex: 1; 
         }}
-    </style>
-</head>
-<body>
-    <div class="slide-container{layout_class}">
-"""
+        """
 
         # Render the slide content
-        html_content += render_slide_content(slide, self)
+        slide_content = render_slide_content(slide, self)
 
-        # Close the HTML structure
-        html_content += """
-    </div>
-</body>
-</html>"""
+        # Generate the HTML structure using htpy
+        html_doc = html[
+            head[
+                title[f"Slide {slide_number}"],
+                style[Markup(css_content)]
+            ],
+            body[
+                div(class_=" ".join(layout_classes))[
+                    Markup(slide_content)
+                ]
+            ]
+        ]
 
         # Create output directory and write file
         slide_output_directory = os.path.join(
@@ -123,7 +125,7 @@ class HtmlWriter:
             slide_output_directory, f"slide{slide_number}.html"
         )
         with open(output_file_path, "w", encoding="utf-8") as f:
-            f.write(html_content)
+            f.write(str(html_doc))
         return output_file_path
 
     def _get_background_css(self, slide: Slide) -> str:
@@ -135,11 +137,11 @@ class HtmlWriter:
         Returns:
             str: CSS for slide background
         """
-        background_css = ""
+        background_css_parts = []
 
         # Add solid background color
         if slide.common_slide_data.background_color:
-            background_css += (
+            background_css_parts.append(
                 f"background-color: #{slide.common_slide_data.background_color};"
             )
 
@@ -149,6 +151,6 @@ class HtmlWriter:
                 slide.common_slide_data.background_gradient_fill
             )
             if gradient_css:
-                background_css += f" {gradient_css}"
+                background_css_parts.append(gradient_css)
 
-        return background_css
+        return " ".join(background_css_parts)

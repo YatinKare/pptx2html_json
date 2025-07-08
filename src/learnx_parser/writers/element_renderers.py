@@ -5,6 +5,9 @@ This module contains functions that render individual PowerPoint elements to HTM
 
 import os
 
+from htpy import div, img, li, p, span, ul
+from markupsafe import Markup
+
 from learnx_parser.models.core import (
     GraphicFrame,
     GroupShape,
@@ -41,11 +44,14 @@ def render_graphic_frame_html(
     cx = emu_to_px(element.transform.cx)
     cy = emu_to_px(element.transform.cy)
 
-    return f"""
-        <div class="graphic-frame" style="left: {x}px; top: {y}px; width: {cx}px; height: {cy}px; position: absolute; border: 1px dashed #ccc;">
-            <!-- Graphic Frame content (e.g., charts, tables) would go here -->
-        </div>
-"""
+    graphic_frame = div(
+        class_="graphic-frame",
+        style=f"left: {x}px; top: {y}px; width: {cx}px; height: {cy}px; position: absolute; border: 1px dashed #ccc;"
+    )[
+        Markup("<!-- Graphic Frame content (e.g., charts, tables) would go here -->")
+    ]
+
+    return str(graphic_frame)
 
 
 def render_group_shape_html(
@@ -121,11 +127,14 @@ def render_group_shape_html(
     if element.is_flex_container:
         container_class += " flex-container"
 
-    return f"""
-        <div class="{container_class}" style="{container_style}">
-            {content_html}
-        </div>
-"""
+    group_div = div(
+        class_=container_class,
+        style=container_style
+    )[
+        Markup(content_html)
+    ]
+
+    return str(group_div)
 
 
 def render_picture_html(
@@ -178,9 +187,13 @@ def render_picture_html(
     style_string = " ".join(filter(None, style_attributes))
 
     # Return an HTML img tag representing the picture with its styles
-    return f"""
-        <img class="image" src="{image_src}" style="{style_string}" />
-"""
+    image_element = img(
+        class_="image",
+        src=image_src,
+        style=style_string
+    )
+
+    return str(image_element)
 
 
 def render_shape_html(
@@ -230,11 +243,14 @@ def render_shape_html(
     # Join style attributes
     style_string = " ".join(filter(None, style_attributes))
 
-    return f"""
-        <div class="shape" style="{style_string}">
-            {content_html}
-        </div>
-"""
+    shape_div = div(
+        class_="shape",
+        style=style_string
+    )[
+        Markup(content_html)
+    ]
+
+    return str(shape_div)
 
 
 def render_text_frame_html(text_frame) -> str:
@@ -252,7 +268,7 @@ def render_text_frame_html(text_frame) -> str:
     # Check if this text frame should be rendered as a bullet list
     if _should_render_as_bullet_list(text_frame.paragraphs):
         return _render_as_bullet_list(text_frame.paragraphs)
-    
+
     # Default paragraph rendering
     content_html = ""
     for paragraph in text_frame.paragraphs:
@@ -263,14 +279,17 @@ def render_text_frame_html(text_frame) -> str:
             for run in paragraph.text_runs:
                 run_style = get_run_style_css(run)
                 if run_style:
-                    paragraph_content += f'<span style="{run_style}">{run.text}</span>'
+                    run_span = span(style=run_style)[run.text]
+                    paragraph_content += str(run_span)
                 else:
                     paragraph_content += run.text
 
         if paragraph_style:
-            content_html += f'<p style="{paragraph_style}">{paragraph_content}</p>'
+            paragraph_element = p(style=paragraph_style)[Markup(paragraph_content)]
         else:
-            content_html += f"<p>{paragraph_content}</p>"
+            paragraph_element = p[Markup(paragraph_content)]
+        
+        content_html += str(paragraph_element)
 
     return content_html
 
@@ -279,27 +298,25 @@ def _should_render_as_bullet_list(paragraphs) -> bool:
     """Check if paragraphs should be rendered as a bullet list."""
     if len(paragraphs) <= 1:
         return False
-    
+
     # Get all non-empty paragraph texts
     all_texts = [
         "".join([run.text for run in p.text_runs]).strip()
         for p in paragraphs
         if "".join([run.text for run in p.text_runs]).strip()
     ]
-    
+
     if len(all_texts) <= 1:
         return False
-    
+
     # Check if texts are list-like (short, similar length)
     avg_length = sum(len(text) for text in all_texts) / len(all_texts)
     if avg_length < 50:  # Short items are likely bullets
         # Check if they start with similar patterns (Topic, etc.)
-        starts_with_topic = any(
-            text.startswith("Topic") for text in all_texts
-        )
+        starts_with_topic = any(text.startswith("Topic") for text in all_texts)
         if starts_with_topic and len(all_texts) >= 3:
             return True
-    
+
     # Check explicit bullet properties
     for paragraph in paragraphs:
         if (
@@ -309,14 +326,14 @@ def _should_render_as_bullet_list(paragraphs) -> bool:
             return True
         if paragraph.properties.level is not None and paragraph.properties.level > 0:
             return True
-    
+
     return False
 
 
 def _render_as_bullet_list(paragraphs) -> str:
     """Render paragraphs as an HTML bullet list."""
-    list_items = ""
-    
+    list_items = []
+
     for paragraph in paragraphs:
         paragraph_text = "".join([run.text for run in paragraph.text_runs]).strip()
         if paragraph_text:
@@ -325,10 +342,13 @@ def _render_as_bullet_list(paragraphs) -> str:
             for run in paragraph.text_runs:
                 run_style = get_run_style_css(run)
                 if run_style:
-                    item_content += f'<span style="{run_style}">{run.text}</span>'
+                    run_span = span(style=run_style)[run.text]
+                    item_content += str(run_span)
                 else:
                     item_content += run.text
-            
-            list_items += f"<li>{item_content}</li>"
-    
-    return f"<ul>{list_items}</ul>"
+
+            list_item = li[Markup(item_content)]
+            list_items.append(str(list_item))
+
+    bullet_list = ul[Markup("".join(list_items))]
+    return str(bullet_list)
