@@ -1,0 +1,67 @@
+<!doctype html><html><head><title>Slide 1</title><style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: sans-serif; 
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .slide-wrapper {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .slide-container-absolute { 
+            position: relative; 
+            width: 1280px; 
+            height: 720px; 
+            background-color: #fff; 
+            overflow: hidden;
+            transform-origin: 0 0;
+            margin: 0 auto;
+            
+        }
+        
+        .element-absolute {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .shape-absolute {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .text-absolute {
+            position: absolute;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        
+        .image-absolute {
+            position: absolute;
+            object-fit: cover;
+        }
+        
+        /* Responsive scaling for absolute positioning */
+        @media (max-aspect-ratio: 16/9) {
+            .slide-container-absolute {
+                transform: scale(calc(100vh / 720));
+            }
+        }
+        
+        @media (min-aspect-ratio: 16/9) {
+            .slide-container-absolute {
+                transform: scale(calc(100vw / 1280));
+            }
+        }
+        </style></head><body><div class="slide-wrapper"><div class="slide-container-absolute"><div class="shape-absolute" style="position: absolute; left: 134px; top: 38px; width: 838px; height: 323px; z-index: 100; background: lightcoral; border: 1px solid #999;">Shape 1</div></div></div></body></html>

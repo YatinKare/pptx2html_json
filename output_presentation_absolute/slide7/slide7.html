@@ -1,0 +1,57 @@
+<!doctype html><html><head><title>Slide 7</title><style>
+        body { 
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0px;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        
+        #player {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        #player canvas, #player div, #player iframe, #player img {
+            position: absolute;
+        }
+        
+        #resizer { 
+            left: 0px;
+            top: 0px;
+            height: 720px;
+            width: 1280px;
+            overflow: hidden;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -640px;
+            margin-top: -360px;
+            
+        }
+        
+        .shape {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .image {
+            position: absolute;
+        }
+        
+        /* Auto-scaling based on window size */
+        @media all {
+            #resizer {
+                transform: scale(min(calc(100vw / 1280), calc(100vh / 720)));
+            }
+        }
+        </style></head><body><div id="player"><div id="resizer"><div class="shape" style="left: 134px; top: 72px; width: 959px; height: 134px;"><p>Effective delivery techniques</p></div><div class="shape" style="left: 134px; top: 244px; width: 509px; height: 424px;"><ul><li>This is a powerful tool in public speaking. It involves varying pitch, tone, and volume to convey emotion, emphasize points, and maintain interest. </li><li>Pitch variation</li><li>Tone inflection</li><li>Volume control</li></ul></div><div class="shape" style="left: 706px; top: 244px; width: 509px; height: 424px;"><ul><li>Effective body language enhances your message, making it more impactful and memorable.</li><li>Meaningful eye contact</li><li>Purposeful gestures</li><li>Maintain good posture</li><li>Control your expressions</li></ul></div></div></div></body></html>

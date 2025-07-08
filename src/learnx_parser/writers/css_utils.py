@@ -25,6 +25,140 @@ def emu_to_px(emu):
     return round(emu / 9525)
 
 
+class CoordinateConverter:
+    """Convert PowerPoint coordinates to CSS positioning for absolute positioning mode.
+    
+    This class provides utilities to convert PowerPoint's EMU (English Metric Units)
+    coordinate system to pixel-based CSS positioning. PowerPoint uses EMUs for precise
+    positioning where 1 inch = 914400 EMUs = 96 pixels, making the conversion factor
+    1 EMU = 1/9525 pixels.
+    
+    Used primarily for version 0.2.6's absolute positioning feature to achieve
+    pixel-perfect positioning that matches PowerPoint's layout exactly.
+    """
+    
+    EMU_TO_PIXEL = 1 / 9525
+    
+    @staticmethod
+    def emu_to_px(emu: int) -> int:
+        """Convert EMU to pixels with proper rounding.
+        
+        Args:
+            emu: Value in EMU units
+            
+        Returns:
+            int: Value in pixels
+        """
+        return round(emu * CoordinateConverter.EMU_TO_PIXEL)
+    
+    @staticmethod
+    def extract_position(transform: Transform) -> dict:
+        """Extract position from Transform object.
+        
+        Args:
+            transform: Transform object containing position and size
+            
+        Returns:
+            dict: Position dictionary with x, y, width, height in pixels
+        """
+        if transform is None:
+            return None
+            
+        return {
+            'x': CoordinateConverter.emu_to_px(transform.x),
+            'y': CoordinateConverter.emu_to_px(transform.y),
+            'width': CoordinateConverter.emu_to_px(transform.cx),
+            'height': CoordinateConverter.emu_to_px(transform.cy)
+        }
+    
+    @staticmethod
+    def generate_absolute_css(position: dict, z_index: int = 1) -> str:
+        """Generate CSS for absolute positioning.
+        
+        Args:
+            position: Position dictionary with x, y, width, height
+            z_index: Z-index for element layering
+            
+        Returns:
+            str: CSS string for absolute positioning
+        """
+        if position is None:
+            return ""
+            
+        return f"""position: absolute; left: {position['x']}px; top: {position['y']}px; width: {position['width']}px; height: {position['height']}px; z-index: {z_index};"""
+
+
+class ZIndexLayers:
+    """Z-index management for element layering in absolute positioning mode.
+    
+    Provides a hierarchical z-index system to ensure proper element layering
+    that matches PowerPoint's element stacking order. Elements are assigned
+    z-index values based on their type and order within the slide.
+    
+    Z-index Hierarchy:
+        - Background: 0 (slide backgrounds)
+        - Shapes: 100+ (shapes and text boxes) 
+        - Text: 200+ (text elements)
+        - Images: 300+ (pictures and graphics)
+        - Overlays: 400+ (overlays and special elements)
+    
+    Each element type gets a base z-index plus its order in the slide,
+    ensuring proper layering within each type.
+    """
+    
+    BACKGROUND = 0
+    SHAPES = 100
+    TEXT = 200
+    IMAGES = 300
+    OVERLAYS = 400
+    
+    @staticmethod
+    def get_element_z_index(element_type: str, order: int = 0) -> int:
+        """Get z-index for element type.
+        
+        Args:
+            element_type: Type of element (shape, text, image, group)
+            order: Order of element in slide (0-based)
+            
+        Returns:
+            int: Z-index value
+        """
+        base_z = {
+            'shape': ZIndexLayers.SHAPES,
+            'text': ZIndexLayers.TEXT,
+            'image': ZIndexLayers.IMAGES,
+            'group': ZIndexLayers.SHAPES
+        }.get(element_type, ZIndexLayers.SHAPES)
+        
+        return base_z + order
+
+
+class PositioningConfig:
+    """Configuration for positioning modes in version 0.2.6.
+    
+    Manages configuration settings for different positioning modes:
+    - RESPONSIVE: Original flexbox-based layout that adapts to screen size
+    - ABSOLUTE: Fixed 1280x720 container with pixel-perfect positioning
+    - HYBRID: Combination mode (planned for future implementation)
+    
+    The absolute positioning mode provides pixel-perfect rendering that matches
+    PowerPoint's exact layout, while responsive mode maintains flexible layouts
+    suitable for various screen sizes.
+    """
+    
+    RESPONSIVE = "responsive"
+    ABSOLUTE = "absolute"
+    HYBRID = "hybrid"
+    
+    def __init__(self, mode=RESPONSIVE):
+        self.mode = mode
+        # Use actual slide dimensions from Galaxy presentation (16:9 aspect ratio)
+        self.slide_width = 1280
+        self.slide_height = 720
+        self.enable_scaling = True
+        self.z_index_auto = True
+
+
 def get_gradient_css(gradient_fill: GradientFill) -> str:
     """Generate CSS for a linear gradient background.
 
