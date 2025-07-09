@@ -25,3 +25,8 @@ Thumbs.db
 
 # Dependency files not managed by uv
 requirements.txt
+
+# Output directories
+output/
+output_*/
+test_output*/

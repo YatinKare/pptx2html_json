@@ -23,7 +23,6 @@ classifiers = [
 
 dependencies = [
     "lxml",
-    "pdfplumber>=0.11.7",
     "pytest>=8.4.1",
     "jsonschema",
     "htpy>=25.7.0",

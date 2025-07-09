@@ -55,14 +55,16 @@ def test_write_slide_json(slide_data, json_writer):
         json_content = json.load(f)
 
     # Basic checks for JSON content
-    assert "slides" in json_content
-    assert "id" in json_content
-    assert "title" in json_content
-    assert json_content["id"] == "test-presentation"
-    assert len(json_content["slides"]) == 1
+    assert "presentation" in json_content
+    presentation = json_content["presentation"]
+    assert "slides" in presentation
+    assert "id" in presentation
+    assert "title" in presentation
+    assert presentation["id"] == "test-presentation"
+    assert len(presentation["slides"]) == 1
 
     # Check the slide content
-    slide_json = json_content["slides"][0]
+    slide_json = presentation["slides"][0]
     assert "elements" in slide_json
     assert "id" in slide_json
     assert slide_json["id"] == "slide-23"
@@ -131,7 +133,8 @@ def test_flexbox_layout_json_output(json_writer):
         json_content = json.load(f)
 
     # Check the slide content
-    slide_json = json_content["slides"][0]
+    presentation = json_content["presentation"]
+    slide_json = presentation["slides"][0]
     assert slide_json["id"] == "slide-2"
     assert len(slide_json["elements"]) >= 2  # At least title and text elements
 
