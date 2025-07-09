@@ -1,7 +1,10 @@
 """Test coordinate conversion utilities."""
-import pytest
 from learnx_parser.models.core import Transform
-from learnx_parser.writers.css_utils import CoordinateConverter, ZIndexLayers, PositioningConfig
+from learnx_parser.writers.css_utils import (
+    CoordinateConverter,
+    PositioningConfig,
+    ZIndexLayers,
+)
 
 
 class TestCoordinateConverter:
