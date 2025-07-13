@@ -24,6 +24,7 @@ class SlideParser:
         pptx_unpacked_path,
         slide_width,
         slide_height,
+        presentation_defaults=None,
     ):
         # Path to the XML file for the current slide
         self.slide_xml_path = slide_xml_path
@@ -43,6 +44,8 @@ class SlideParser:
         self.slide_width = slide_width
         # Height of the slide in EMUs, inherited from presentation properties
         self.slide_height = slide_height
+        # Presentation-level default text styles for theme inheritance
+        self.presentation_defaults = presentation_defaults or {}
 
     def _parse_rels(self):
         # Initialize an empty dictionary to store relationships

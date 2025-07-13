@@ -80,9 +80,25 @@ class LayoutParser:
                     int(ph_elem.get("idx")) if ph_elem.get("idx") is not None else None
                 )
                 transform = self._extract_transform(sp_elem)
+
+                # Extract text frame properties from layout XML
+                anchor, anchor_ctr, insets = self._extract_bodypr_properties(sp_elem)
+                paragraph_align = self._extract_paragraph_align_from_layout(
+                    sp_elem, ph_type
+                )
+
                 placeholders.append(
                     LayoutPlaceholder(
-                        ph_type=ph_type, ph_idx=ph_idx, transform=transform
+                        ph_type=ph_type,
+                        ph_idx=ph_idx,
+                        transform=transform,
+                        anchor=anchor,
+                        anchor_ctr=anchor_ctr,
+                        left_inset=insets.get("lIns"),
+                        top_inset=insets.get("tIns"),
+                        right_inset=insets.get("rIns"),
+                        bottom_inset=insets.get("bIns"),
+                        paragraph_align=paragraph_align,
                     )
                 )
 
@@ -224,6 +240,38 @@ class LayoutParser:
 
                     list_styles[i] = props
         return list_styles
+
+    def _extract_bodypr_properties(self, sp_elem):
+        """Extract bodyPr anchor and inset properties from shape element."""
+        anchor = None
+        anchor_ctr = False
+        insets = {}
+
+        # Look for bodyPr element in the shape's text body
+        body_pr_elem = sp_elem.find(".//a:bodyPr", namespaces=self.nsmap)
+        if body_pr_elem is not None:
+            anchor = body_pr_elem.get("anchor")
+            anchor_ctr = body_pr_elem.get("anchorCtr", "0") == "1"
+
+            # Extract insets
+            for inset_attr in ["lIns", "tIns", "rIns", "bIns"]:
+                inset_value = body_pr_elem.get(inset_attr)
+                if inset_value is not None:
+                    insets[inset_attr] = int(inset_value)
+
+        return anchor, anchor_ctr, insets
+
+    def _extract_paragraph_align_from_layout(self, sp_elem, ph_type):
+        """Extract paragraph alignment from layout's lstStyle for this placeholder type."""
+        # Look for lstStyle in the shape's text body
+        lst_style_elem = sp_elem.find(".//a:lstStyle", namespaces=self.nsmap)
+        if lst_style_elem is not None:
+            # Get level 0 paragraph properties (most common)
+            lvl0_elem = lst_style_elem.find(".//a:lvl1pPr", namespaces=self.nsmap)
+            if lvl0_elem is not None:
+                return lvl0_elem.get("algn")
+
+        return None
 
     def parse_layout(self) -> SlideLayout:
         layout_name = self.root.find(".//p:cSld", namespaces=self.nsmap).get("name")

@@ -1,0 +1,539 @@
+/* CSS Document */
+
+body  {
+	font: 100% Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	background: #FFFFFF;
+	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
+	padding: 0;
+	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
+	color: #000000;
+}
+.twoColFixLtHdr #container { 
+	width: 960px;  /* using 20px less than a full 800px width allows for browser chrome and avoids a horizontal scroll bar */
+	background: #FFFFFF;
+	margin: 0 auto; /* the auto margins (in conjunction with a width) center the page */
+	border: 1px solid #000000;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+} 
+.twoColFixLtHdr #header { 
+	background: #FFFFFF;
+        height:20px;
+    	padding: 0 0 0 0;  /*this padding matches the left alignment of the elements in the divs that appear beneath it. If an image is used in the #header instead of text,
+                          you may want to remove the padding. */
+        margin: 0 20px 0 160px;
+}
+
+.twoColFixLtHdr #headerLinks {
+	/*background: #D7EBAD;*/
+        background: #E0F5CC;
+        height: 20px;
+        padding:5px 0 0 0;
+
+
+
+}
+/*A:link { color: blue; }
+A:hover { color: #000000 }*/
+
+/*A:link { color: #000099; font-weight: bold; }
+A:visited { color: #000000; font-weight: bold; }
+A:hover { color: #66CC00 } */
+
+#headerLinks A:link { color: #000000; font-weight: bold; }          
+#headerLinks A:visited { color: #000000; font-weight: bold; }
+#headerLinks A:hover { color: #66CC00 }
+
+
+.twoColFixLtHdr #header h1 {
+	margin: 0; /* zeroing the margin of the last element in the #header div will avoid margin collapse - an unexplainable space between divs. If the div has a border around it, this is not necessary as that also avoids the margin collapse */
+	padding: 10px 0; /* using padding instead of margin will allow you to keep the element away from the edges of the div */
+}
+.twoColFixLtHdr #sidebar1 {
+	float: left; /* since this element is floated, a width must be given */
+	width: 125px; /* the actual width of this div, in standards-compliant browsers, or standards mode in Internet Explorer will include the padding and border in addition to the width */
+	background: #FFFFFF; /* the background color will be displayed for the length of the content in the column, but no further */
+	padding: 5px 10px 5px 20px;
+}
+.twoColFixLtHdr #mainContent { 
+	margin: 0 0 0 140px; /* the left margin on this div element creates the column down the left side of the page - no matter how much content the sidebar1 div contains,
+                      the column space will remain. You can remove this margin if you want the #mainContent div's text to fill the #sidebar1 space when the content in #sidebar1 ends. */
+	padding: 0 20px; /* remember that padding is the space inside the div box and margin is the space outside the div box */
+} 
+.twoColFixLtHdr #footer { 
+	padding: 10px 10px 10px 20px; /* this padding matches the left alignment of the elements in the divs that appear above it. */
+	background:#F0F0F0;
+} 
+.twoColFixLtHdr #footer p {
+	margin: 0; /* zeroing the margins of the first element in the footer will avoid the possibility of margin collapse - a space between divs */
+	padding: 10px 0; /* padding on this element will create space, just as the the margin would have, without the margin collapse issue */
+}
+.fltrt { /* this class can be used to float an element right in your page. The floated element must precede the element it should be next to on the page. */
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { /* this class can be used to float an element left in your page */
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { /* this class should be placed on a div or break element and should be the final element before the close of a container that should fully contain a float */
+	clear:both;
+    height:0;
+    font-size: 1px;
+    line-height: 0px;
+}
+
+
+legend {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	color:#4C4C33;
+
+}
+
+
+label {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	font-weight:bold;
+	color:#4C4C33;
+
+}
+
+.MainTOCLink {
+	font-size:11px;
+	text-decoration:none;	
+
+
+}
+
+.section { 
+
+margin:5px 5px;
+/*background-color: #F0FFF0;  */
+border-color:#E6E6FF;
+display:block;
+padding: 10px;
+border-style:dotted;
+/*border-color:#7AA3CC;  */
+border-width:2px;
+text-align:left;
+
+}
+
+
+.sectionHeading { 
+	font-size:16px; 
+	font-weight:bold; 
+	color:#CC7000; 
+	padding:5px;
+	color:#000000;
+
+}
+
+.sectionHeadingText  {
+padding:5px;
+color:#000000;
+}
+
+.textSubHeading {
+	font-size:12px;
+	font-weight:bold;
+	margin-left:5px;
+
+}
+
+.textPara {
+	font-size:11px; 
+	margin-left:10px; 
+	margin-bottom:5px;
+
+}
+
+
+#header { 
+	height:50px;
+	text-align:center;	
+
+}
+
+
+#footer   {
+	text-align:center;
+	
+	
+}
+
+
+ul {
+	padding:0;
+	margin:0;
+	list-style-type:none;
+
+}
+
+li {
+	margin: 5px;
+}
+
+
+.sidebarHead1 {
+	padding-bottom:5px;
+	padding-top:10px;
+	font-size:12px;
+	font-weight:bold;
+}
+
+h1 {
+font-family:Geneva, Arial, Helvetica, sans-serif;
+font-style:italic;
+margin-left: 0px;
+
+}
+
+
+h3 {
+font-family:Geneva, Arial, Helvetica, sans-serif;
+margin-bottom:3px;
+color:#456613;
+font-weight:normal;
+font-size:18px;
+
+}
+
+h4 {
+font-family:Geneva, Arial, Helvetica, sans-serif;
+margin-bottom:3px;
+color:#66CC00;
+font-weight:bold;
+font-size:14px;
+
+}
+
+.mainColor1 {
+	color:#66CC00;
+
+}
+
+.code {
+background-color:#F0F0E0;
+padding:20px;
+border:1px;
+border-style:dotted;
+border-color:#0033FF;
+
+}
+
+.codeL1 {
+margin-left:10px;
+margin-top:0px;
+margin-bottom:0px;
+
+}
+
+.codeL2 {
+margin-left:30px;
+margin-top:0px;
+margin-bottom:0px;
+	
+}
+
+.codeL3 {
+margin-left:50px;
+margin-top:0px;
+margin-bottom:0px;
+	
+}
+
+.codeL4 {
+margin-left:70px;
+margin-top:0px;
+margin-bottom:0px;
+	
+}
+
+.codeL5 {
+margin-left:90px;
+margin-top:0px;
+margin-bottom:0px;
+	
+}
+
+.codeL6 {
+margin-left:110px;
+margin-top:0px;
+margin-bottom:0px;
+	
+}
+
+.codeL7 {
+margin-left:130px;
+margin-top:0px;
+margin-bottom:0px;
+	
+}
+
+.codeL8 {
+margin-left:150px;
+margin-top:0px;
+margin-bottom:0px;
+	
+}
+
+p {
+margin-top: 10px;
+margin-bottom: 10px;
+}
+
+table {
+border-collapse:collapse;
+
+}
+
+
+table.attributes th, td {
+border: 1px solid gray;
+}
+
+table.attributes th {
+padding:5px;
+background-color:#E0F5CC;
+background-color:#D7EBAD;
+}
+
+table.attributes td {
+padding:10px; 
+}
+
+table.elements th, td {
+border: 1px solid gray;
+}
+
+table.elements th {
+padding:5px;
+background-color:#E0F5CC;
+
+}
+
+table.elements td {
+padding:10px; 
+}
+
+
+
+
+
+
+.odfAttributes th, td {
+border: 1px solid #303030;
+}
+
+.odfAttributes th {
+padding:5px;
+/*background-color:#EFFFD5*/
+background-color:#303030;
+color:#FFFFFF;
+}
+
+.odfAttributes td {
+padding:10px;
+color: #000000;
+background-color: #FFFFFF;
+}
+
+.odfElements th, td {
+border: 1px solid #303030;
+}
+
+.odfElements th {
+padding:5px;
+background-color:#303030;
+color:#FFFFFF;
+}
+
+.odfElements td {
+padding:10px;
+color:#000000;
+background-color: #FFFFFF;
+}
+
+
+
+
+.cssSample {
+/*background-color:#EFFFD5; */
+background-color:#EFFFD5;
+padding: 10px;
+border-style:solid;
+border-width:1px;
+border-color:gray;
+font-family:"Times New Roman", Times, serif;
+font-size:16px;
+}
+
+.ECMAref {
+font-style:italic;
+padding-bottom: 10px;
+padding-top: 10px;
+
+}
+
+.ODFref {
+font-style:italic;
+padding-bottom: 10px;
+padding-top: 10px;
+
+}
+.cssCounterpart {
+font-family:'Courier New', Courier, monospace;
+background-color:#E0EBCC;
+margin-bottom:15px; 
+padding:15px;
+/*border-style: dashed;
+border-width:1px;
+border-color:#A1A1B2; */
+
+}
+
+.cssCounterpart h1 {
+font-family:Arial;
+font-size:18px;
+font-weight: bold;
+color:#333333;
+
+}
+
+.cssContent {
+background-color: #FFFFFF;
+padding:10px;
+
+}
+
+.openOfficeCounterpart {
+background-color:#E6F5FA;
+margin-bottom:15px; 
+padding:15px;
+
+}
+
+.openOfficeCounterpart h3 {
+color:#202020;
+
+}
+
+.openOfficeContent {
+background-color: #FFFFFF;
+padding:10px;
+
+}
+
+.openOfficeCounterpart h1 {
+font-family:Arial;
+font-size:18px;
+font-weight: bold;
+color:#333333;
+
+
+}
+.topicHead {
+font-weight:normal;
+font-size:24px;
+color:#66CC00;
+}
+
+.titleHead {
+font-size: 24px;
+font-style:  italic;
+font-weight:  bold;
+text-align: left;
+
+}
+
+.exampleHead {
+font-weight:normal;
+font-size:18px;
+color:#66CC00;
+margin-top:5px;
+margin-bottom:5px;
+}
+
+
+.exampleTable {
+/*background-color:#EFFFD5; */
+background-color:#E0F5CC;
+border:none;
+width:100%;
+
+}
+
+table.example {
+background-color:#E0F5CC;
+border:1px;
+border-color:#EFFFD5
+}
+
+table.example td {
+padding:20px;
+
+}
+
+img.sample {
+border:1px;
+border-color:#66CC00;
+border-style: dashed;
+
+}
+
+.attributeName {
+font-weight:bold;
+
+
+}
+
+.attributeValue {
+font-style:italic;
+
+}
+
+ul {
+list-style-type:square;
+margin-left:15px;
+}
+
+.featuredItem {
+font-weight:bold;
+}
+
+
+.elementName {
+font-weight:bold;
+
+}
+
+.noteImage {
+padding:5px;
+border:none;
+float:left;
+
+}
+
+.noteParagraph {
+margin-left:20px;
+margin-right:20px
+}
+
+.codeFragment {
+font-size:14px;
+font-family:"Courier",monospace;
+
+}
+
+td {
+padding:10px;
+}
+
+th {
+padding:10px;
+background-color:#EFFFD5;
+border: 1px solid gray;
+}

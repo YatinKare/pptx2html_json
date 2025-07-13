@@ -1,0 +1,306 @@
+{
+  "presentation": {
+    "id": "galaxy-001",
+    "title": "Galaxy Presentation",
+    "slides": [
+      {
+        "id": "slide-1",
+        "layout": "title-slide",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Galaxy"
+          }
+        ]
+      },
+      {
+        "id": "slide-2",
+        "layout": "two-content",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Agenda"
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Topic one"
+              },
+              {
+                "text": "\tTopic two"
+              },
+              {
+                "text": "Topic three"
+              },
+              {
+                "text": "Topic four"
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "/ppt/media/image1.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-3",
+        "layout": "content-with-caption",
+        "elements": [
+          {
+            "type": "title",
+            "text": "The power of communication"
+          },
+          {
+            "type": "image",
+            "src": "/ppt/media/image24.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-4",
+        "layout": "title-and-content",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Overcoming nervousness"
+          },
+          {
+            "type": "text-box",
+            "text": "Confidence-building strategies"
+          },
+          {
+            "type": "image",
+            "src": "/ppt/media/image33.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-5",
+        "layout": "title-and-content",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Engaging the audience"
+          },
+          {
+            "type": "text-box",
+            "text": "Make eye contact with your audience to create a sense of intimacy and involvement\nWeave relatable stories into your presentation using narratives that\u00a0make your message memorable and impactful\nEncourage questions and provide thoughtful responses to\u00a0enhance audience participation\nUse live polls or surveys to gather audience opinions, promoting engagement and making sure\u00a0the audience feel involved"
+          },
+          {
+            "type": "image",
+            "src": "/ppt/media/image42.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-6",
+        "layout": "title-and-content",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Selecting visual aids"
+          },
+          {
+            "type": "text-box",
+            "text": "Enhancing your presentation"
+          }
+        ]
+      },
+      {
+        "id": "slide-7",
+        "layout": "title-and-content",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Effective delivery techniques"
+          },
+          {
+            "type": "text-box",
+            "text": "This is a powerful tool in public speaking. It involves varying pitch, tone, and volume to convey emotion, emphasize points, and maintain interest. "
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Pitch variation"
+              },
+              {
+                "text": "Tone inflection"
+              },
+              {
+                "text": "Volume control"
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Effective body language enhances your message, making it more impactful and memorable."
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Meaningful eye contact"
+              },
+              {
+                "text": "Purposeful gestures"
+              },
+              {
+                "text": "Maintain good posture"
+              },
+              {
+                "text": "Control your expressions"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "slide-8",
+        "layout": "title-and-content",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Navigating Q&A sessions"
+          },
+          {
+            "type": "text-box",
+            "text": "Know your material in advance\nAnticipate common questions\nRehearse your responses"
+          },
+          {
+            "type": "text-box",
+            "text": "Maintaining composure during the Q&A session is essential for projecting confidence and authority. Consider the following tips for staying composed:"
+          },
+          {
+            "type": "text-box",
+            "text": "Stay calm\nActively listen\nPause and reflect\nMaintain eye contact"
+          }
+        ]
+      },
+      {
+        "id": "slide-9",
+        "layout": "two-content",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Speaking impact"
+          },
+          {
+            "type": "text-box",
+            "text": "Your ability to communicate effectively will leave a lasting impact on your audience\nEffectively communicating involves not only delivering a message but also resonating with the experiences, values, and emotions of those listening\u00a0"
+          },
+          {
+            "type": "image",
+            "src": "/ppt/media/image33.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-10",
+        "layout": "title-and-content",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Dynamic delivery"
+          },
+          {
+            "type": "text-box",
+            "text": "Learn to infuse energy into your delivery to leave a lasting impression\nOne of the goals of effective communication is to motivate your audience"
+          }
+        ]
+      },
+      {
+        "id": "slide-11",
+        "layout": "title-and-content",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Final tips & takeaways"
+          },
+          {
+            "type": "text-box",
+            "text": "Consistent rehearsal"
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Strengthen your familiarity"
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Refine delivery style"
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Pacing, tone, and emphasis"
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Timing and transitions"
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Aim for seamless, professional delivery"
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Practice audience"
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Enlist colleagues to listen & provide feedback"
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Seek feedback\nReflect on performance\nExplore new techniques\nSet personal goals\nIterate and adapt"
+          }
+        ]
+      },
+      {
+        "id": "slide-12",
+        "layout": "title-only",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Speaking engagement metrics"
+          }
+        ]
+      },
+      {
+        "id": "slide-13",
+        "layout": "two-content",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Thank you"
+          },
+          {
+            "type": "text-box",
+            "text": "Brita Tamm\n502-555-0152\nbrita@firstupconsultants.com\nwww.firstupconsultants.com"
+          },
+          {
+            "type": "image",
+            "src": "/ppt/media/image55.png"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -11,7 +11,9 @@ from learnx_parser.writers.json_writer import JsonWriter
 
 
 class DocumentParser:
-    def __init__(self, pptx_unpacked_path, output_dir="./output", positioning_mode="responsive"):
+    def __init__(
+        self, pptx_unpacked_path, output_dir="./output", positioning_mode="responsive"
+    ):
         # Path to the unpacked PowerPoint presentation directory
         self.pptx_unpacked_path = pptx_unpacked_path
         # Directory where the generated HTML and JSON output will be saved
@@ -25,9 +27,9 @@ class DocumentParser:
         self.presentation_parser = PresentationParser(self.presentation_xml_path)
         # Initialize the HtmlWriter for generating HTML output for each slide
         self.html_writer = HtmlWriter(
-            output_directory=self.output_dir, 
+            output_directory=self.output_dir,
             pptx_unpacked_path=self.pptx_unpacked_path,
-            positioning_mode=positioning_mode
+            positioning_mode=positioning_mode,
         )
         # Initialize the JsonWriter for generating JSON output for each slide
         self.json_writer = JsonWriter(output_directory=self.output_dir)
@@ -45,8 +47,17 @@ class DocumentParser:
             # Check if the picture has associated blip fill data (which contains the image path)
             if picture.blip_fill:
                 # Construct the original path of the media file within the unpacked PPTX
+                media_relative_path = picture.blip_fill.path.lstrip("/").replace(
+                    "../", ""
+                )
+
+                # Ensure the path includes 'ppt/' prefix for consistent handling
+                # Some PPTX files have relative paths like "../media/image1.jpg" while others have "/ppt/media/image1.jpg"
+                if not media_relative_path.startswith("ppt/"):
+                    media_relative_path = "ppt/" + media_relative_path
+
                 original_media_path = os.path.join(
-                    self.pptx_unpacked_path, picture.blip_fill.path.lstrip("/")
+                    self.pptx_unpacked_path, media_relative_path
                 )
                 # Construct the destination path for the media file in the output directory
                 destination_media_path = os.path.join(
@@ -91,6 +102,12 @@ class DocumentParser:
 
             # Remove leading '/' if present, and replace '../' for relative paths to construct a clean relative path
             slide_xml_relative_path = slide_target.lstrip("/").replace("../", "")
+
+            # Ensure the path includes 'ppt/' prefix for consistent handling
+            # Some PPTX files have relative paths like "slides/slide1.xml" while others have "/ppt/slides/slide1.xml"
+            if not slide_xml_relative_path.startswith("ppt/"):
+                slide_xml_relative_path = "ppt/" + slide_xml_relative_path
+
             # Construct the absolute path to the slide's XML file
             slide_xml_path = os.path.join(
                 self.pptx_unpacked_path, slide_xml_relative_path
@@ -123,6 +140,8 @@ class DocumentParser:
     def parse_presentation(self):
         # Get the overall slide width and height from the presentation properties
         slide_width, slide_height = self.presentation_parser.get_slide_size()
+        # Extract presentation-level default text styles for theme inheritance
+        presentation_defaults = self.presentation_parser.get_default_text_style()
         # Get a list of all slide XML paths and their corresponding relationship file paths
         slide_paths = self._get_slide_paths_and_rels()
 
@@ -140,6 +159,7 @@ class DocumentParser:
                 self.pptx_unpacked_path,
                 slide_width,
                 slide_height,
+                presentation_defaults,
             )
             # Parse the slide to get its structured data
             parsed_slide_data = current_slide_parser.parse_slide(

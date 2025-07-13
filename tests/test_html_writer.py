@@ -2,7 +2,6 @@ import os
 import re
 
 import pytest
-from htpy import div
 
 from learnx_parser.models.core import (
     LayoutPlaceholder,
@@ -109,7 +108,7 @@ def test_image_transform_and_crop_css(slide_data, html_writer):
         transform_parts.append("scaleX(-1)")
     if picture_obj.transform.flipV:
         transform_parts.append("scaleY(-1)")
-    
+
     if transform_parts:
         expected_transform_css = f"transform: {' '.join(transform_parts)};"
         assert expected_transform_css in img_style, (
@@ -126,12 +125,12 @@ def test_image_transform_and_crop_css(slide_data, html_writer):
         # Convert coordinates to percentage strings
         def coord_to_percent(coord):
             return f"{coord / 1000:.2f}%" if coord is not None else "0%"
-        
+
         top = coord_to_percent(picture_obj.blip_fill.src_rect_t)
         bottom = coord_to_percent(picture_obj.blip_fill.src_rect_b)
         left = coord_to_percent(picture_obj.blip_fill.src_rect_l)
         right = coord_to_percent(picture_obj.blip_fill.src_rect_r)
-        
+
         expected_clip_path_css = f"clip-path: inset({top} {right} {bottom} {left});"
         # Use more flexible assertion due to floating point precision
         assert "clip-path: inset(" in img_style, (

@@ -6,17 +6,17 @@ from learnx_parser import parse_pptx
 def main():
     """
     Main function to parse Galaxy presentation with positioning mode selection.
-    
+
     Usage:
         python main.py              # Responsive positioning (default)
         python main.py --absolute   # Absolute positioning (pixel-perfect)
-    
+
     Positioning Modes:
         - responsive: Flexbox-based layout that adapts to screen size
         - absolute: Fixed 1280x720 container with pixel-perfect positioning
     """
     pptx_file = "./example/Galaxy presentation.pptx"
-    
+
     # Check if absolute positioning mode is requested
     if len(sys.argv) > 1 and sys.argv[1] == "--absolute":
         output_dir = "./output_presentation_absolute"

@@ -18,7 +18,7 @@ class TestLayoutDetection:
         # Read the generated JSON file
         json_file_path = os.path.join("./test_output_layout", "presentation.json")
 
-        with open(json_file_path, "r") as f:
+        with open(json_file_path) as f:
             json_data = json.load(f)
 
         # Test that layout uses semantic names
@@ -59,7 +59,7 @@ class TestLayoutDetection:
         # Read the generated JSON file
         json_file_path = os.path.join("./test_output_layout", "presentation.json")
 
-        with open(json_file_path, "r") as f:
+        with open(json_file_path) as f:
             json_data = json.load(f)
 
         slides = json_data.get("slides", [])
@@ -94,7 +94,7 @@ class TestLayoutDetection:
         # Read the generated JSON file
         json_file_path = os.path.join("./test_output_layout", "presentation.json")
 
-        with open(json_file_path, "r") as f:
+        with open(json_file_path) as f:
             json_data = json.load(f)
 
         for slide in json_data.get("slides", []):
@@ -111,32 +111,30 @@ class TestLayoutDetection:
 
             # Validate layout consistency with content
             if layout == "title-only":
-                assert title_count == 1, (
-                    f"title-only layout should have exactly 1 title"
-                )
+                assert title_count == 1, "title-only layout should have exactly 1 title"
                 assert text_box_count + bullet_list_count + image_count == 0, (
-                    f"title-only layout should have no other elements"
+                    "title-only layout should have no other elements"
                 )
 
             elif layout == "title-and-bullets":
                 assert title_count >= 1, (
-                    f"title-and-bullets layout should have at least 1 title"
+                    "title-and-bullets layout should have at least 1 title"
                 )
                 assert bullet_list_count >= 1, (
-                    f"title-and-bullets layout should have at least 1 bullet list"
+                    "title-and-bullets layout should have at least 1 bullet list"
                 )
 
             elif layout == "title-and-image":
                 assert title_count >= 1, (
-                    f"title-and-image layout should have at least 1 title"
+                    "title-and-image layout should have at least 1 title"
                 )
                 assert image_count >= 1, (
-                    f"title-and-image layout should have at least 1 image"
+                    "title-and-image layout should have at least 1 image"
                 )
 
             elif layout == "side-by-side":
                 assert len(elements) >= 2, (
-                    f"side-by-side layout should have at least 2 elements"
+                    "side-by-side layout should have at least 2 elements"
                 )
 
         # Clean up

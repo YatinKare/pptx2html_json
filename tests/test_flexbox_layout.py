@@ -14,8 +14,8 @@ from learnx_parser.models.core import (
 )
 from learnx_parser.parsers.slide.base import SlideParser
 from learnx_parser.parsers.slide.elements import parse_group_shape_element
-from learnx_parser.writers.html_writer import HtmlWriter
 from learnx_parser.writers.element_renderers import render_group_shape_html
+from learnx_parser.writers.html_writer import HtmlWriter
 
 
 class TestFlexboxLayout(unittest.TestCase):

@@ -14,12 +14,15 @@ from learnx_parser.writers.element_renderers import (
 )
 
 
-def render_slide_content(slide: Slide, html_writer_instance) -> str:
+def render_slide_content(
+    slide: Slide, html_writer_instance, theme_resolver=None
+) -> str:
     """Render slide content based on its layout type.
 
     Args:
         slide: Slide object containing elements to render
         html_writer_instance: HtmlWriter instance for accessing helper methods
+        theme_resolver: ThemeResolver instance for theme-based styling
 
     Returns:
         str: HTML content for the slide
@@ -45,13 +48,13 @@ def render_slide_content(slide: Slide, html_writer_instance) -> str:
 
     handler = layout_handlers.get(layout_type, render_generic_layout)
     content_html, used_element_ids = handler(
-        slide, placeholder_elements, html_writer_instance
+        slide, placeholder_elements, html_writer_instance, theme_resolver
     )
     return content_html
 
 
 def render_pic_tx_layout(
-    slide: Slide, placeholder_elements: dict, html_writer_instance
+    slide: Slide, placeholder_elements: dict, html_writer_instance, theme_resolver=None
 ) -> tuple[str, list]:
     """Render picture-text layout (image on left, text on right).
 
@@ -71,9 +74,15 @@ def render_pic_tx_layout(
         for title_element in placeholder_elements["title"]:
             title_container = div(
                 class_="title-container",
-                style="display: flex; justify-content: center; align-items: center; padding: 20px;"
+                style="display: flex; justify-content: center; align-items: center; padding: 20px;",
             )[
-                Markup(render_shape_html(title_element, use_absolute_pos=False))
+                Markup(
+                    render_shape_html(
+                        title_element,
+                        use_absolute_pos=False,
+                        theme_resolver=theme_resolver,
+                    )
+                )
             ]
             content_elements.append(str(title_container))
             used_element_ids.append(title_element.id)
@@ -86,10 +95,8 @@ def render_pic_tx_layout(
         for pic_element in placeholder_elements["pic"]:
             picture_container = div(
                 class_="picture-container",
-                style="display: flex; justify-content: center; align-items: center; flex: 1;"
-            )[
-                Markup(render_picture_html(pic_element, use_absolute_pos=False))
-            ]
+                style="display: flex; justify-content: center; align-items: center; flex: 1;",
+            )[Markup(render_picture_html(pic_element, use_absolute_pos=False))]
             flex_content.append(str(picture_container))
             used_element_ids.append(pic_element.id)
 
@@ -98,9 +105,15 @@ def render_pic_tx_layout(
         for body_element in placeholder_elements["body"]:
             text_container = div(
                 class_="text-container",
-                style="display: flex; flex-direction: column; justify-content: center; padding: 20px; flex: 1;"
+                style="display: flex; flex-direction: column; justify-content: center; padding: 20px; flex: 1;",
             )[
-                Markup(render_shape_html(body_element, use_absolute_pos=False))
+                Markup(
+                    render_shape_html(
+                        body_element,
+                        use_absolute_pos=False,
+                        theme_resolver=theme_resolver,
+                    )
+                )
             ]
             flex_content.append(str(text_container))
             used_element_ids.append(body_element.id)
@@ -109,17 +122,15 @@ def render_pic_tx_layout(
     if flex_content:
         flex_container = div(
             class_="content-flex-container",
-            style="display: flex; flex-direction: row; justify-content: space-around; align-items: flex-start; flex: 1;"
-        )[
-            Markup("".join(flex_content))
-        ]
+            style="display: flex; flex-direction: row; justify-content: space-around; align-items: flex-start; flex: 1;",
+        )[Markup("".join(flex_content))]
         content_elements.append(str(flex_container))
 
     return "".join(content_elements), used_element_ids
 
 
 def render_tx_layout(
-    slide: Slide, placeholder_elements: dict, html_writer_instance
+    slide: Slide, placeholder_elements: dict, html_writer_instance, theme_resolver=None
 ) -> tuple[str, list]:
     """Render text-only layout.
 
@@ -139,9 +150,15 @@ def render_tx_layout(
         for body_element in placeholder_elements["body"]:
             text_container = div(
                 class_="text-container",
-                style="display: flex; flex-direction: column; justify-content: center; align-items: center;"
+                style="display: flex; flex-direction: column; justify-content: center; align-items: center;",
             )[
-                Markup(render_shape_html(body_element, use_absolute_pos=False))
+                Markup(
+                    render_shape_html(
+                        body_element,
+                        use_absolute_pos=False,
+                        theme_resolver=theme_resolver,
+                    )
+                )
             ]
             content_elements.append(str(text_container))
             used_element_ids.append(body_element.id)
@@ -150,7 +167,7 @@ def render_tx_layout(
 
 
 def render_obj_layout(
-    slide: Slide, placeholder_elements: dict, html_writer_instance
+    slide: Slide, placeholder_elements: dict, html_writer_instance, theme_resolver=None
 ) -> tuple[str, list]:
     """Render object layout.
 
@@ -162,11 +179,13 @@ def render_obj_layout(
     Returns:
         tuple: (HTML content, list of used element IDs)
     """
-    return render_generic_layout(slide, placeholder_elements, html_writer_instance)
+    return render_generic_layout(
+        slide, placeholder_elements, html_writer_instance, theme_resolver
+    )
 
 
 def render_title_only_layout(
-    slide: Slide, placeholder_elements: dict, html_writer_instance
+    slide: Slide, placeholder_elements: dict, html_writer_instance, theme_resolver=None
 ) -> tuple[str, list]:
     """Render title-only layout.
 
@@ -189,9 +208,15 @@ def render_title_only_layout(
         for title_element in title_elements:
             title_container = div(
                 class_="title-container",
-                style="display: flex; justify-content: center; align-items: center; padding: 20px;"
+                style="display: flex; justify-content: center; align-items: center; padding: 20px;",
             )[
-                Markup(render_shape_html(title_element, use_absolute_pos=False))
+                Markup(
+                    render_shape_html(
+                        title_element,
+                        use_absolute_pos=False,
+                        theme_resolver=theme_resolver,
+                    )
+                )
             ]
             content_elements.append(str(title_container))
             used_element_ids.append(title_element.id)
@@ -204,9 +229,15 @@ def render_title_only_layout(
         for body_element in placeholder_elements["body"]:
             text_container = div(
                 class_="text-container",
-                style="display: flex; flex-direction: column; justify-content: center; margin: 10px;"
+                style="display: flex; flex-direction: column; justify-content: center; margin: 10px;",
             )[
-                Markup(render_shape_html(body_element, use_absolute_pos=False))
+                Markup(
+                    render_shape_html(
+                        body_element,
+                        use_absolute_pos=False,
+                        theme_resolver=theme_resolver,
+                    )
+                )
             ]
             flex_content.append(str(text_container))
             used_element_ids.append(body_element.id)
@@ -218,9 +249,15 @@ def render_title_only_layout(
                 if hasattr(element, "text_frame"):  # Text element
                     text_container = div(
                         class_="text-container",
-                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;"
+                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;",
                     )[
-                        Markup(render_shape_html(element, use_absolute_pos=False))
+                        Markup(
+                            render_shape_html(
+                                element,
+                                use_absolute_pos=False,
+                                theme_resolver=theme_resolver,
+                            )
+                        )
                     ]
                     flex_content.append(str(text_container))
                 elif hasattr(element, "blip_fill") or hasattr(
@@ -228,26 +265,28 @@ def render_title_only_layout(
                 ):  # Picture
                     picture_container = div(
                         class_="picture-container",
-                        style="display: flex; justify-content: center; align-items: center; margin: 10px;"
-                    )[
-                        Markup(render_picture_html(element, use_absolute_pos=False))
-                    ]
+                        style="display: flex; justify-content: center; align-items: center; margin: 10px;",
+                    )[Markup(render_picture_html(element, use_absolute_pos=False))]
                     flex_content.append(str(picture_container))
                 elif hasattr(element, "is_flex_container"):  # GroupShape
                     group_container = div(
                         class_="group-container",
-                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;"
+                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;",
                     )[
-                        Markup(render_group_shape_html(element, use_absolute_pos=False))
+                        Markup(
+                            render_group_shape_html(
+                                element,
+                                use_absolute_pos=False,
+                                theme_resolver=theme_resolver,
+                            )
+                        )
                     ]
                     flex_content.append(str(group_container))
                 else:  # GraphicFrame or other elements - render as placeholder
                     other_container = div(
                         class_="other-container",
-                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px; background-color: #f0f0f0; border: 1px dashed #ccc; padding: 20px;"
-                    )[
-                        p[f"Content placeholder ({type(element).__name__})"]
-                    ]
+                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px; background-color: #f0f0f0; border: 1px dashed #ccc; padding: 20px;",
+                    )[p[f"Content placeholder ({type(element).__name__})"]]
                     flex_content.append(str(other_container))
                 used_element_ids.append(element.id)
 
@@ -255,17 +294,15 @@ def render_title_only_layout(
     if flex_content:
         content_container = div(
             class_="content-flex-container",
-            style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; padding: 20px;"
-        )[
-            Markup("".join(flex_content))
-        ]
+            style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; padding: 20px;",
+        )[Markup("".join(flex_content))]
         content_elements.append(str(content_container))
 
     return "".join(content_elements), used_element_ids
 
 
 def render_blank_layout(
-    slide: Slide, placeholder_elements: dict, html_writer_instance
+    slide: Slide, placeholder_elements: dict, html_writer_instance, theme_resolver=None
 ) -> tuple[str, list]:
     """Render blank layout.
 
@@ -281,7 +318,7 @@ def render_blank_layout(
 
 
 def render_title_layout(
-    slide: Slide, placeholder_elements: dict, html_writer_instance
+    slide: Slide, placeholder_elements: dict, html_writer_instance, theme_resolver=None
 ) -> tuple[str, list]:
     """Render title slide layout.
 
@@ -304,9 +341,15 @@ def render_title_layout(
         for title_element in title_elements:
             title_container = div(
                 class_="title-container",
-                style="text-align: center; margin-bottom: 40px;"
+                style="text-align: center; margin-bottom: 40px;",
             )[
-                Markup(render_shape_html(title_element, use_absolute_pos=False))
+                Markup(
+                    render_shape_html(
+                        title_element,
+                        use_absolute_pos=False,
+                        theme_resolver=theme_resolver,
+                    )
+                )
             ]
             content_elements.append(str(title_container))
             used_element_ids.append(title_element.id)
@@ -315,10 +358,15 @@ def render_title_layout(
     if "subTitle" in placeholder_elements:
         for subtitle_element in placeholder_elements["subTitle"]:
             subtitle_container = div(
-                class_="subtitle-container",
-                style="text-align: center;"
+                class_="subtitle-container", style="text-align: center;"
             )[
-                Markup(render_shape_html(subtitle_element, use_absolute_pos=False))
+                Markup(
+                    render_shape_html(
+                        subtitle_element,
+                        use_absolute_pos=False,
+                        theme_resolver=theme_resolver,
+                    )
+                )
             ]
             content_elements.append(str(subtitle_container))
             used_element_ids.append(subtitle_element.id)
@@ -327,7 +375,7 @@ def render_title_layout(
 
 
 def render_title_pic_layout(
-    slide: Slide, placeholder_elements: dict, html_writer_instance
+    slide: Slide, placeholder_elements: dict, html_writer_instance, theme_resolver=None
 ) -> tuple[str, list]:
     """Render title with picture layout.
 
@@ -350,9 +398,15 @@ def render_title_pic_layout(
         for title_element in title_elements:
             title_container = div(
                 class_="title-container",
-                style="text-align: center; margin-bottom: 20px;"
+                style="text-align: center; margin-bottom: 20px;",
             )[
-                Markup(render_shape_html(title_element, use_absolute_pos=False))
+                Markup(
+                    render_shape_html(
+                        title_element,
+                        use_absolute_pos=False,
+                        theme_resolver=theme_resolver,
+                    )
+                )
             ]
             content_elements.append(str(title_container))
             used_element_ids.append(title_element.id)
@@ -365,9 +419,15 @@ def render_title_pic_layout(
         for body_element in placeholder_elements["body"]:
             text_container = div(
                 class_="text-container",
-                style="display: flex; flex-direction: column; justify-content: center; margin: 10px;"
+                style="display: flex; flex-direction: column; justify-content: center; margin: 10px;",
             )[
-                Markup(render_shape_html(body_element, use_absolute_pos=False))
+                Markup(
+                    render_shape_html(
+                        body_element,
+                        use_absolute_pos=False,
+                        theme_resolver=theme_resolver,
+                    )
+                )
             ]
             flex_content.append(str(text_container))
             used_element_ids.append(body_element.id)
@@ -377,10 +437,8 @@ def render_title_pic_layout(
         for pic_element in placeholder_elements["pic"]:
             picture_container = div(
                 class_="picture-container",
-                style="display: flex; justify-content: center; align-items: center; margin: 10px;"
-            )[
-                Markup(render_picture_html(pic_element, use_absolute_pos=False))
-            ]
+                style="display: flex; justify-content: center; align-items: center; margin: 10px;",
+            )[Markup(render_picture_html(pic_element, use_absolute_pos=False))]
             flex_content.append(str(picture_container))
             used_element_ids.append(pic_element.id)
 
@@ -391,9 +449,15 @@ def render_title_pic_layout(
                 if hasattr(element, "text_frame"):  # Text element
                     text_container = div(
                         class_="text-container",
-                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;"
+                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;",
                     )[
-                        Markup(render_shape_html(element, use_absolute_pos=False))
+                        Markup(
+                            render_shape_html(
+                                element,
+                                use_absolute_pos=False,
+                                theme_resolver=theme_resolver,
+                            )
+                        )
                     ]
                     flex_content.append(str(text_container))
                 elif hasattr(element, "blip_fill") or hasattr(
@@ -401,26 +465,28 @@ def render_title_pic_layout(
                 ):  # Picture
                     picture_container = div(
                         class_="picture-container",
-                        style="display: flex; justify-content: center; align-items: center; margin: 10px;"
-                    )[
-                        Markup(render_picture_html(element, use_absolute_pos=False))
-                    ]
+                        style="display: flex; justify-content: center; align-items: center; margin: 10px;",
+                    )[Markup(render_picture_html(element, use_absolute_pos=False))]
                     flex_content.append(str(picture_container))
                 elif hasattr(element, "is_flex_container"):  # GroupShape
                     group_container = div(
                         class_="group-container",
-                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;"
+                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;",
                     )[
-                        Markup(render_group_shape_html(element, use_absolute_pos=False))
+                        Markup(
+                            render_group_shape_html(
+                                element,
+                                use_absolute_pos=False,
+                                theme_resolver=theme_resolver,
+                            )
+                        )
                     ]
                     flex_content.append(str(group_container))
                 else:  # GraphicFrame or other elements - render as placeholder
                     other_container = div(
                         class_="other-container",
-                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px; background-color: #f0f0f0; border: 1px dashed #ccc; padding: 20px;"
-                    )[
-                        p[f"Content placeholder ({type(element).__name__})"]
-                    ]
+                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px; background-color: #f0f0f0; border: 1px dashed #ccc; padding: 20px;",
+                    )[p[f"Content placeholder ({type(element).__name__})"]]
                     flex_content.append(str(other_container))
                 used_element_ids.append(element.id)
 
@@ -428,17 +494,15 @@ def render_title_pic_layout(
     if flex_content:
         content_container = div(
             class_="content-flex-container",
-            style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; padding: 20px;"
-        )[
-            Markup("".join(flex_content))
-        ]
+            style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; padding: 20px;",
+        )[Markup("".join(flex_content))]
         content_elements.append(str(content_container))
 
     return "".join(content_elements), used_element_ids
 
 
 def render_generic_layout(
-    slide: Slide, placeholder_elements: dict, html_writer_instance
+    slide: Slide, placeholder_elements: dict, html_writer_instance, theme_resolver=None
 ) -> tuple[str, list]:
     """Render generic layout using flexbox approach.
 
@@ -461,9 +525,15 @@ def render_generic_layout(
         for title_element in title_elements:
             title_container = div(
                 class_="title-container",
-                style="display: flex; justify-content: center; align-items: center; padding: 20px;"
+                style="display: flex; justify-content: center; align-items: center; padding: 20px;",
             )[
-                Markup(render_shape_html(title_element, use_absolute_pos=False))
+                Markup(
+                    render_shape_html(
+                        title_element,
+                        use_absolute_pos=False,
+                        theme_resolver=theme_resolver,
+                    )
+                )
             ]
             content_elements.append(str(title_container))
             used_element_ids.append(title_element.id)
@@ -478,9 +548,15 @@ def render_generic_layout(
                 if hasattr(element, "text_frame"):  # Text element
                     text_container = div(
                         class_="text-container",
-                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;"
+                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;",
                     )[
-                        Markup(render_shape_html(element, use_absolute_pos=False))
+                        Markup(
+                            render_shape_html(
+                                element,
+                                use_absolute_pos=False,
+                                theme_resolver=theme_resolver,
+                            )
+                        )
                     ]
                     flex_content.append(str(text_container))
                 elif hasattr(element, "blip_fill") or hasattr(
@@ -488,26 +564,28 @@ def render_generic_layout(
                 ):  # Picture
                     picture_container = div(
                         class_="picture-container",
-                        style="display: flex; justify-content: center; align-items: center; margin: 10px;"
-                    )[
-                        Markup(render_picture_html(element, use_absolute_pos=False))
-                    ]
+                        style="display: flex; justify-content: center; align-items: center; margin: 10px;",
+                    )[Markup(render_picture_html(element, use_absolute_pos=False))]
                     flex_content.append(str(picture_container))
                 elif hasattr(element, "is_flex_container"):  # GroupShape
                     group_container = div(
                         class_="group-container",
-                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;"
+                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px;",
                     )[
-                        Markup(render_group_shape_html(element, use_absolute_pos=False))
+                        Markup(
+                            render_group_shape_html(
+                                element,
+                                use_absolute_pos=False,
+                                theme_resolver=theme_resolver,
+                            )
+                        )
                     ]
                     flex_content.append(str(group_container))
                 else:  # GraphicFrame or other elements - render as placeholder
                     other_container = div(
                         class_="other-container",
-                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px; background-color: #f0f0f0; border: 1px dashed #ccc; padding: 20px;"
-                    )[
-                        p[f"Content placeholder ({type(element).__name__})"]
-                    ]
+                        style="display: flex; flex-direction: column; justify-content: center; margin: 10px; background-color: #f0f0f0; border: 1px dashed #ccc; padding: 20px;",
+                    )[p[f"Content placeholder ({type(element).__name__})"]]
                     flex_content.append(str(other_container))
                 used_element_ids.append(element.id)
 
@@ -515,10 +593,8 @@ def render_generic_layout(
     if flex_content:
         content_container = div(
             class_="content-flex-container",
-            style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; padding: 20px;"
-        )[
-            Markup("".join(flex_content))
-        ]
+            style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; padding: 20px;",
+        )[Markup("".join(flex_content))]
         content_elements.append(str(content_container))
 
     return "".join(content_elements), used_element_ids

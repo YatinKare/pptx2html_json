@@ -73,6 +73,7 @@ class RunProperties:
     scheme_color: str | None = None
     font_face: str | None = None
     underline: bool = False
+    cap: str | None = None  # Text capitalization (all, small, none)
 
 
 @dataclass
@@ -106,6 +107,13 @@ class Paragraph:
 @dataclass
 class TextFrame:
     paragraphs: list[Paragraph] = field(default_factory=list)
+    # Vertical alignment properties from <a:bodyPr>
+    anchor: str | None = None  # t (top), ctr (center), b (bottom), just, dist
+    anchor_ctr: bool = False  # horizontal centering
+    left_inset: int = 0  # lIns - left inset
+    top_inset: int = 0  # tIns - top inset
+    right_inset: int = 0  # rIns - right inset
+    bottom_inset: int = 0  # bIns - bottom inset
 
 
 @dataclass
@@ -172,6 +180,18 @@ class LayoutPlaceholder:
     ph_type: str | None = None
     ph_idx: int | None = None
     transform: Transform = field(default_factory=Transform)
+    # Text frame properties from layout XML
+    anchor: str | None = None  # Vertical alignment: t, ctr, b, just, dist
+    anchor_ctr: bool = False  # Horizontal centering of bounding box
+    # Text insets
+    left_inset: int | None = None
+    top_inset: int | None = None
+    right_inset: int | None = None
+    bottom_inset: int | None = None
+    # Paragraph alignment from layout lstStyle
+    paragraph_align: str | None = (
+        None  # Horizontal text alignment: l, r, ctr, just, dist
+    )
 
 
 @dataclass

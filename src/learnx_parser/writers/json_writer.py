@@ -238,8 +238,11 @@ class JsonWriter:
         image_count = sum(1 for el in elements if el.type == "image")
 
         # Detect if this is a title slide (first slide with title + subtitle pattern)
-        if (slide.slide_number == 1 and title_count >= 1 and 
-            (text_box_count > 0 or len(elements) <= 2)):
+        if (
+            slide.slide_number == 1
+            and title_count >= 1
+            and (text_box_count > 0 or len(elements) <= 2)
+        ):
             return "title-slide"
 
         # Map based on PowerPoint layout and content (v2 compliant names only)

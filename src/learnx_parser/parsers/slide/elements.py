@@ -87,7 +87,7 @@ def parse_shape_element(parser_instance, shape_element, slide_layout_obj) -> Sha
         from learnx_parser.parsers.slide.text import extract_text_frame_properties
 
         text_frame = extract_text_frame_properties(
-            parser_instance, shape_element, slide_layout_obj
+            parser_instance, shape_element, slide_layout_obj, ph_type
         )
 
     return Shape(

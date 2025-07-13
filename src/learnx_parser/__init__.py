@@ -1,5 +1,6 @@
 import os
 import shutil
+import tempfile
 import zipfile
 
 from learnx_parser.services.document_parser import DocumentParser
@@ -17,8 +18,9 @@ def parse_pptx(pptx_file_path, output_dir="./output", positioning_mode="responsi
     if not os.path.exists(pptx_file_path):
         raise FileNotFoundError(f"PPTX file not found: {pptx_file_path}")
 
-    # Create a temporary directory for unpacking the PPTX
-    temp_unpacked_dir = os.path.join(output_dir, "temp_pptx_unpacked")
+    # Create a temporary directory for unpacking the PPTX using system temp directory
+    # This avoids cluttering the output directory and ensures consistent behavior
+    temp_unpacked_dir = tempfile.mkdtemp(prefix="pptx_unpacked_")
     os.makedirs(temp_unpacked_dir, exist_ok=True)
 
     try:

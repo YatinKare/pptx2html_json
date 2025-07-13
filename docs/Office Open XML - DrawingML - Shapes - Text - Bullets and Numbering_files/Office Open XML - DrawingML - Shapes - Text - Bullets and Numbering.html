@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Office Open XML - DrawingML - Shapes - Text - Bullets and Numbering</title>
+<link rel="stylesheet" type="text/css" href="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/OOXML1.css">
+
+<script type="text/javascript" src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/jquery.min.js"></script>
+	<link rel="stylesheet" href="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/jquery.treeview.css">
+	<script src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/jquery.cookie.js" type="text/javascript"></script>
+	<script src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/jquery.treeview.js" type="text/javascript"></script>
+        <script type="text/javascript" src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/startTree.js"></script>
+<script async="" src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/googlesyndication_adsbygoogle.js" crossorigin="anonymous"></script>
+  
+</head>
+
+<body class="twoColFixLtHdr">
+
+<div id="container">
+      <img src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/drawingMLBanner.png" alt="OfficeOpenXML.com">
+  <div id="header">
+          <div id="headerLinks">
+
+        <a href="http://officeopenxml.com/index.php">Home</a> | <a href="http://officeopenxml.com/anatomyofOOXML.php">WordprocessingML (docx)</a> | <a href="http://officeopenxml.com/anatomyofOOXML-xlsx.php">SpreadsheetML (xlsx)</a> | <a href="http://officeopenxml.com/anatomyofOOXML-pptx.php">PresentationML (pptx)</a> | <a href="http://officeopenxml.com/drwOverview.php">DrawingML</a>
+       
+    </div>
+        
+
+
+        </div>
+  <div id="sidebar1">
+      <ul id="navigation" class="treeview">
+    <li><a href="http://officeopenxml.com/drwOverview.php">Overview</a></li>
+    <li class="collapsable"><div class="hitarea collapsable-hitarea"></div>Pictures
+    	<ul style="display: block;">
+        	<li><a href="http://officeopenxml.com/drwPic.php">Overview</a></li>
+            <li class="collapsable"><div class="hitarea collapsable-hitarea"></div>Image Properties
+            	<ul style="display: block;">
+                	<li><a href="http://officeopenxml.com/drwPic-ImageData.php">Image Data</a></li>
+                    <li><a href="http://officeopenxml.com/drwPic-tile.php">Tile or Stretch Image to Fill</a></li>
+                    <li class="last"><a href="http://officeopenxml.com/drwPic-effects.php">Effects</a></li>
+                </ul>
+             </li>
+             <li><a href="http://officeopenxml.com/drwPic-nvPicPr.php">Non-Visual Properties</a></li>
+             <li class="last"><a href="http://officeopenxml.com/drwSp-SpPr.php">Shape Properties</a></li>
+        </ul>
+     </li>
+     <li class="collapsable"><div class="hitarea collapsable-hitarea"></div>Shapes
+     	<ul style="display: block;">
+        	<li><a href="http://officeopenxml.com/drwShape.php">Overview</a></li>
+            <li><a href="http://officeopenxml.com/drwSp-nvSpPr.php">Non-Visual Properties</a></li>
+            <li class="collapsable"><div class="hitarea collapsable-hitarea"></div><a href="http://officeopenxml.com/drwSp-SpPr.php">Visual Properties</a>
+            	<ul style="display: block;">
+                	<li><a href="http://officeopenxml.com/drwSp-size.php">Size of Bounding Box</a></li>
+                    <li><a href="http://officeopenxml.com/drwSp-location.php">Location of Bounding Box</a></li>
+                	<li class="collapsable"><div class="hitarea collapsable-hitarea"></div>Geometry
+                    	<ul style="display: block;">
+                        	<li><a href="http://officeopenxml.com/drwSp-prstGeom.php">Preset</a></li>
+                            <li class="last"><a href="http://officeopenxml.com/drwSp-custGeom.php">Custom</a></li>
+                        </ul>
+                    </li>
+                    <li class="expandable"><div class="hitarea expandable-hitarea"></div><a href="http://officeopenxml.com/drwSp-shapeFill.php">Shape Fill</a>
+                    	<ul style="display: none;">
+                        	<li><a href="http://officeopenxml.com/drwSp-SolidFill.php">Solid Fill</a></li>
+                            <li><a href="http://officeopenxml.com/drwSp-PictFill.php">Picture Fill</a></li>
+                            <li><a href="http://officeopenxml.com/drwSp-GradFill.php">Gradient Fill</a></li>
+                            <li><a href="http://officeopenxml.com/drwSp-PattFill.php">Pattern Fill</a></li>
+                            <li class="last"><a href="http://officeopenxml.com/drwSp-grpFill.php">Group Fill</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="http://officeopenxml.com/drwSp-effects.php">Effects</a></li>
+                    <li><a href="http://officeopenxml.com/drwSp-outline.php">Outline Style</a></li>
+                    <li><a href="http://officeopenxml.com/drwSp-rotate.php">2D Transforms</a></li>
+                    <li class="expandable lastExpandable"><div class="hitarea expandable-hitarea lastExpandable-hitarea"></div>3-D
+                    	<ul style="display: none;">
+                        	<li><a href="http://officeopenxml.com/drwSp-3dProps.php">Shape Properties</a></li>
+                            <li class="last"><a href="http://officeopenxml.com/drwSp-3dScene.php">Scene Properties</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="http://officeopenxml.com/drwSp-styles.php">Styles</a></li>
+            <li class="collapsable lastCollapsable"><div class="hitarea collapsable-hitarea lastCollapsable-hitarea"></div><a href="http://officeopenxml.com/drwSp-text.php">Text</a>
+            	<ul style="display: block;">
+                	<li class="collapsable"><div class="hitarea collapsable-hitarea"></div><a href="http://officeopenxml.com/drwSp-text-bodyPr.php">Text Body Properties</a>
+                    	<ul style="display: block;">
+                        	<li><a href="http://officeopenxml.com/drwSp-text-bodyPr-inset.php">Positioning and Insets</a></li>
+                        	<li><a href="http://officeopenxml.com/drwSp-text-bodyPr-fit.php">Fit, Wrap, Warp and 3D</a></li>
+                            <li class="last"><a href="http://officeopenxml.com/drwSp-text-bodyPr-columns.php">Columns, Vertical Text and Rotation</a></li>
+                        </ul>
+                    </li>
+            		<li class="collapsable"><div class="hitarea collapsable-hitarea"></div><a href="http://officeopenxml.com/drwSp-text-paragraph.php">Paragraphs</a>
+                    	<ul style="display: block;">
+                        	<li class="collapsable"><div class="hitarea collapsable-hitarea"></div><a href="http://officeopenxml.com/drwSp-text-paraProps.php">Paragraph Properties</a>
+                            	<ul style="display: block;">
+                                	<li><a href="http://officeopenxml.com/drwSp-text-paraProps-numbering.php">Bullets and Numbering</a></li>
+                                    <li><a href="http://officeopenxml.com/drwSp-text-paraProps-margins.php">Spacing, Indent and Margins</a></li>
+                                    <li class="last"><a href="http://officeopenxml.com/drwSp-text-paraProps-align.php">Alignment, Tabs, Other</a></li>
+                                </ul>
+                            </li>
+                            <li class="last"><a href="http://officeopenxml.com/drwSp-text-runProps.php">Run Properties</a></li>
+                        </ul>
+                    </li>
+                    <li class="last"><a href="http://officeopenxml.com/drwSp-text-lstPr.php">List Properties</a></li>
+            	</ul>
+            </li>
+        </ul>
+     </li>
+     <li class="expandable"><div class="hitarea expandable-hitarea"></div><a href="http://officeopenxml.com/drwCxnSp.php">Connectors</a>
+         <ul style="display: none;">
+             <li class="last"><a href="http://officeopenxml.com/drwSp-nvCxnSpPr.php">Non-Visual Properties</a></li>
+         </ul>
+     </li>
+     <li><a href="http://officeopenxml.com/drwSp-textbox.php">Text</a></li>
+     <li>Charts</li>     
+     <li>Diagrams</li>     
+     <li class="expandable"><div class="hitarea expandable-hitarea"></div><a href="http://officeopenxml.com/drwTable.php">Tables</a>
+         <ul style="display: none;">
+             <li><a href="http://officeopenxml.com/drwTableGrid.php">Defining Structure</a></li>
+             <li><a href="http://officeopenxml.com/drwTableRowAndCell.php">Rows, Cells, Cell Content</a></li>
+             <li class="expandable"><div class="hitarea expandable-hitarea"></div>Cell Properties
+                 <ul style="display: none;">
+                     <li><a href="http://officeopenxml.com/drwTableCellProperties-alignment.php">Alignment, Margins, Direction</a></li>
+                     <li class="last"><a href="http://officeopenxml.com/drwTableCellProperties-bordersFills.php">Borders and Fill</a></li>
+                 </ul>
+             </li>
+             <li class="last"><a href="http://officeopenxml.com/drwTableStyles.php">Table Styles and Properties</a></li>
+         </ul>
+     </li>
+     <li class="expandable"><div class="hitarea expandable-hitarea"></div>Placement within Docs
+     	<ul style="display: none;">
+        	<li><a href="http://officeopenxml.com/drwPicInWord.php">Overview</a></li>
+            <li><a href="http://officeopenxml.com/drwPicInline.php">Inline Objects</a></li>
+            <li class="expandable lastExpandable"><div class="hitarea expandable-hitarea lastExpandable-hitarea"></div><a href="http://officeopenxml.com/drwPicFloating.php">Floating Objects</a>
+            	<ul style="display: none;">
+                	<li><a href="http://officeopenxml.com/drwPicFloating-position.php">Positioning</a></li>
+                    <li class="last"><a href="http://officeopenxml.com/drwPicFloating-textWrap.php">Text Wrapping</a></li>
+                </ul>
+            </li>
+        </ul>
+     </li>
+     <li class="expandable"><div class="hitarea expandable-hitarea"></div>Placement within Spreadsheets
+     	<ul style="display: none;">
+        	<li><a href="http://officeopenxml.com/drwPicInSpread.php">Overview</a></li>
+            <li><a href="http://officeopenxml.com/drwPicInSpread-absolute.php">Absolute Anchoring</a></li>
+            <li><a href="http://officeopenxml.com/drwPicInSpread-oneCell.php">One Cell Anchoring</a></li>
+            <li class="last"><a href="http://officeopenxml.com/drwPicInSpread-twoCell.php">Two Cell Anchoring</a></li>
+        </ul>
+     </li>   
+      <li class="last"><a href="http://officeopenxml.com/drwPicInPresentation.php">Placement within Presentations</a></li>
+</ul>
+
+  <!-- end #sidebar1 -->
+  </div>
+  &nbsp;
+  
+<div id="mainContent">
+<!-- <div style="height:1px; background-color:#1F3D00; " ></div>
+<div style="height:2px; background-color:#478F00; " ></div>
+ <div style="height:3px; background-color:#66CC00; " ></div> -->
+
+<h1>DrawingML <span class="mainColor1">Shapes</span></h1>
+<div class="topicHead">Text - Bullets and Numbering</div>
+
+<p>Paragraphs in shapes can have bullets and numbering/lettering applied
+ either by using list styles or with direct formatting within the <span class="featuredItem">&lt;a:pPr&gt;</span> element for the paragraph (<span class="featuredItem">&lt;a:p&gt;</span>).
+ This page covers the individual properties related to bulleted and 
+numbered/lettered paragraphs. Each of these my be specified as part of a
+ list style. For the definition and application of list styles, see <a href="http://officeopenxml.com/drwSp-text-lstPr.php">List Properties</a>. </p>
+<p>Bullets and numbering are specified using attributes and child elements of <span class="featuredItem">&lt;a:pPr&gt;</span>. However, both are affected by the level specified for the paragraph by the <span class="attributeName">lvl</span> attribute on <span class="featuredItem">&lt;a:pPr&gt;</span>. The level is specified as a numeric value of between 0 and 8, since there are 9 possible levels defined. For example, <span class="codeFragment">&lt;a:pPr lvl="1"/&gt;</span> indicates that the paragraph is a level 2 and should use the lvl2pPr list style as defined within <span class="featuredItem">&lt;a:txBody&gt;</span>.  See <a href="http://officeopenxml.com/drwSp-text-lstPr.php">List Properties</a>. Below is a sample shape with two paragraphs--the first specified as level 2 (<span class="codeFragment">&lt;a:pPr lvl="1"/&gt;</span>) and the second specified as level 3 (<span class="codeFragment">&lt;a:pPr lvl="2"/&gt;</span>). This is before any numbering or bullets have been specified.</p>
+<p><img alt="Shape with text - auto numbering" src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/drwSp-text-numbering1.gif" style="padding:10px;"></p>
+
+<h2>Bullets</h2>
+<h3>Images as Bullets</h3>
+<p>Bullets can be either characters or images.  The <span class="elementName">&lt;a:buBlip&gt;</span> element is used to specifiy an image as a bullet. This element contains a single <span class="elementName">&lt;a:blip&gt;</span> element which references the image with the value of the <span class="attributeName">r:embed</span> attribute.  (For more on blips, see the <a href="http://officeopenxml.com/drwPic.php">Overview</a>
+ on pictures, and the related pages.) For example, below is the same 
+shape as above, but with a simple image being used as a bullet for the 
+paragraphs within the shape. The <span class="codeFragment">&lt;r:embed="rId2"/&gt;</span> references a <span class="elementName">&lt;Relationship&gt;</span>
+ in the .rels file for the presentation slide, which has a type of 
+"http://schemas.opemxmlformats.org/officeDocument/2006/
+relationships.image" and a target of "../media/image1.gif" referencing 
+the image file within the package.</p>
+<div class="code">
+	<div class="codeL1">&lt;a:pPr lvl="1"&gt;</div>
+    	<div class="codeL2">&lt;a:buBlip&gt;</div>
+        	<div class="codeL3">&lt;a:blip r:embed="rId2"/&gt;</div>
+        <div class="codeL2">&lt;/a:buBlip&gt;</div>
+    <div class="codeL1">&lt;/a:pPr&gt;</div>
+	<div class="codeL1">. . .</div>
+	<div class="codeL1">&lt;a:pPr lvl="2"&gt;</div>
+    	<div class="codeL2">&lt;a:buBlip&gt;</div>
+        	<div class="codeL3">&lt;a:blip r:embed="rId2"/&gt;</div>
+        <div class="codeL2">&lt;/a:buBlip&gt;</div>
+    <div class="codeL1">&lt;/a:pPr&gt;</div>
+</div>
+<p><img alt="Shape with text - image as bullet" src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/drwSp-text-bullet1.gif" style="padding:10px;"></p>
+
+<h3>Characters as Bullets</h3>
+<p>Characters are specified as bullets with the <span class="elementName">&lt;a:buChar&gt;</span> element. The character can be any character in any font that the system supports, and it is specified in the <span class="attributeName">char</span> attribute of <span class="elementName">&lt;a:buChar&gt;</span>. The character refers to a character in the font specified by the <span class="elementName">&lt;a:buFont&gt;</span> element, which is a child of <span class="featuredItem">&lt;a:pPr&gt;</span>. The <span class="elementName">&lt;a:buFont&gt;</span>
+ element specifies a typeface that is registered with the application.  
+The font will only apply to the bullet--not to the text that follows.  
+The typeface is specified in the <span class="attributeName">typeface</span> attribute as a string (e.g., Arial); if the font is not available, font substitution will be performed. There are also <span class="attributeName">charset</span> and <span class="attributeName">pitchFamily</span>
+ attributes.  These are not discussed further here. To set the font of 
+the bullet to be the same as the text run that contains the bullet, 
+specify the empty element . The <span class="elementName">&lt;a:buFontTx&gt;</span>.</p>
+
+<div class="code">
+	<div class="codeL1">&lt;a:pPr lvl="1"&gt;</div>
+    <div class="codeL2">&lt;a:buFont typeface="Wingdings" pitchFamily="2" charset="2"/&gt;</div>
+    	<div class="codeL2">&lt;a:buChar char="q"/&gt;</div>
+    <div class="codeL1">&lt;/a:pPr&gt;</div>
+	<div class="codeL1">. . .</div>
+	<div class="codeL1">&lt;a:pPr lvl="2"&gt;</div>
+    <div class="codeL2">&lt;a:buFont typeface="Wingdings" pitchFamily="2" charset="2"/&gt;</div>
+    	<div class="codeL2">&lt;a:buChar char="J"/&gt;</div>
+    <div class="codeL1">&lt;/a:pPr&gt;</div>
+</div>
+<p><img alt="Shape with text - character as bullet" src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/drwSp-text-bullet2.gif" style="padding:10px;"></p>
+
+<h3>Bullet Character Color</h3>
+<p>The color of bullet characters can be specified with the <span class="elementName">&lt;a:buClr&gt;</span> element. As with other color within shapes, color is specified as a child element (in this context, a child of <span class="elementName">&lt;a:buClr&gt;</span>) using one of the following color options: as a preset color (<span class="elementName">&lt;a:prstClr&gt;</span>), using hue, saturation and luminance (<span class="elementName">&lt;a:hslClr&gt;</span>), scheme colors (<span class="elementName">&lt;a:schemeClr&gt;</span>), system colors (<span class="elementName">&lt;a:sysClr&gt;</span>), or as RGB percentages or hex numbers (<span class="elementName">&lt;a:scrgbClr&gt;</span> or <span class="elementName">&lt;a:srgbClr&gt;</span>).
+ Note that these elements corresponding to color specification methods 
+can also have child elements which transform the base color. So, for 
+example, a scheme or theme color may be specified as accent6, but a 
+luminance modulation can also be applied to that base color. Colors are 
+not covered in detail here.</p> 
+<p>Below is the same shape as above, with the same characters as bullets, but with a color applied to the first bullet.</p>
+<div class="code">
+	<div class="codeL1">&lt;a:pPr lvl="1"&gt;</div>
+    <div class="codeL2"><span style="color:#FF0000">&lt;a:buClr&gt;</span></div>
+    	<div class="codeL3"><span style="color:#FF0000">&lt;a:srgbClr val="00B0F0"/&gt;</span></div>
+    <div class="codeL2"><span style="color:#FF0000">&lt;/a:buClr&gt;</span></div>
+    <div class="codeL2">&lt;a:buFont typeface="Wingdings" pitchFamily="2" charset="2"/&gt;</div>
+    	<div class="codeL2">&lt;a:buChar char="q"/&gt;</div>
+    <div class="codeL1">&lt;/a:pPr&gt;</div>
+	<div class="codeL1">. . .</div>
+	<div class="codeL1">&lt;a:pPr lvl="2"&gt;</div>
+    <div class="codeL2">&lt;a:buFont typeface="Wingdings" pitchFamily="2" charset="2"/&gt;</div>
+    	<div class="codeL2">&lt;a:buChar char="J"/&gt;</div>
+    <div class="codeL1">&lt;/a:pPr&gt;</div>
+</div>
+<p><img alt="Shape with text - character with color as bullet" src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/drwSp-text-bullet3.gif" style="padding:10px;"></p>
+<p>It is possible to set the color of the bullet to be the same color as
+ the text run that contains the bullet.  This is specified with the 
+empty <span class="elementName">&lt;a:buClrTx&gt;</span> element. Of course if no color is specified for the run, then the color of the bullet will follow the default text color.</p>
+
+<h3>Bullet Size</h3>
+<p>The size of bullet characters can be specified as either a percentage
+ of the surrounding text or in points.  A percentage is specified with <span class="elementName">&lt;a:buSzPct&gt;</span> element. The actual value is specified with the <span class="attributeName">val</span> attribute and must be between <span class="attributeValue">25%</span> and <span class="attributeValue">400%</span>. A size in points is specified with the <span class="elementName">&lt;a:buSzPts&gt;</span> element. Again the actual value is specified with the <span class="attributeName">val</span> attribute, with <span class="attributeValue">100</span>
+ being one point size.  Below is the same shape as above, except that 
+the first bullet character is set to 350% of the surrounding text.</p>
+<div class="code">
+	<div class="codeL1">&lt;a:pPr lvl="1"&gt;</div>
+    <div class="codeL2">&lt;a:buClr&gt;</div>
+    	<div class="codeL3">&lt;a:srgbClr val="00B0F0"/&gt;</div>
+    <div class="codeL2">&lt;/a:buClr&gt;</div>
+    <div class="codeL2"><span style="color:#FF0000">&lt;a:buSzPct val="350000"/&gt;</span></div>
+    <div class="codeL2">&lt;a:buFont typeface="Wingdings" pitchFamily="2" charset="2"/&gt;</div>
+    	<div class="codeL2">&lt;a:buChar char="q"/&gt;</div>
+    <div class="codeL1">&lt;/a:pPr&gt;</div>
+	<div class="codeL1">. . .</div>
+	<div class="codeL1">&lt;a:pPr lvl="2"&gt;</div>
+    <div class="codeL2">&lt;a:buFont typeface="Wingdings" pitchFamily="2" charset="2"/&gt;</div>
+    	<div class="codeL2">&lt;a:buChar char="J"/&gt;</div>
+    <div class="codeL1">&lt;/a:pPr&gt;</div>
+</div>
+<p><img alt="Shape with text - bullet size" src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/drwSp-text-bullet4.gif" style="padding:10px;"></p>
+
+<p>It is possible to set the bullet size to be the same point size as 
+the text run that contains the bullet.  This is specified with the empty
+ <span class="elementName">&lt;a:buSzTx&gt;</span> element. Of course if no size is specified for the run, then the size of the bullet will follow the default text size.</p>
+
+<h3>No Bullets/h3&gt;
+<p>To specify that a paragraph within a shape is to have no bullet formatting applied, specify the empty <span class="elementName">&lt;a:buNone&gt;</span> element as a child of <span class="featuredItem">&lt;a:pPr&gt;</span>.</p>
+
+</h3><h2>Automatic Numbering</h2>
+<p>Automatic numbering of paragraphs can be specified with the <span class="elementName">&lt;a:buAutoNum&gt;</span> element within <span class="featuredItem">&lt;a:pPr&gt;</span>. The numbering scheme to be used and the indentation and other characteristics are affected by the attributes of <span class="elementName">&lt;a:buAutoNum&gt;</span> as well as by the level specified for the paragraph, as discussed above. The auto numbering element has two attributes: <span class="attributeName">startAt</span> and <span class="attributeName">type</span>. The <span class="attributeName">startAt</span>
+ specifies the number that starts the numbering sequence. When the 
+numbering is alphabetical, the number should map to the approprirate 
+latter--e.g., 2 to 'b', 27 to 'aa', etc. The <span class="attributeName">type</span> specifies the numbering scheme to be used.  Possible values include: </p>
+<ul>
+<li>alphaLcParenBoth -- (a), (b), (c), ...</li>
+<li>alphaLcParenR -- a), b), c), ...</li>
+<li>alphaLcPeriod -- a., b., c., ...</li>
+<li>alphaUcParenBoth -- (A), (B), (C), ...</li>
+<li>alphaUcParenR -- A), B), C), ...</li>
+<li>alphaUcPeriod -- A., B., C., ...</li>
+<li>arabicParenBoth -- (1), (2), (3), ...</li>
+<li>arabicParenR -- 1), 2), 3), ...</li>
+<li>arabicPeriod -- 1., 2., 3., ...</li>
+<li>arabicPlain -- 1, 2, 3, ...</li>
+<li>romanLcParenBoth -- (i), (ii), (iii), ...</li>
+<li>romanLcParenR -- i), ii), iii), ...</li>
+<li>romanLcPeriod -- i., ii., iii., ...</li>
+<li>romanUcParenBoth -- (I), (II), (III), ...</li>
+<li>romanUcParenR -- I), II), III), ...</li>
+<li>romanUcPeriod -- I., II., III., ...</li>
+</ul>
+<p>Below is the same shape as above, but with auto numbering set for both paragraphs. The first starts at D, using the <span class="attributeValue">alphaUcPeriod</span> scheme, and the second starts at I using the <span class="attributeValue">romanUcParenBoth</span> scheme.</p>
+
+<div class="code">
+	<div class="codeL1">&lt;a:pPr lvl="1"&gt;</div>
+    	<div class="codeL2">&lt;a:buAutoNum type="alphaUcPeriod" startAt="4"/&gt;</div>
+    <div class="codeL1">&lt;/a:pPr&gt;</div>
+	<div class="codeL1">. . .</div>
+	<div class="codeL1">&lt;a:pPr lvl="2"&gt;</div>
+    	<div class="codeL2">&lt;a:buAutoNum type="romanUcParenBoth" startAt="1"/&gt;</div>
+    <div class="codeL1">&lt;/a:pPr&gt;</div>
+</div>
+<p><img alt="Shape with text - auto numbering" src="Office%20Open%20XML%20-%20DrawingML%20-%20Shapes%20-%20Text%20-%20Bullets%20and%20Numbering_files/drwSp-text-numbering2.gif" style="padding:10px;"></p>
+
+	<!-- end #mainContent -->
+    </div>
+	<!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat">
+  <div id="footer">
+      <a href="http://officeopenxml.com/aboutThisSite.php">About this site</a> | <a href="http://officeopenxml.com/contactUs.php">Contact us</a>
+<br>Copyright © 2023. All Rights Reserved.
+
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+
+
+</body></html>

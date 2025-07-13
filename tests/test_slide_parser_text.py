@@ -56,7 +56,7 @@ def test_extract_paragraph_properties(mock_parser_instance):
     </a:p>
     """
     element = etree.fromstring(xml_str)
-    paragraph = extract_paragraph_properties(mock_parser_instance, element, None)
+    paragraph = extract_paragraph_properties(mock_parser_instance, element, None, None)
     assert paragraph.properties.align == "ctr"
     assert paragraph.properties.indent == 1000
     assert paragraph.properties.bullet_type == "char"
@@ -78,7 +78,9 @@ def test_extract_text_frame_properties(mock_parser_instance):
     </p:txBody>
     """
     element = etree.fromstring(xml_str)
-    text_frame = extract_text_frame_properties(mock_parser_instance, element, None)
+    text_frame = extract_text_frame_properties(
+        mock_parser_instance, element, None, None
+    )
     assert len(text_frame.paragraphs) == 2
     assert text_frame.paragraphs[0].text_runs[0].text == "Line 1"
     assert text_frame.paragraphs[1].text_runs[0].text == "Line 2"

@@ -5,7 +5,7 @@ This module contains functions that render individual PowerPoint elements to HTM
 
 import os
 
-from htpy import div, img, li, p, span, ul
+from htpy import div, img, p, span
 from markupsafe import Markup
 
 from learnx_parser.models.core import (
@@ -15,18 +15,25 @@ from learnx_parser.models.core import (
     Shape,
 )
 from learnx_parser.writers.css_utils import (
+    CoordinateConverter,
+    ZIndexLayers,
     emu_to_px,
     get_flex_properties_from_name,
     get_image_crop_css,
     get_paragraph_style_css,
     get_run_style_css,
     get_shape_style_css,
+    get_text_frame_alignment_css,
     get_transform_css,
 )
 
 
 def render_graphic_frame_html(
-    element: GraphicFrame, parent_x: int = 0, parent_y: int = 0
+    element: GraphicFrame,
+    parent_x: int = 0,
+    parent_y: int = 0,
+    z_index: int = 1,
+    prevent_overflow: bool = True,
 ) -> str:
     """Render a graphic frame element (charts, tables) to HTML.
 
@@ -34,22 +41,29 @@ def render_graphic_frame_html(
         element: GraphicFrame object
         parent_x: Parent container X offset
         parent_y: Parent container Y offset
+        z_index: Z-index for element layering
+        prevent_overflow: Whether to prevent element overflow
 
     Returns:
         str: HTML representation of the graphic frame
     """
-    # Calculate position and size relative to parent
-    x = emu_to_px(element.transform.x - parent_x)
-    y = emu_to_px(element.transform.y - parent_y)
-    cx = emu_to_px(element.transform.cx)
-    cy = emu_to_px(element.transform.cy)
+    # Extract position using enhanced coordinate converter
+    position = CoordinateConverter.extract_position(element.transform)
+    if position is None:
+        return ""
+
+    # Adjust for parent offset
+    position["x"] -= emu_to_px(parent_x)
+    position["y"] -= emu_to_px(parent_y)
+
+    # Generate CSS with overflow prevention
+    css_style = CoordinateConverter.generate_absolute_css(
+        position, z_index, prevent_overflow=prevent_overflow
+    )
 
     graphic_frame = div(
-        class_="graphic-frame",
-        style=f"left: {x}px; top: {y}px; width: {cx}px; height: {cy}px; position: absolute; border: 1px dashed #ccc;"
-    )[
-        Markup("<!-- Graphic Frame content (e.g., charts, tables) would go here -->")
-    ]
+        class_="graphic-frame", style=f"{css_style} border: 1px dashed #ccc;"
+    )[Markup("<!-- Graphic Frame content (e.g., charts, tables) would go here -->")]
 
     return str(graphic_frame)
 
@@ -59,6 +73,10 @@ def render_group_shape_html(
     parent_x: int = 0,
     parent_y: int = 0,
     use_absolute_pos: bool = True,
+    z_index_base: int = 1,
+    prevent_overflow: bool = True,
+    theme_resolver=None,
+    slide_background_color=None,
 ) -> str:
     """Render a group shape element to HTML.
 
@@ -67,72 +85,95 @@ def render_group_shape_html(
         parent_x: Parent container X offset
         parent_y: Parent container Y offset
         use_absolute_pos: Whether to use absolute positioning
+        z_index_base: Base z-index for child elements
+        prevent_overflow: Whether to prevent element overflow
 
     Returns:
         str: HTML representation of the group shape
     """
-    # Calculate the relative position and size of the group shape in pixels
-    # These are relative to its parent container (if any), hence parent_x and parent_y are subtracted.
-    relative_x = emu_to_px(element.transform.x - parent_x)
-    relative_y = emu_to_px(element.transform.y - parent_y)
-    cx = emu_to_px(element.transform.cx)
-    cy = emu_to_px(element.transform.cy)
+    # Use enhanced coordinate converter for positioning
+    container_style = ""
+    if use_absolute_pos:
+        position = CoordinateConverter.extract_position(element.transform)
+        if position is not None:
+            # Adjust for parent offset
+            position["x"] -= emu_to_px(parent_x)
+            position["y"] -= emu_to_px(parent_y)
+
+            # Generate CSS with overflow prevention
+            container_style = CoordinateConverter.generate_absolute_css(
+                position, z_index_base, prevent_overflow=prevent_overflow
+            )
+    else:
+        # Fallback for responsive mode
+        relative_x = emu_to_px(element.transform.x - parent_x)
+        relative_y = emu_to_px(element.transform.y - parent_y)
+        cx = emu_to_px(element.transform.cx)
+        cy = emu_to_px(element.transform.cy)
+        container_style = f"width: {cx}px; height: {cy}px;"
 
     # Extract flexbox properties from the group shape's name (if any)
     flex_properties = get_flex_properties_from_name(element.name)
-
-    # Set up the container style
-    container_style = f"width: {cx}px; height: {cy}px;"
-    if use_absolute_pos:
-        container_style += (
-            f" left: {relative_x}px; top: {relative_y}px; position: absolute;"
-        )
     if flex_properties:
         container_style += f" {flex_properties}"
 
-    # Generate HTML for child elements
+    # Generate HTML for child elements with proper z-indexing
     content_html = ""
     if hasattr(element, "children") and element.children:
         shapes, pictures, group_shapes, graphic_frames = element.children
 
-        # Render child shapes
-        for child_shape in shapes:
+        # Render child shapes with incremented z-index
+        for i, child_shape in enumerate(shapes):
             content_html += render_shape_html(
                 child_shape,
                 element.transform.x,
                 element.transform.y,
                 use_absolute_pos=False,
+                z_index=ZIndexLayers.get_element_z_index("shape", z_index_base + i),
+                slide_background_color=slide_background_color,
+                prevent_overflow=prevent_overflow,
+                theme_resolver=theme_resolver,
             )
 
-        # Render child pictures
-        for child_picture in pictures:
+        # Render child pictures with incremented z-index
+        for i, child_picture in enumerate(pictures):
             content_html += render_picture_html(
                 child_picture,
                 element.transform.x,
                 element.transform.y,
                 use_absolute_pos=False,
+                z_index=ZIndexLayers.get_element_z_index("image", z_index_base + i),
+                prevent_overflow=prevent_overflow,
             )
 
-        # Render child group shapes
-        for child_group in group_shapes:
+        # Render child group shapes with incremented z-index
+        for i, child_group in enumerate(group_shapes):
             content_html += render_group_shape_html(
                 child_group,
                 element.transform.x,
                 element.transform.y,
                 use_absolute_pos=False,
+                z_index_base=z_index_base + i + 1,
+                prevent_overflow=prevent_overflow,
+                theme_resolver=theme_resolver,
+            )
+
+        # Render child graphic frames with incremented z-index
+        for i, child_frame in enumerate(graphic_frames):
+            content_html += render_graphic_frame_html(
+                child_frame,
+                element.transform.x,
+                element.transform.y,
+                z_index=z_index_base + i + 1,
+                prevent_overflow=prevent_overflow,
             )
 
     # Determine container class based on flexbox properties
     container_class = "group-shape"
-    if element.is_flex_container:
+    if hasattr(element, "is_flex_container") and element.is_flex_container:
         container_class += " flex-container"
 
-    group_div = div(
-        class_=container_class,
-        style=container_style
-    )[
-        Markup(content_html)
-    ]
+    group_div = div(class_=container_class, style=container_style)[Markup(content_html)]
 
     return str(group_div)
 
@@ -144,6 +185,8 @@ def render_picture_html(
     parent_cx: int = 0,
     parent_cy: int = 0,
     use_absolute_pos: bool = True,
+    z_index: int = 1,
+    prevent_overflow: bool = True,
 ) -> str:
     """Render a picture element to HTML.
 
@@ -154,16 +197,12 @@ def render_picture_html(
         parent_cx: Parent container width
         parent_cy: Parent container height
         use_absolute_pos: Whether to use absolute positioning
+        z_index: Z-index for element layering
+        prevent_overflow: Whether to prevent element overflow
 
     Returns:
         str: HTML representation of the picture
     """
-    # Calculate the position and size of the picture in pixels, relative to its parent
-    x = emu_to_px(element.transform.x - parent_x)
-    y = emu_to_px(element.transform.y - parent_y)
-    cx = emu_to_px(element.transform.cx)
-    cy = emu_to_px(element.transform.cy)
-
     # Construct the image source path, assuming media files are in a 'media' subdirectory
     if element.blip_fill and element.blip_fill.path:
         image_src = os.path.join("media", os.path.basename(element.blip_fill.path))
@@ -171,12 +210,27 @@ def render_picture_html(
         image_src = "placeholder.png"  # Use placeholder when no image data is available
 
     style_attributes = []
-    # If absolute positioning is enabled, add left, top, width, and height styles
+
+    # If absolute positioning is enabled, use enhanced coordinate converter
     if use_absolute_pos:
-        style_attributes.append(f"left: {x}px;")
-        style_attributes.append(f"top: {y}px;")
-        style_attributes.append(f"width: {cx}px;")
-        style_attributes.append(f"height: {cy}px;")
+        position = CoordinateConverter.extract_position(element.transform)
+        if position is not None:
+            # Adjust for parent offset
+            position["x"] -= emu_to_px(parent_x)
+            position["y"] -= emu_to_px(parent_y)
+
+            # Generate CSS with overflow prevention
+            positioning_css = CoordinateConverter.generate_absolute_css(
+                position, z_index, prevent_overflow=prevent_overflow
+            )
+            style_attributes.append(positioning_css)
+    else:
+        # Fallback to manual positioning for responsive mode
+        x = emu_to_px(element.transform.x - parent_x)
+        y = emu_to_px(element.transform.y - parent_y)
+        cx = emu_to_px(element.transform.cx)
+        cy = emu_to_px(element.transform.cy)
+        style_attributes.append(f"width: {cx}px; height: {cy}px;")
 
     # Add transform (rotation, flip) and image crop (clip-path) CSS properties
     style_attributes.append(get_transform_css(element.transform))
@@ -187,11 +241,7 @@ def render_picture_html(
     style_string = " ".join(filter(None, style_attributes))
 
     # Return an HTML img tag representing the picture with its styles
-    image_element = img(
-        class_="image",
-        src=image_src,
-        style=style_string
-    )
+    image_element = img(class_="image", src=image_src, style=style_string)
 
     return str(image_element)
 
@@ -203,6 +253,10 @@ def render_shape_html(
     parent_cx: int = 0,
     parent_cy: int = 0,
     use_absolute_pos: bool = True,
+    z_index: int = 1,
+    prevent_overflow: bool = True,
+    theme_resolver=None,
+    slide_background_color=None,
 ) -> str:
     """Render a shape element to HTML.
 
@@ -213,51 +267,73 @@ def render_shape_html(
         parent_cx: Parent container width
         parent_cy: Parent container height
         use_absolute_pos: Whether to use absolute positioning
+        z_index: Z-index for element layering
+        prevent_overflow: Whether to prevent element overflow
 
     Returns:
         str: HTML representation of the shape
     """
-    # Calculate position and size relative to parent
-    x = emu_to_px(element.transform.x - parent_x)
-    y = emu_to_px(element.transform.y - parent_y)
-    cx = emu_to_px(element.transform.cx)
-    cy = emu_to_px(element.transform.cy)
-
     # Start building style attributes
     style_attributes = []
+
     if use_absolute_pos:
-        style_attributes.append(f"left: {x}px;")
-        style_attributes.append(f"top: {y}px;")
-    style_attributes.append(f"width: {cx}px;")
-    style_attributes.append(f"height: {cy}px;")
+        # Use enhanced coordinate converter for absolute positioning
+        position = CoordinateConverter.extract_position(element.transform)
+        if position is not None:
+            # Adjust for parent offset
+            position["x"] -= emu_to_px(parent_x)
+            position["y"] -= emu_to_px(parent_y)
+
+            # Generate CSS with overflow prevention
+            positioning_css = CoordinateConverter.generate_absolute_css(
+                position, z_index, prevent_overflow=prevent_overflow
+            )
+            style_attributes.append(positioning_css)
+    else:
+        # Fallback to manual positioning for responsive mode
+        x = emu_to_px(element.transform.x - parent_x)
+        y = emu_to_px(element.transform.y - parent_y)
+        cx = emu_to_px(element.transform.cx)
+        cy = emu_to_px(element.transform.cy)
+        style_attributes.append(f"width: {cx}px; height: {cy}px;")
 
     # Add shape-specific styles
     style_attributes.append(get_shape_style_css(element))
     style_attributes.append(get_transform_css(element.transform))
 
+    # Add flexbox properties for alignment based on XML-parsed text frame properties
+    if element.text_frame:
+        text_frame_alignment = get_text_frame_alignment_css(element.text_frame)
+        if text_frame_alignment:
+            style_attributes.append(text_frame_alignment)
+
     # Generate content HTML
     content_html = ""
     if element.text_frame:
-        content_html = render_text_frame_html(element.text_frame)
+        content_html = render_text_frame_html(
+            element.text_frame,
+            theme_resolver=theme_resolver,
+            placeholder_type=element.ph_type,
+            slide_background_color=slide_background_color,
+        )
 
     # Join style attributes
     style_string = " ".join(filter(None, style_attributes))
 
-    shape_div = div(
-        class_="shape",
-        style=style_string
-    )[
-        Markup(content_html)
-    ]
+    shape_div = div(class_="shape", style=style_string)[Markup(content_html)]
 
     return str(shape_div)
 
 
-def render_text_frame_html(text_frame) -> str:
+def render_text_frame_html(
+    text_frame, theme_resolver=None, placeholder_type=None, slide_background_color=None
+) -> str:
     """Render a text frame to HTML.
 
     Args:
         text_frame: TextFrame object containing paragraphs
+        theme_resolver: ThemeResolver instance for theme-based styling
+        placeholder_type: Placeholder type for font sizing (title, body, etc.)
 
     Returns:
         str: HTML representation of the text frame content
@@ -267,17 +343,27 @@ def render_text_frame_html(text_frame) -> str:
 
     # Check if this text frame should be rendered as a bullet list
     if _should_render_as_bullet_list(text_frame.paragraphs):
-        return _render_as_bullet_list(text_frame.paragraphs)
+        return _render_as_bullet_list(
+            text_frame.paragraphs,
+            theme_resolver=theme_resolver,
+            placeholder_type=placeholder_type,
+            slide_background_color=slide_background_color,
+        )
 
     # Default paragraph rendering
     content_html = ""
     for paragraph in text_frame.paragraphs:
-        paragraph_style = get_paragraph_style_css(paragraph)
+        paragraph_style = get_paragraph_style_css(paragraph, placeholder_type)
         paragraph_content = ""
 
         if paragraph.text_runs:
             for run in paragraph.text_runs:
-                run_style = get_run_style_css(run)
+                run_style = get_run_style_css(
+                    run,
+                    theme_resolver=theme_resolver,
+                    placeholder_type=placeholder_type,
+                    slide_background_color=slide_background_color,
+                )
                 if run_style:
                     run_span = span(style=run_style)[run.text]
                     paragraph_content += str(run_span)
@@ -288,36 +374,18 @@ def render_text_frame_html(text_frame) -> str:
             paragraph_element = p(style=paragraph_style)[Markup(paragraph_content)]
         else:
             paragraph_element = p[Markup(paragraph_content)]
-        
+
         content_html += str(paragraph_element)
 
     return content_html
 
 
 def _should_render_as_bullet_list(paragraphs) -> bool:
-    """Check if paragraphs should be rendered as a bullet list."""
-    if len(paragraphs) <= 1:
+    """Check if paragraphs should be rendered as a bullet list based only on OOXML bullet properties."""
+    if not paragraphs:
         return False
 
-    # Get all non-empty paragraph texts
-    all_texts = [
-        "".join([run.text for run in p.text_runs]).strip()
-        for p in paragraphs
-        if "".join([run.text for run in p.text_runs]).strip()
-    ]
-
-    if len(all_texts) <= 1:
-        return False
-
-    # Check if texts are list-like (short, similar length)
-    avg_length = sum(len(text) for text in all_texts) / len(all_texts)
-    if avg_length < 50:  # Short items are likely bullets
-        # Check if they start with similar patterns (Topic, etc.)
-        starts_with_topic = any(text.startswith("Topic") for text in all_texts)
-        if starts_with_topic and len(all_texts) >= 3:
-            return True
-
-    # Check explicit bullet properties
+    # Only rely on explicit bullet properties from OOXML - no heuristics
     for paragraph in paragraphs:
         if (
             paragraph.properties.bullet_type is not None
@@ -330,25 +398,167 @@ def _should_render_as_bullet_list(paragraphs) -> bool:
     return False
 
 
-def _render_as_bullet_list(paragraphs) -> str:
-    """Render paragraphs as an HTML bullet list."""
-    list_items = []
+def _render_as_bullet_list(
+    paragraphs, theme_resolver=None, placeholder_type=None, slide_background_color=None
+) -> str:
+    """Render paragraphs as properly nested HTML bullet list based on paragraph levels."""
+    if not paragraphs:
+        return ""
 
-    for paragraph in paragraphs:
-        paragraph_text = "".join([run.text for run in paragraph.text_runs]).strip()
-        if paragraph_text:
-            # Apply run styles within list items
-            item_content = ""
-            for run in paragraph.text_runs:
-                run_style = get_run_style_css(run)
-                if run_style:
-                    run_span = span(style=run_style)[run.text]
-                    item_content += str(run_span)
+    # Filter out empty paragraphs
+    non_empty_paragraphs = [
+        p for p in paragraphs if "".join([run.text for run in p.text_runs]).strip()
+    ]
+
+    if not non_empty_paragraphs:
+        return ""
+
+    # Build nested structure based on paragraph levels
+    return _build_nested_list(
+        non_empty_paragraphs, theme_resolver, placeholder_type, slide_background_color
+    )
+
+
+def _build_nested_list(
+    paragraphs,
+    theme_resolver=None,
+    placeholder_type=None,
+    slide_background_color=None,
+    current_level=0,
+) -> str:
+    """Recursively build nested HTML lists based on paragraph levels."""
+    if not paragraphs:
+        return ""
+
+    result_html = ""
+    i = 0
+
+    while i < len(paragraphs):
+        paragraph = paragraphs[i]
+        para_level = (
+            paragraph.properties.level if paragraph.properties.level is not None else 0
+        )
+
+        if para_level < current_level:
+            # This paragraph belongs to a higher level, stop processing
+            break
+        elif para_level == current_level:
+            # Same level - add as list item
+            if not result_html:
+                # Start the list
+                list_style = _get_list_style_for_level(
+                    paragraph, theme_resolver, placeholder_type, slide_background_color
+                )
+                list_type = _get_list_type_for_paragraph(paragraph)
+
+                if list_type == "ol":
+                    result_html = f'<ol style="{list_style}">'
                 else:
-                    item_content += run.text
+                    result_html = f'<ul style="{list_style}">'
 
-            list_item = li[Markup(item_content)]
-            list_items.append(str(list_item))
+            # Create list item content
+            item_content = _render_paragraph_runs(
+                paragraph, theme_resolver, placeholder_type, slide_background_color
+            )
 
-    bullet_list = ul[Markup("".join(list_items))]
-    return str(bullet_list)
+            # Look ahead for nested items
+            nested_start = i + 1
+            nested_paragraphs = []
+            j = nested_start
+            while j < len(paragraphs):
+                next_para = paragraphs[j]
+                next_level = (
+                    next_para.properties.level
+                    if next_para.properties.level is not None
+                    else 0
+                )
+                if next_level <= current_level:
+                    break
+                nested_paragraphs.append(next_para)
+                j += 1
+
+            # Render nested content if found
+            nested_html = ""
+            if nested_paragraphs:
+                nested_html = _build_nested_list(
+                    nested_paragraphs,
+                    theme_resolver,
+                    placeholder_type,
+                    slide_background_color,
+                    current_level + 1,
+                )
+                i = j - 1  # Skip the nested paragraphs we just processed
+
+            # Add the list item
+            result_html += f"<li>{item_content}{nested_html}</li>"
+            i += 1
+        else:
+            # para_level > current_level - this shouldn't happen in well-formed lists
+            i += 1
+
+    # Close the list
+    if result_html:
+        if result_html.startswith("<ol"):
+            result_html += "</ol>"
+        else:
+            result_html += "</ul>"
+
+    return result_html
+
+
+def _get_list_style_for_level(
+    paragraph, theme_resolver=None, placeholder_type=None, slide_background_color=None
+) -> str:
+    """Get CSS style for the list container based on paragraph properties."""
+    from learnx_parser.writers.css_utils import get_paragraph_style_css
+
+    # Get base paragraph style (alignment, spacing)
+    base_style = get_paragraph_style_css(paragraph, placeholder_type)
+
+    # Remove hardcoded colors - let text color come from run properties
+    # Add proper bullet positioning
+    additional_styles = "list-style-position: outside; padding-left: 20px;"
+
+    if base_style:
+        return f"{base_style} {additional_styles}"
+    else:
+        return additional_styles
+
+
+def _get_list_type_for_paragraph(paragraph) -> str:
+    """Determine HTML list type (ul/ol) based on bullet properties."""
+    if not paragraph.properties or not paragraph.properties.bullet_type:
+        return "ul"  # Default to unordered list
+
+    bullet_type = paragraph.properties.bullet_type
+
+    if bullet_type == "autoNum":
+        return "ol"  # Numbered list
+    elif bullet_type in ["char", "blip"]:
+        return "ul"  # Bullet list
+    elif bullet_type == "none":
+        return "ul"  # Still use ul but with no bullets
+    else:
+        return "ul"  # Default
+
+
+def _render_paragraph_runs(
+    paragraph, theme_resolver=None, placeholder_type=None, slide_background_color=None
+) -> str:
+    """Render the text runs within a paragraph for list item content."""
+    item_content = ""
+
+    for run in paragraph.text_runs:
+        run_style = get_run_style_css(
+            run,
+            theme_resolver=theme_resolver,
+            placeholder_type=placeholder_type,
+            slide_background_color=slide_background_color,
+        )
+        if run_style:
+            run_span = span(style=run_style)[run.text]
+            item_content += str(run_span)
+        else:
+            item_content += run.text
+
+    return item_content

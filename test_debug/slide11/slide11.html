@@ -1,0 +1,57 @@
+<!doctype html><html><head><title>Slide 11</title><style>
+        body { 
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0px;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        
+        #player {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        #player canvas, #player div, #player iframe, #player img {
+            position: absolute;
+        }
+        
+        #resizer { 
+            left: 0px;
+            top: 0px;
+            height: 720px;
+            width: 1280px;
+            overflow: hidden;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -640px;
+            margin-top: -360px;
+            background-color: #FFFFFF;
+        }
+        
+        .shape {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .image {
+            position: absolute;
+        }
+        
+        /* Auto-scaling based on window size */
+        @media all {
+            #resizer {
+                transform: scale(min(calc(100vw / 1280), calc(100vh / 720)));
+            }
+        }
+        </style></head><body><div id="player"><div id="resizer"><div class="shape" style="position: absolute; left: 134px; top: 522px; width: 960px; height: 134px; z-index: 1;"><p>Final tips & takeaways</p></div><div class="shape" style="position: absolute; left: 134px; top: 72px; width: 518px; height: 422px; z-index: 1;"><ul><li>Consistent rehearsal</li><li>Strengthen your familiarity</li><li>Refine delivery style</li><li>Pacing, tone, and emphasis</li><li>Timing and transitions</li><li>Aim for seamless, professional delivery</li><li>Practice audience</li><li>Enlist colleagues to listen & provide feedback</li></ul></div><div class="shape" style="position: absolute; left: 704px; top: 72px; width: 518px; height: 422px; z-index: 1;"><p>Seek feedback</p><p>Reflect on performance</p><p>Explore new techniques</p><p>Set personal goals</p><p>Iterate and adapt</p></div></div></div></body></html>
