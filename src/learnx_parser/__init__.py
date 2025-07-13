@@ -6,14 +6,13 @@ import zipfile
 from learnx_parser.services.document_parser import DocumentParser
 
 
-def parse_pptx(pptx_file_path, output_dir="./output", positioning_mode="responsive"):
+def parse_pptx(pptx_file_path, output_dir="./output"):
     """
-    Parses a .pptx file and converts its content to HTML and JSON.
+    Parses a .pptx file and converts its content to HTML and JSON using absolute positioning.
 
     Args:
         pptx_file_path (str): The absolute path to the .pptx file.
         output_dir (str): The directory where the HTML and JSON output will be saved.
-        positioning_mode (str): The positioning mode ("responsive", "absolute", "hybrid").
     """
     if not os.path.exists(pptx_file_path):
         raise FileNotFoundError(f"PPTX file not found: {pptx_file_path}")
@@ -28,8 +27,8 @@ def parse_pptx(pptx_file_path, output_dir="./output", positioning_mode="responsi
         with zipfile.ZipFile(pptx_file_path, "r") as zip_ref:
             zip_ref.extractall(temp_unpacked_dir)
 
-        # Initialize and run the DocumentParser
-        parser = DocumentParser(temp_unpacked_dir, output_dir, positioning_mode)
+        # Initialize and run the DocumentParser with absolute positioning
+        parser = DocumentParser(temp_unpacked_dir, output_dir)
         parser.parse_presentation()
 
     finally:

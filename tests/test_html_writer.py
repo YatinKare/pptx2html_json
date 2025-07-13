@@ -50,7 +50,7 @@ def html_writer():
 
 def test_write_slide_html(slide_data, html_writer):
     slide_number = 23
-    output_file = html_writer.write_slide_html(slide_data, slide_number)
+    html_writer.write_slide_html(slide_data, slide_number)
 
     expected_output_dir = os.path.join(
         html_writer.output_directory, f"slide{slide_number}"
@@ -126,12 +126,11 @@ def test_image_transform_and_crop_css(slide_data, html_writer):
         def coord_to_percent(coord):
             return f"{coord / 1000:.2f}%" if coord is not None else "0%"
 
-        top = coord_to_percent(picture_obj.blip_fill.src_rect_t)
-        bottom = coord_to_percent(picture_obj.blip_fill.src_rect_b)
-        left = coord_to_percent(picture_obj.blip_fill.src_rect_l)
-        right = coord_to_percent(picture_obj.blip_fill.src_rect_r)
+        coord_to_percent(picture_obj.blip_fill.src_rect_t)
+        coord_to_percent(picture_obj.blip_fill.src_rect_b)
+        coord_to_percent(picture_obj.blip_fill.src_rect_l)
+        coord_to_percent(picture_obj.blip_fill.src_rect_r)
 
-        expected_clip_path_css = f"clip-path: inset({top} {right} {bottom} {left});"
         # Use more flexible assertion due to floating point precision
         assert "clip-path: inset(" in img_style, (
             "Expected clip-path CSS not found in image style."
@@ -180,4 +179,4 @@ def test_shape_position_and_size_css(html_writer):
     assert shape_match is not None, (
         f"Shape div not found in HTML. Content: {html_content[:500]}..."
     )
-    shape_style = shape_match.group(1)
+    shape_match.group(1)

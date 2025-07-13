@@ -258,23 +258,18 @@ class ZIndexLayers:
 
 
 class PositioningConfig:
-    """Configuration for positioning modes in version 0.2.6.
+    """Configuration for absolute positioning mode.
 
-    Manages configuration settings for different positioning modes:
-    - RESPONSIVE: Original flexbox-based layout that adapts to screen size
-    - ABSOLUTE: Fixed 1280x720 container with pixel-perfect positioning
-    - HYBRID: Combination mode (planned for future implementation)
-
-    The absolute positioning mode provides pixel-perfect rendering that matches
-    PowerPoint's exact layout, while responsive mode maintains flexible layouts
-    suitable for various screen sizes.
+    Uses absolute positioning with fixed 1280x720 container for pixel-perfect rendering
+    that matches PowerPoint's exact layout. The positioning uses CSS transforms for
+    responsive scaling while maintaining precise element placement.
     """
 
     RESPONSIVE = "responsive"
     ABSOLUTE = "absolute"
     HYBRID = "hybrid"
 
-    def __init__(self, mode=RESPONSIVE):
+    def __init__(self, mode=ABSOLUTE):
         self.mode = mode
         # Use actual slide dimensions from Galaxy presentation (16:9 aspect ratio)
         self.slide_width = 1280
@@ -609,51 +604,3 @@ def get_run_style_css(
             styles.append(f"color: #{text_color};")
 
     return " ".join(styles)
-
-
-def get_flex_properties_from_name(name: str) -> str:
-    """Extract flexbox CSS properties from element name.
-
-    Args:
-        name: Element name that may contain flexbox keywords
-
-    Returns:
-        str: CSS flexbox properties
-    """
-    if not name:
-        return ""
-
-    name_lower = name.lower()
-    flex_props = []
-
-    # Check for flex container
-    if "flex-container" in name_lower:
-        flex_props.append("display: flex;")
-
-    # Check for flex direction
-    if "flex-row" in name_lower:
-        flex_props.append("flex-direction: row;")
-    elif "flex-column" in name_lower:
-        flex_props.append("flex-direction: column;")
-
-    # Check for justify-content
-    if "justify-start" in name_lower:
-        flex_props.append("justify-content: flex-start;")
-    elif "justify-center" in name_lower:
-        flex_props.append("justify-content: center;")
-    elif "justify-end" in name_lower:
-        flex_props.append("justify-content: flex-end;")
-    elif "justify-between" in name_lower:
-        flex_props.append("justify-content: space-between;")
-    elif "justify-around" in name_lower:
-        flex_props.append("justify-content: space-around;")
-
-    # Check for align-items
-    if "align-start" in name_lower:
-        flex_props.append("align-items: flex-start;")
-    elif "align-center" in name_lower:
-        flex_props.append("align-items: center;")
-    elif "align-end" in name_lower:
-        flex_props.append("align-items: flex-end;")
-
-    return " ".join(flex_props)

@@ -62,11 +62,15 @@ class PresentationParser:
 
                     # Parse bullet properties at presentation level
                     self._parse_bullet_properties_for_level(level_element, level_props)
-                    
+
                     # Parse default run properties (defRPr) for font size inheritance
-                    def_rpr_element = level_element.find(".//a:defRPr", namespaces=self.nsmap)
+                    def_rpr_element = level_element.find(
+                        ".//a:defRPr", namespaces=self.nsmap
+                    )
                     if def_rpr_element is not None:
-                        level_props.default_run_properties = self._parse_default_run_properties(def_rpr_element)
+                        level_props.default_run_properties = (
+                            self._parse_default_run_properties(def_rpr_element)
+                        )
 
                     # Store using 0-based indexing (level 1 -> index 0)
                     default_text_styles[level - 1] = level_props
@@ -132,50 +136,56 @@ class PresentationParser:
 
     def _parse_default_run_properties(self, def_rpr_element) -> RunProperties:
         """Parse default run properties (defRPr) from a level element.
-        
+
         This extracts font size and other run properties for the inheritance hierarchy.
-        
+
         Args:
             def_rpr_element: XML element containing default run properties
-            
+
         Returns:
             RunProperties: Parsed run properties with font size and other attributes
         """
         run_props = RunProperties()
-        
+
         # Parse font size (sz attribute) - most important for hierarchy
         if def_rpr_element.get("sz") is not None:
             run_props.font_size = int(def_rpr_element.get("sz"))
-        
+
         # Parse other run properties that can be inherited
         if def_rpr_element.get("b") == "1":
             run_props.bold = True
-        
+
         if def_rpr_element.get("i") == "1":
             run_props.italic = True
-            
+
         if def_rpr_element.get("cap") is not None:
             run_props.cap = def_rpr_element.get("cap")
-        
+
         # Parse font face (explicit font)
         latin_font_element = def_rpr_element.find(".//a:latin", namespaces=self.nsmap)
         if latin_font_element is not None:
             run_props.font_face = latin_font_element.get("typeface")
-        
+
         # Parse font reference (theme-based font)
         font_ref_element = def_rpr_element.find(".//a:fontRef", namespaces=self.nsmap)
         if font_ref_element is not None:
             run_props.font_ref = font_ref_element.get("idx")  # "major" or "minor"
-        
+
         # Parse color
-        solid_fill_element = def_rpr_element.find(".//a:solidFill", namespaces=self.nsmap)
+        solid_fill_element = def_rpr_element.find(
+            ".//a:solidFill", namespaces=self.nsmap
+        )
         if solid_fill_element is not None:
-            srgb_color_element = solid_fill_element.find(".//a:srgbClr", namespaces=self.nsmap)
+            srgb_color_element = solid_fill_element.find(
+                ".//a:srgbClr", namespaces=self.nsmap
+            )
             if srgb_color_element is not None:
                 run_props.color = srgb_color_element.get("val")
             else:
-                scheme_color_element = solid_fill_element.find(".//a:schemeClr", namespaces=self.nsmap)
+                scheme_color_element = solid_fill_element.find(
+                    ".//a:schemeClr", namespaces=self.nsmap
+                )
                 if scheme_color_element is not None:
                     run_props.scheme_color = scheme_color_element.get("val")
-        
+
         return run_props

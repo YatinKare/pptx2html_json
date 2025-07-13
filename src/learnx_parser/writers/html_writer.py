@@ -11,10 +11,8 @@ from markupsafe import Markup
 from learnx_parser.models.core import Slide
 from learnx_parser.writers.css_utils import (
     PositioningConfig,
-    emu_to_px,
     get_gradient_css,
 )
-from learnx_parser.writers.layout_handlers import render_slide_content
 from learnx_parser.writers.theme_resolver import ThemeResolver
 
 
@@ -25,18 +23,16 @@ class HtmlWriter:
         self,
         output_directory="./output",
         pptx_unpacked_path=None,
-        positioning_mode="responsive",
     ):
         """Initialize the HTML writer.
 
         Args:
             output_directory: Directory where HTML files will be saved
             pptx_unpacked_path: Path to unpacked PPTX for resolving media files
-            positioning_mode: Positioning mode ('responsive', 'absolute', 'hybrid')
         """
         self.output_directory = output_directory
         self.pptx_unpacked_path = pptx_unpacked_path
-        self.positioning_config = PositioningConfig(positioning_mode)
+        self.positioning_config = PositioningConfig(PositioningConfig.ABSOLUTE)
 
         # Initialize theme resolver for background and color resolution
         self.theme_resolver = None
@@ -62,111 +58,13 @@ class HtmlWriter:
                 self.theme_resolver = None
 
     def write_slide_html(self, slide: Slide, slide_number: int):
-        """Write a slide to an HTML file.
+        """Write a slide to an HTML file using absolute positioning.
 
         Args:
             slide: Slide object containing the slide data
             slide_number: The slide number for file naming
         """
-        if self.positioning_config.mode == PositioningConfig.ABSOLUTE:
-            return self._write_slide_absolute(slide, slide_number)
-        else:
-            return self._write_slide_responsive(slide, slide_number)
-
-    def _write_slide_responsive(self, slide: Slide, slide_number: int):
-        """Write a slide using responsive positioning (original method).
-
-        Args:
-            slide: Slide object containing the slide data
-            slide_number: The slide number for file naming
-        """
-        # Determine the layout class for the slide container
-        layout_classes = ["slide-container"]
-        if slide.slide_layout and slide.slide_layout.type:
-            layout_classes.append(f"{slide.slide_layout.type}-layout")
-
-        # Get slide dimensions
-        slide_width = emu_to_px(slide.common_slide_data.cx)
-        slide_height = emu_to_px(slide.common_slide_data.cy)
-
-        # Generate background CSS
-        background_css = self._get_background_css(slide)
-
-        # Create CSS content
-        css_content = f"""
-        body {{ margin: 0; padding: 0; font-family: sans-serif; overflow: hidden; }}
-        .slide-container {{ 
-            position: relative; 
-            width: {slide_width}px; 
-            height: {slide_height}px; 
-            background-color: #fff; 
-            display: flex; 
-            flex-direction: column;
-            {background_css}
-        }}
-        .shape, .image, .graphic-frame, .group-shape, .placeholder-container {{ 
-            box-sizing: border-box; 
-        }}
-        .text-content {{ 
-            white-space: pre-wrap; 
-            word-wrap: break-word; 
-        }}
-
-        /* Layout-specific CSS */
-        .slide-container.picTx-layout .content-flex-container {{ 
-            display: flex; 
-            flex-direction: row; 
-            justify-content: space-around; 
-            align-items: center; 
-            flex: 1; 
-        }}
-        .slide-container.tx-layout .content-flex-container {{ 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            flex: 1; 
-        }}
-        .slide-container.titlePic-layout .content-flex-container {{ 
-            display: flex; 
-            flex-direction: row; 
-            justify-content: space-around; 
-            align-items: center; 
-            flex: 1; 
-        }}
-        .title-container {{ 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            flex: 0 0 auto; 
-        }}
-        .content-flex-container {{ 
-            display: flex; 
-            flex: 1; 
-        }}
-        """
-
-        # Render the slide content
-        slide_content = render_slide_content(slide, self, self.theme_resolver)
-
-        # Generate the HTML structure using htpy
-        html_doc = html[
-            head[title[f"Slide {slide_number}"], style[Markup(css_content)]],
-            body[div(class_=" ".join(layout_classes))[Markup(slide_content)]],
-        ]
-
-        # Create output directory and write file
-        slide_output_directory = os.path.join(
-            self.output_directory, f"slide{slide_number}"
-        )
-        os.makedirs(slide_output_directory, exist_ok=True)
-
-        output_file_path = os.path.join(
-            slide_output_directory, f"slide{slide_number}.html"
-        )
-        with open(output_file_path, "w", encoding="utf-8") as f:
-            f.write(str(html_doc))
-        return output_file_path
+        return self._write_slide_absolute(slide, slide_number)
 
     def _write_slide_absolute(self, slide: Slide, slide_number: int):
         """Write a slide using absolute positioning.
@@ -287,7 +185,6 @@ class HtmlWriter:
                 slide_bg_color = self._get_slide_background_color(slide)
                 shape_html = render_shape_html(
                     shape,
-                    use_absolute_pos=True,
                     theme_resolver=self.theme_resolver,
                     slide_background_color=slide_bg_color,
                 )
@@ -309,7 +206,7 @@ class HtmlWriter:
         # Render all pictures with absolute positioning
         for picture in slide.pictures:
             try:
-                picture_html = render_picture_html(picture, use_absolute_pos=True)
+                picture_html = render_picture_html(picture)
                 html_parts.append(picture_html)
             except Exception as e:
                 # Fallback rendering if element renderer fails
@@ -328,7 +225,7 @@ class HtmlWriter:
         # Render all group shapes with absolute positioning
         for group_shape in slide.group_shapes:
             try:
-                group_html = render_group_shape_html(group_shape, use_absolute_pos=True)
+                group_html = render_group_shape_html(group_shape)
                 html_parts.append(group_html)
             except Exception as e:
                 # Fallback rendering if element renderer fails

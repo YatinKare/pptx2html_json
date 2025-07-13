@@ -11,9 +11,7 @@ from learnx_parser.writers.json_writer import JsonWriter
 
 
 class DocumentParser:
-    def __init__(
-        self, pptx_unpacked_path, output_dir="./output", positioning_mode="responsive"
-    ):
+    def __init__(self, pptx_unpacked_path, output_dir="./output"):
         # Path to the unpacked PowerPoint presentation directory
         self.pptx_unpacked_path = pptx_unpacked_path
         # Directory where the generated HTML and JSON output will be saved
@@ -25,11 +23,10 @@ class DocumentParser:
         )
         # Initialize the PresentationParser to extract presentation-level data (e.g., slide order, slide size)
         self.presentation_parser = PresentationParser(self.presentation_xml_path)
-        # Initialize the HtmlWriter for generating HTML output for each slide
+        # Initialize the HtmlWriter for generating HTML output for each slide using absolute positioning
         self.html_writer = HtmlWriter(
             output_directory=self.output_dir,
             pptx_unpacked_path=self.pptx_unpacked_path,
-            positioning_mode=positioning_mode,
         )
         # Initialize the JsonWriter for generating JSON output for each slide
         self.json_writer = JsonWriter(output_directory=self.output_dir)

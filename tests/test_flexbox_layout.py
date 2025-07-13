@@ -70,7 +70,7 @@ class TestFlexboxLayout(unittest.TestCase):
         )
 
         # Create an HtmlWriter instance
-        html_writer = HtmlWriter()
+        HtmlWriter()
 
         # Render the HTML for the group shape
         html_output = render_group_shape_html(group_shape)

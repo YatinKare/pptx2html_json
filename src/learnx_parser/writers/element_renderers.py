@@ -5,7 +5,7 @@ This module contains functions that render individual PowerPoint elements to HTM
 
 import os
 
-from htpy import div, img, p, span
+from htpy import div, img, span
 from markupsafe import Markup
 
 from learnx_parser.models.core import (
@@ -18,9 +18,7 @@ from learnx_parser.writers.css_utils import (
     CoordinateConverter,
     ZIndexLayers,
     emu_to_px,
-    get_flex_properties_from_name,
     get_image_crop_css,
-    get_paragraph_style_css,
     get_run_style_css,
     get_shape_style_css,
     get_text_frame_alignment_css,
@@ -72,50 +70,35 @@ def render_group_shape_html(
     element: GroupShape,
     parent_x: int = 0,
     parent_y: int = 0,
-    use_absolute_pos: bool = True,
     z_index_base: int = 1,
     prevent_overflow: bool = True,
     theme_resolver=None,
     slide_background_color=None,
 ) -> str:
-    """Render a group shape element to HTML.
+    """Render a group shape element to HTML using absolute positioning.
 
     Args:
         element: GroupShape object
         parent_x: Parent container X offset
         parent_y: Parent container Y offset
-        use_absolute_pos: Whether to use absolute positioning
         z_index_base: Base z-index for child elements
         prevent_overflow: Whether to prevent element overflow
 
     Returns:
         str: HTML representation of the group shape
     """
-    # Use enhanced coordinate converter for positioning
+    # Use enhanced coordinate converter for absolute positioning
     container_style = ""
-    if use_absolute_pos:
-        position = CoordinateConverter.extract_position(element.transform)
-        if position is not None:
-            # Adjust for parent offset
-            position["x"] -= emu_to_px(parent_x)
-            position["y"] -= emu_to_px(parent_y)
+    position = CoordinateConverter.extract_position(element.transform)
+    if position is not None:
+        # Adjust for parent offset
+        position["x"] -= emu_to_px(parent_x)
+        position["y"] -= emu_to_px(parent_y)
 
-            # Generate CSS with overflow prevention
-            container_style = CoordinateConverter.generate_absolute_css(
-                position, z_index_base, prevent_overflow=prevent_overflow
-            )
-    else:
-        # Fallback for responsive mode
-        relative_x = emu_to_px(element.transform.x - parent_x)
-        relative_y = emu_to_px(element.transform.y - parent_y)
-        cx = emu_to_px(element.transform.cx)
-        cy = emu_to_px(element.transform.cy)
-        container_style = f"width: {cx}px; height: {cy}px;"
-
-    # Extract flexbox properties from the group shape's name (if any)
-    flex_properties = get_flex_properties_from_name(element.name)
-    if flex_properties:
-        container_style += f" {flex_properties}"
+        # Generate CSS with overflow prevention
+        container_style = CoordinateConverter.generate_absolute_css(
+            position, z_index_base, prevent_overflow=prevent_overflow
+        )
 
     # Generate HTML for child elements with proper z-indexing
     content_html = ""
@@ -128,7 +111,6 @@ def render_group_shape_html(
                 child_shape,
                 element.transform.x,
                 element.transform.y,
-                use_absolute_pos=False,
                 z_index=ZIndexLayers.get_element_z_index("shape", z_index_base + i),
                 slide_background_color=slide_background_color,
                 prevent_overflow=prevent_overflow,
@@ -141,7 +123,6 @@ def render_group_shape_html(
                 child_picture,
                 element.transform.x,
                 element.transform.y,
-                use_absolute_pos=False,
                 z_index=ZIndexLayers.get_element_z_index("image", z_index_base + i),
                 prevent_overflow=prevent_overflow,
             )
@@ -152,7 +133,6 @@ def render_group_shape_html(
                 child_group,
                 element.transform.x,
                 element.transform.y,
-                use_absolute_pos=False,
                 z_index_base=z_index_base + i + 1,
                 prevent_overflow=prevent_overflow,
                 theme_resolver=theme_resolver,
@@ -184,11 +164,10 @@ def render_picture_html(
     parent_y: int = 0,
     parent_cx: int = 0,
     parent_cy: int = 0,
-    use_absolute_pos: bool = True,
     z_index: int = 1,
     prevent_overflow: bool = True,
 ) -> str:
-    """Render a picture element to HTML.
+    """Render a picture element to HTML using absolute positioning.
 
     Args:
         element: Picture object
@@ -196,7 +175,6 @@ def render_picture_html(
         parent_y: Parent container Y offset
         parent_cx: Parent container width
         parent_cy: Parent container height
-        use_absolute_pos: Whether to use absolute positioning
         z_index: Z-index for element layering
         prevent_overflow: Whether to prevent element overflow
 
@@ -211,26 +189,18 @@ def render_picture_html(
 
     style_attributes = []
 
-    # If absolute positioning is enabled, use enhanced coordinate converter
-    if use_absolute_pos:
-        position = CoordinateConverter.extract_position(element.transform)
-        if position is not None:
-            # Adjust for parent offset
-            position["x"] -= emu_to_px(parent_x)
-            position["y"] -= emu_to_px(parent_y)
+    # Use enhanced coordinate converter for absolute positioning
+    position = CoordinateConverter.extract_position(element.transform)
+    if position is not None:
+        # Adjust for parent offset
+        position["x"] -= emu_to_px(parent_x)
+        position["y"] -= emu_to_px(parent_y)
 
-            # Generate CSS with overflow prevention
-            positioning_css = CoordinateConverter.generate_absolute_css(
-                position, z_index, prevent_overflow=prevent_overflow
-            )
-            style_attributes.append(positioning_css)
-    else:
-        # Fallback to manual positioning for responsive mode
-        x = emu_to_px(element.transform.x - parent_x)
-        y = emu_to_px(element.transform.y - parent_y)
-        cx = emu_to_px(element.transform.cx)
-        cy = emu_to_px(element.transform.cy)
-        style_attributes.append(f"width: {cx}px; height: {cy}px;")
+        # Generate CSS with overflow prevention
+        positioning_css = CoordinateConverter.generate_absolute_css(
+            position, z_index, prevent_overflow=prevent_overflow
+        )
+        style_attributes.append(positioning_css)
 
     # Add transform (rotation, flip) and image crop (clip-path) CSS properties
     style_attributes.append(get_transform_css(element.transform))
@@ -252,13 +222,12 @@ def render_shape_html(
     parent_y: int = 0,
     parent_cx: int = 0,
     parent_cy: int = 0,
-    use_absolute_pos: bool = True,
     z_index: int = 1,
     prevent_overflow: bool = True,
     theme_resolver=None,
     slide_background_color=None,
 ) -> str:
-    """Render a shape element to HTML.
+    """Render a shape element to HTML using absolute positioning.
 
     Args:
         element: Shape object
@@ -266,7 +235,6 @@ def render_shape_html(
         parent_y: Parent container Y offset
         parent_cx: Parent container width
         parent_cy: Parent container height
-        use_absolute_pos: Whether to use absolute positioning
         z_index: Z-index for element layering
         prevent_overflow: Whether to prevent element overflow
 
@@ -276,26 +244,18 @@ def render_shape_html(
     # Start building style attributes
     style_attributes = []
 
-    if use_absolute_pos:
-        # Use enhanced coordinate converter for absolute positioning
-        position = CoordinateConverter.extract_position(element.transform)
-        if position is not None:
-            # Adjust for parent offset
-            position["x"] -= emu_to_px(parent_x)
-            position["y"] -= emu_to_px(parent_y)
+    # Use enhanced coordinate converter for absolute positioning
+    position = CoordinateConverter.extract_position(element.transform)
+    if position is not None:
+        # Adjust for parent offset
+        position["x"] -= emu_to_px(parent_x)
+        position["y"] -= emu_to_px(parent_y)
 
-            # Generate CSS with overflow prevention
-            positioning_css = CoordinateConverter.generate_absolute_css(
-                position, z_index, prevent_overflow=prevent_overflow
-            )
-            style_attributes.append(positioning_css)
-    else:
-        # Fallback to manual positioning for responsive mode
-        x = emu_to_px(element.transform.x - parent_x)
-        y = emu_to_px(element.transform.y - parent_y)
-        cx = emu_to_px(element.transform.cx)
-        cy = emu_to_px(element.transform.cy)
-        style_attributes.append(f"width: {cx}px; height: {cy}px;")
+        # Generate CSS with overflow prevention
+        positioning_css = CoordinateConverter.generate_absolute_css(
+            position, z_index, prevent_overflow=prevent_overflow
+        )
+        style_attributes.append(positioning_css)
 
     # Add shape-specific styles
     style_attributes.append(get_shape_style_css(element))
@@ -341,61 +301,13 @@ def render_text_frame_html(
     if not text_frame or not text_frame.paragraphs:
         return ""
 
-    # Check if this text frame should be rendered as a bullet list
-    if _should_render_as_bullet_list(text_frame.paragraphs):
-        return _render_as_bullet_list(
-            text_frame.paragraphs,
-            theme_resolver=theme_resolver,
-            placeholder_type=placeholder_type,
-            slide_background_color=slide_background_color,
-        )
-
-    # Default paragraph rendering
-    content_html = ""
-    for paragraph in text_frame.paragraphs:
-        paragraph_style = get_paragraph_style_css(paragraph, placeholder_type)
-        paragraph_content = ""
-
-        if paragraph.text_runs:
-            for run in paragraph.text_runs:
-                run_style = get_run_style_css(
-                    run,
-                    theme_resolver=theme_resolver,
-                    placeholder_type=placeholder_type,
-                    slide_background_color=slide_background_color,
-                )
-                if run_style:
-                    run_span = span(style=run_style)[run.text]
-                    paragraph_content += str(run_span)
-                else:
-                    paragraph_content += run.text
-
-        if paragraph_style:
-            paragraph_element = p(style=paragraph_style)[Markup(paragraph_content)]
-        else:
-            paragraph_element = p[Markup(paragraph_content)]
-
-        content_html += str(paragraph_element)
-
-    return content_html
-
-
-def _should_render_as_bullet_list(paragraphs) -> bool:
-    """Check if paragraphs should be rendered as a bullet list based only on OOXML bullet properties."""
-    if not paragraphs:
-        return False
-
-    # Only rely on explicit bullet properties from OOXML - no heuristics
-    for paragraph in paragraphs:
-        if (
-            paragraph.properties.bullet_type is not None
-            and paragraph.properties.bullet_type != "none"
-        ):
-            return True
-        if paragraph.properties.level is not None and paragraph.properties.level > 0:
-            return True
-
-    return False
+    # Always use bullet list rendering - CSS will handle bullet display based on bullet_type
+    return _render_as_bullet_list(
+        text_frame.paragraphs,
+        theme_resolver=theme_resolver,
+        placeholder_type=placeholder_type,
+        slide_background_color=slide_background_color,
+    )
 
 
 def _render_as_bullet_list(
