@@ -72,6 +72,7 @@ class RunProperties:
     color: str | None = None
     scheme_color: str | None = None
     font_face: str | None = None
+    font_ref: str | None = None  # Font reference (major, minor) for theme resolution
     underline: bool = False
     cap: str | None = None  # Text capitalization (all, small, none)
 
@@ -96,6 +97,8 @@ class ParagraphProperties:
     bullet_start_at: int | None = None
     bullet_image_path: str | None = None
     level: int | None = None
+    # Default run properties for this paragraph level (defRPr)
+    default_run_properties: "RunProperties | None" = None
 
 
 @dataclass

@@ -480,23 +480,39 @@ def get_run_style_css(
 
     # Add font properties
     if run.properties:
-        # Font family - use placeholder-based font selection or explicit font face
+        # Font family - resolve font references through ThemeResolver
         if run.properties.font_face:
-            styles.append(f"font-family: '{run.properties.font_face}';")
-        else:
-            # Always use Univers fonts based on placeholder type, or default if no placeholder
+            # Explicit font face specified
+            if theme_resolver:
+                font_css = theme_resolver.get_font_css(run.properties.font_face)
+                styles.append(font_css)
+            else:
+                styles.append(f"font-family: '{run.properties.font_face}';")
+        elif run.properties.font_ref and theme_resolver:
+            # Font reference (major/minor) - resolve through theme
+            font_css = theme_resolver.get_font_css(run.properties.font_ref)
+            styles.append(font_css)
+        elif theme_resolver:
+            # No explicit font - use theme defaults based on placeholder type
             if placeholder_type == "title":
-                # Title uses Univers (Headings)
+                # Titles typically use major font
+                font_css = theme_resolver.get_font_css("major")
+                styles.append(font_css)
+            else:
+                # Body text typically uses minor font
+                font_css = theme_resolver.get_font_css("minor")
+                styles.append(font_css)
+        else:
+            # Fallback to hard-coded fonts when no theme resolver available
+            if placeholder_type == "title":
                 styles.append(
                     "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
                 )
             elif placeholder_type == "body":
-                # Body uses Univers (Body) - same font family but different semantic meaning
                 styles.append(
                     "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
                 )
             else:
-                # Default Univers font for any text without specific placeholder type
                 styles.append(
                     "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
                 )
@@ -545,27 +561,41 @@ def get_run_style_css(
                 text_color = theme_resolver.resolve_scheme_color("bg1")
             styles.append(f"color: #{text_color};")
     else:
-        # No run properties - apply defaults
-        # Always use Univers font family
-        if placeholder_type == "title":
-            # Title uses Univers (Headings)
-            styles.append(
-                "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
-            )
-            styles.append("font-size: 30px;")
-        elif placeholder_type == "body":
-            # Body uses Univers (Body)
-            styles.append(
-                "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
-            )
-            styles.append("font-size: 21px;")
+        # No run properties - apply defaults using theme resolver when available
+        if theme_resolver:
+            # Use theme-based font resolution
+            if placeholder_type == "title":
+                # Titles typically use major font
+                font_css = theme_resolver.get_font_css("major")
+                styles.append(font_css)
+                styles.append("font-size: 30px;")
+            elif placeholder_type == "body":
+                # Body text typically uses minor font
+                font_css = theme_resolver.get_font_css("minor")
+                styles.append(font_css)
+                styles.append("font-size: 21px;")
+            else:
+                # Default to minor font for other text
+                font_css = theme_resolver.get_font_css("minor")
+                styles.append(font_css)
+                styles.append("font-size: 48px;")
         else:
-            # Default Univers font for any text without specific placeholder type
-            styles.append(
-                "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
-            )
-            # Add large font size for main title slides
-            styles.append("font-size: 48px;")
+            # Fallback to hard-coded fonts when no theme resolver available
+            if placeholder_type == "title":
+                styles.append(
+                    "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
+                )
+                styles.append("font-size: 30px;")
+            elif placeholder_type == "body":
+                styles.append(
+                    "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
+                )
+                styles.append("font-size: 21px;")
+            else:
+                styles.append(
+                    "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
+                )
+                styles.append("font-size: 48px;")
 
         if theme_resolver:
             # Use contrasting text color based on slide background

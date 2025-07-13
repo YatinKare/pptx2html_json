@@ -15,7 +15,7 @@ def main():
         - responsive: Flexbox-based layout that adapts to screen size
         - absolute: Fixed 1280x720 container with pixel-perfect positioning
     """
-    pptx_file = "./example/Galaxy presentation.pptx"
+    pptx_file = "./Respiratory Ch 16_students.pptx"
 
     # Check if absolute positioning mode is requested
     if len(sys.argv) > 1 and sys.argv[1] == "--absolute":
