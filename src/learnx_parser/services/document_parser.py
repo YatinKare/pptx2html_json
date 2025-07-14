@@ -6,6 +6,7 @@ from lxml import etree
 from learnx_parser.models.core import Slide
 from learnx_parser.parsers.presentation import PresentationParser
 from learnx_parser.parsers.slide.base import SlideParser
+from learnx_parser.services.background_renderer import BackgroundRenderer
 from learnx_parser.writers.html_writer import HtmlWriter
 from learnx_parser.writers.json_writer import JsonWriter
 
@@ -134,11 +135,73 @@ class DocumentParser:
             slide_paths.append((slide_xml_path, slide_relationships_path))
         return slide_paths
 
+    def _generate_background_for_slide(self, slide: Slide, slide_number: int) -> str | None:
+        """Generate background image for a slide using Goal 1: Background as Single Image.
+        
+        This method implements the core workflow for Goal 1 by checking if a slide has
+        background properties and generating a PNG image if needed. The generated image
+        path is then set on the slide object for HTML writer integration.
+        
+        The method checks for three types of background properties:
+        1. background_color: Direct hex color values
+        2. background_gradient_fill: Gradient definitions with color stops
+        3. background_reference: Theme-based background references
+        
+        If any background properties are found, a PNG image is generated at
+        1280×720 resolution and saved to the slide's media directory with the
+        filename pattern "background_{slide_number}.png".
+        
+        Args:
+            slide (Slide): Slide object containing common_slide_data with background properties
+            slide_number (int): 1-based slide number used for filename generation
+            
+        Returns:
+            str | None: Relative path to generated background image (e.g., "media/background_1.png")
+                if background properties exist and image generation succeeds, None otherwise.
+                
+        Note:
+            This method automatically creates the media output directory if it doesn't exist.
+            The returned path is relative to the slide's output directory for HTML usage.
+        """
+        # Check if slide has any background properties
+        has_background = (
+            slide.common_slide_data.background_color or
+            slide.common_slide_data.background_gradient_fill or
+            slide.common_slide_data.background_reference
+        )
+        
+        if not has_background:
+            return None
+        
+        # Create the media output directory for this slide
+        media_output_directory = os.path.join(
+            self.output_dir, f"slide{slide_number}", "media"
+        )
+        os.makedirs(media_output_directory, exist_ok=True)
+        
+        # Generate background image file path
+        background_filename = f"background_{slide_number}.png"
+        background_path = os.path.join(media_output_directory, background_filename)
+        
+        # Generate background image using the renderer
+        generated_path = self.background_renderer.generate_background_image(
+            slide.common_slide_data,
+            background_path
+        )
+        
+        # Return relative path for HTML usage
+        if generated_path:
+            return f"media/{background_filename}"
+        
+        return None
+
     def parse_presentation(self):
         # Get the overall slide width and height from the presentation properties
         slide_width, slide_height = self.presentation_parser.get_slide_size()
         # Extract presentation-level default text styles for theme inheritance
         presentation_defaults = self.presentation_parser.get_default_text_style()
+        # Initialize the BackgroundRenderer with proper slide dimensions
+        self.background_renderer = BackgroundRenderer(slide_width=1280, slide_height=720)
         # Get a list of all slide XML paths and their corresponding relationship file paths
         slide_paths = self._get_slide_paths_and_rels()
 
@@ -163,6 +226,15 @@ class DocumentParser:
                 slide_number=current_slide_number
             )
             slides.append(parsed_slide_data)
+
+            # Generate background image for this slide
+            background_image_path = self._generate_background_for_slide(
+                parsed_slide_data, current_slide_number
+            )
+            
+            # Set the generated background path on the slide object
+            if background_image_path:
+                parsed_slide_data.generated_background_path = background_image_path
 
             # Copy any media files associated with this slide to its output directory
             self._copy_media_for_slide(parsed_slide_data, current_slide_number)

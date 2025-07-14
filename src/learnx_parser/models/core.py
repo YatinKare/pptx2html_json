@@ -50,6 +50,12 @@ class PatternFill:
     bg_color: str | None = None
 
 
+@dataclass
+class BackgroundReference:
+    idx: int
+    scheme_color: str | None = None
+
+
 # Define Fill after all its constituent types
 Fill = SolidFill | GradientFill | BlipFill | PatternFill
 
@@ -129,6 +135,7 @@ class Hyperlink:
 class CommonSlideData:
     background_color: str | None = None
     background_gradient_fill: GradientFill | None = None
+    background_reference: BackgroundReference | None = None
     cx: int = 0
     cy: int = 0
 
@@ -203,6 +210,19 @@ class SlideLayout:
     type: str | None = None  # e.g., 'title', 'picTx', 'secHead', 'tx'
     placeholders: list[LayoutPlaceholder] = field(default_factory=list)
     list_styles: dict[int, ParagraphProperties] = field(default_factory=dict)
+    background_color: str | None = None
+    background_gradient_fill: GradientFill | None = None
+    background_reference: BackgroundReference | None = None
+
+
+@dataclass
+class SlideMaster:
+    name: str | None = None
+    placeholders: list[LayoutPlaceholder] = field(default_factory=list)
+    list_styles: dict[int, ParagraphProperties] = field(default_factory=dict)
+    background_color: str | None = None
+    background_gradient_fill: GradientFill | None = None
+    background_reference: BackgroundReference | None = None
 
 
 @dataclass
@@ -215,6 +235,7 @@ class Slide:
     graphic_frames: list[GraphicFrame] = field(default_factory=list)
     hyperlinks: list[Hyperlink] = field(default_factory=list)
     slide_layout: SlideLayout | None = None
+    generated_background_path: str | None = None
 
 
 # Simplified JSON-friendly data models

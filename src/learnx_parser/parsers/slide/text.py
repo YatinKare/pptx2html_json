@@ -156,48 +156,47 @@ def extract_run_properties(
     paragraph_level: int | None = None,
     paragraph_properties_element=None,
 ) -> RunProperties:
-    """Extract run properties from a text run element following OpenXML inheritance hierarchy."""
+    """Extract run properties from a text run element."""
     run_properties = RunProperties()
-
-    # 1. Direct Run Properties (Most Powerful): Extract from <a:rPr> on the run
-    run_properties_element = run_element.find(
-        ".//a:rPr", namespaces=parser_instance.nsmap
-    )
+    
+    # Extract from <a:rPr> on the run
+    run_properties_element = run_element.find(".//a:rPr", namespaces=parser_instance.nsmap)
     if run_properties_element is not None:
-        # Extract all direct properties using helper functions
-        _extract_font_size_property(run_properties, run_properties_element)
-        _extract_text_style_properties(run_properties, run_properties_element)
-        _extract_color_properties(
-            run_properties, run_properties_element, parser_instance.nsmap
-        )
-        _extract_font_properties(
-            run_properties, run_properties_element, parser_instance.nsmap
-        )
-        _extract_formatting_properties(
-            run_properties, run_properties_element, parser_instance.nsmap
-        )
-
-    # Apply sophisticated font size inheritance hierarchy for missing properties
-    if not run_properties.font_size:
-        resolved_font_size = _resolve_font_size_intelligently(
-            parser_instance,
-            paragraph_properties_element,
-            slide_layout_obj,
-            ph_type,
-            paragraph_level,
-        )
-        if resolved_font_size:
-            run_properties.font_size = resolved_font_size
-
-    # Apply other property inheritance as needed
-    _apply_inherited_run_properties(
-        run_properties,
-        parser_instance,
-        paragraph_properties_element,
-        slide_layout_obj,
-        ph_type,
-        paragraph_level,
-    )
+        # Extract font size
+        if run_properties_element.get("sz") is not None:
+            run_properties.font_size = int(run_properties_element.get("sz"))
+        # Extract bold property
+        if run_properties_element.get("b") == "1":
+            run_properties.bold = True
+        # Extract italic property
+        if run_properties_element.get("i") == "1":
+            run_properties.italic = True
+        # Extract color
+        solid_fill_element = run_properties_element.find(".//a:solidFill", namespaces=parser_instance.nsmap)
+        if solid_fill_element is not None:
+            srgb_color_element = solid_fill_element.find(".//a:srgbClr", namespaces=parser_instance.nsmap)
+            if srgb_color_element is not None:
+                run_properties.color = srgb_color_element.get("val")
+            else:
+                scheme_color_element = solid_fill_element.find(".//a:schemeClr", namespaces=parser_instance.nsmap)
+                if scheme_color_element is not None:
+                    run_properties.scheme_color = scheme_color_element.get("val")
+        # Extract font face (explicit font)
+        latin_font_element = run_properties_element.find(".//a:latin", namespaces=parser_instance.nsmap)
+        if latin_font_element is not None:
+            run_properties.font_face = latin_font_element.get("typeface")
+        
+        # Extract font reference (theme-based font)
+        font_ref_element = run_properties_element.find(".//a:fontRef", namespaces=parser_instance.nsmap)
+        if font_ref_element is not None:
+            run_properties.font_ref = font_ref_element.get("idx")  # "major" or "minor"
+        # Extract underline
+        underline_element = run_properties_element.find(".//a:u", namespaces=parser_instance.nsmap)
+        if underline_element is not None:
+            run_properties.underline = True
+        # Extract capitalization (cap attribute)
+        if run_properties_element.get("cap") is not None:
+            run_properties.cap = run_properties_element.get("cap")
 
     return run_properties
 
@@ -836,11 +835,12 @@ def _resolve_font_size_intelligently(
             return int(def_rpr_element.get("sz"))
 
     # 3. List Style Level: Check master slide list styles for this level
-    if slide_layout_obj and paragraph_level is not None:
-        if (
-            slide_layout_obj.list_styles
-            and paragraph_level in slide_layout_obj.list_styles
-        ):
+    if (
+        slide_layout_obj
+        and paragraph_level is not None
+        and slide_layout_obj.list_styles
+        and paragraph_level in slide_layout_obj.list_styles
+    ):
             level_props = slide_layout_obj.list_styles[paragraph_level]
             if (
                 level_props
@@ -983,11 +983,12 @@ def _resolve_run_property_intelligently(
                 return value
 
     # 3. List Style Level
-    if slide_layout_obj and paragraph_level is not None:
-        if (
-            slide_layout_obj.list_styles
-            and paragraph_level in slide_layout_obj.list_styles
-        ):
+    if (
+        slide_layout_obj
+        and paragraph_level is not None
+        and slide_layout_obj.list_styles
+        and paragraph_level in slide_layout_obj.list_styles
+    ):
             level_props = slide_layout_obj.list_styles[paragraph_level]
             if level_props and level_props.default_run_properties:
                 value = getattr(level_props.default_run_properties, property_name, None)
@@ -1103,11 +1104,12 @@ def _resolve_font_intelligently(
                 return {"font_ref": font_ref}
 
     # 3. List Style Level: Check master slide list styles for this level
-    if slide_layout_obj and paragraph_level is not None:
-        if (
-            slide_layout_obj.list_styles
-            and paragraph_level in slide_layout_obj.list_styles
-        ):
+    if (
+        slide_layout_obj
+        and paragraph_level is not None
+        and slide_layout_obj.list_styles
+        and paragraph_level in slide_layout_obj.list_styles
+    ):
             level_props = slide_layout_obj.list_styles[paragraph_level]
             if level_props and level_props.default_run_properties:
                 if level_props.default_run_properties.font_face:

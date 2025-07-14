@@ -3,12 +3,17 @@ import os
 from lxml import etree
 
 from learnx_parser.models.core import (
+    BackgroundReference,
+    GradientFill,
+    GradientStop,
     LayoutPlaceholder,
     ParagraphProperties,
     RunProperties,
     SlideLayout,
+    SlideMaster,
     Transform,
 )
+from learnx_parser.parsers.master import SlideMasterParser
 
 
 class LayoutParser:
@@ -339,6 +344,99 @@ class LayoutParser:
 
         return run_props
 
+    def _extract_background_properties(self) -> tuple[str | None, GradientFill | None, BackgroundReference | None]:
+        """Extract background properties from layout XML.
+        
+        Returns:
+            Tuple of (background_color, background_gradient_fill, background_reference)
+        """
+        background_color = None
+        background_gradient_fill = None
+        background_reference = None
+        
+        # Look for background element in common slide data
+        cSld_element = self.root.find(".//p:cSld", namespaces=self.nsmap)
+        if cSld_element is not None:
+            background_element = cSld_element.find(".//p:bg", namespaces=self.nsmap)
+            if background_element is not None:
+                # Check for background properties (p:bgPr)
+                background_properties_element = background_element.find(".//p:bgPr", namespaces=self.nsmap)
+                if background_properties_element is not None:
+                    # Extract solid fill
+                    solid_fill_element = background_properties_element.find(".//a:solidFill", namespaces=self.nsmap)
+                    if solid_fill_element is not None:
+                        srgb_color_element = solid_fill_element.find(".//a:srgbClr", namespaces=self.nsmap)
+                        if srgb_color_element is not None:
+                            background_color = srgb_color_element.get("val")
+                    
+                    # Extract gradient fill
+                    gradient_fill_element = background_properties_element.find(".//a:gradFill", namespaces=self.nsmap)
+                    if gradient_fill_element is not None:
+                        gradient_stops = []
+                        for gs_element in gradient_fill_element.findall(".//a:gs", namespaces=self.nsmap):
+                            pos = int(gs_element.get("pos", "0"))
+                            
+                            # Extract color from gradient stop
+                            color = None
+                            scheme_color = None
+                            srgb_color_element = gs_element.find(".//a:srgbClr", namespaces=self.nsmap)
+                            if srgb_color_element is not None:
+                                color = srgb_color_element.get("val")
+                            else:
+                                scheme_color_element = gs_element.find(".//a:schemeClr", namespaces=self.nsmap)
+                                if scheme_color_element is not None:
+                                    scheme_color = scheme_color_element.get("val")
+                            
+                            gradient_stops.append(GradientStop(pos=pos, color=color, scheme_color=scheme_color))
+                        
+                        if gradient_stops:
+                            # Extract gradient direction/angle
+                            angle = None
+                            lin_element = gradient_fill_element.find(".//a:lin", namespaces=self.nsmap)
+                            if lin_element is not None:
+                                angle = int(lin_element.get("ang", "0"))
+                            
+                            background_gradient_fill = GradientFill(stops=gradient_stops, angle=angle)
+                
+                # Check for background reference (p:bgRef)
+                background_reference_element = background_element.find(".//p:bgRef", namespaces=self.nsmap)
+                if background_reference_element is not None:
+                    idx = int(background_reference_element.get("idx", "0"))
+                    scheme_color = None
+                    scheme_color_element = background_reference_element.find(".//a:schemeClr", namespaces=self.nsmap)
+                    if scheme_color_element is not None:
+                        scheme_color = scheme_color_element.get("val")
+                    background_reference = BackgroundReference(idx=idx, scheme_color=scheme_color)
+        
+        return background_color, background_gradient_fill, background_reference
+
+    def _get_slide_master_obj(self) -> SlideMaster | None:
+        """Get the slide master object referenced by this layout."""
+        slide_master_relationship_id = None
+        # Look for slide master relationship
+        for rel_id, target in self.rels.items():
+            if "slideMaster" in target:
+                slide_master_relationship_id = rel_id
+                break
+
+        slide_master_path = None
+        if slide_master_relationship_id:
+            slide_master_target = self.rels.get(slide_master_relationship_id)
+            if slide_master_target:
+                # Construct the absolute path to the slide master XML file
+                slide_master_path = os.path.join(
+                    self.pptx_unpacked_path,
+                    slide_master_target.lstrip("/").replace("../", ""),
+                )
+
+        slide_master_object = None
+        if slide_master_path and os.path.exists(slide_master_path):
+            slide_master_parser = SlideMasterParser(
+                slide_master_path, self.pptx_unpacked_path
+            )
+            slide_master_object = slide_master_parser.parse_master()
+        return slide_master_object
+
     def parse_layout(self) -> SlideLayout:
         layout_name = self.root.find(".//p:cSld", namespaces=self.nsmap).get("name")
         layout_type = self.root.get("type")
@@ -350,6 +448,21 @@ class LayoutParser:
 
         placeholders = self._parse_placeholders()
         list_styles = self._extract_list_styles()
+        background_color, background_gradient_fill, background_reference = self._extract_background_properties()
+
+        # Inherit background properties from slide master if no layout-level background is found
+        if (not background_color and 
+            not background_gradient_fill and 
+            not background_reference):
+            
+            slide_master_obj = self._get_slide_master_obj()
+            if slide_master_obj:
+                if slide_master_obj.background_color:
+                    background_color = slide_master_obj.background_color
+                elif slide_master_obj.background_gradient_fill:
+                    background_gradient_fill = slide_master_obj.background_gradient_fill
+                elif slide_master_obj.background_reference:
+                    background_reference = slide_master_obj.background_reference
 
         # If layout_type is still None, infer from placeholders
         if layout_type is None:
@@ -360,4 +473,7 @@ class LayoutParser:
             type=layout_type,
             placeholders=placeholders,
             list_styles=list_styles,
+            background_color=background_color,
+            background_gradient_fill=background_gradient_fill,
+            background_reference=background_reference,
         )

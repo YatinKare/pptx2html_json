@@ -273,14 +273,40 @@ class HtmlWriter:
         return "".join(html_parts)
 
     def _get_background_css(self, slide: Slide) -> str:
-        """Generate CSS for slide background using theme resolution.
+        """Generate CSS for slide background with Goal 1 integration.
+        
+        This method implements the background image priority system for Goal 1:
+        Background as a Single Image. It prioritizes generated background images
+        over legacy CSS-based background generation to ensure perfect visual fidelity.
+        
+        Priority order:
+        1. Generated background images (Goal 1) - highest priority
+        2. Theme-resolved background CSS - medium priority
+        3. Direct background properties (fallback) - lowest priority
+        
+        For Goal 1 implementation, when a slide has a generated_background_path,
+        this method generates CSS with background-image, background-size: cover,
+        background-position: center, and background-repeat: no-repeat to ensure
+        the PNG background image displays correctly at all screen sizes.
 
         Args:
-            slide: Slide object
+            slide (Slide): Slide object containing background properties and 
+                potentially a generated_background_path from Goal 1 processing
 
         Returns:
-            str: CSS for slide background
+            str: CSS background properties string. For generated images, returns
+                complete background-image CSS. For legacy slides, returns 
+                background-color or gradient CSS. Empty string if no background.
+                
+        Example generated CSS:
+            "background-image: url('media/background_1.png'); background-size: cover; 
+             background-position: center; background-repeat: no-repeat;"
         """
+        # Check for generated background image first (Goal 1: Background as Single Image)
+        if slide.generated_background_path:
+            return f"background-image: url('{slide.generated_background_path}'); background-size: cover; background-position: center; background-repeat: no-repeat;"
+        
+        # Fallback to old background generation for slides without generated images
         background_css_parts = []
 
         # Try to resolve background from slide hierarchy (slide -> layout -> master)

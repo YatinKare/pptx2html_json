@@ -3,6 +3,7 @@ import os
 from lxml import etree
 
 from learnx_parser.models.core import (
+    BackgroundReference,
     CommonSlideData,
     GradientFill,
     GradientStop,
@@ -62,7 +63,7 @@ class SlideParser:
                 relationships[relationship.get("Id")] = relationship.get("Target")
         return relationships
 
-    def _extract_common_slide_data(self) -> CommonSlideData:
+    def _extract_common_slide_data(self, slide_layout_obj: SlideLayout | None = None) -> CommonSlideData:
         # Initialize CommonSlideData with slide width and height
         common_slide_data = CommonSlideData(cx=self.slide_width, cy=self.slide_height)
 
@@ -74,85 +75,117 @@ class SlideParser:
                 ".//p:bg", namespaces=self.nsmap
             )
             if background_element is not None:
-                # Find the background properties element (p:bgPr)
-                background_properties_element = background_element.find(
-                    ".//p:bgPr", namespaces=self.nsmap
+                # Check for background reference first (p:bgRef)
+                background_reference_element = background_element.find(
+                    ".//p:bgRef", namespaces=self.nsmap
                 )
-                if background_properties_element is not None:
-                    # Check for solid fill background
-                    solid_fill_element = background_properties_element.find(
-                        ".//a:solidFill", namespaces=self.nsmap
+                if background_reference_element is not None:
+                    # Extract background reference index and scheme color
+                    idx = int(background_reference_element.get("idx", "0"))
+                    scheme_color = None
+                    scheme_color_element = background_reference_element.find(
+                        ".//a:schemeClr", namespaces=self.nsmap
                     )
-                    if solid_fill_element is not None:
-                        # Extract SRGB color value if present
-                        srgb_color_element = solid_fill_element.find(
-                            ".//a:srgbClr", namespaces=self.nsmap
+                    if scheme_color_element is not None:
+                        scheme_color = scheme_color_element.get("val")
+                    
+                    common_slide_data.background_reference = BackgroundReference(
+                        idx=idx, scheme_color=scheme_color
+                    )
+                else:
+                    # Find the background properties element (p:bgPr)
+                    background_properties_element = background_element.find(
+                        ".//p:bgPr", namespaces=self.nsmap
+                    )
+                    if background_properties_element is not None:
+                        # Check for solid fill background
+                        solid_fill_element = background_properties_element.find(
+                            ".//a:solidFill", namespaces=self.nsmap
                         )
-                        if srgb_color_element is not None:
-                            common_slide_data.background_color = srgb_color_element.get(
-                                "val"
+                        if solid_fill_element is not None:
+                            # Extract SRGB color value if present
+                            srgb_color_element = solid_fill_element.find(
+                                ".//a:srgbClr", namespaces=self.nsmap
                             )
-                    else:
-                        # Check for gradient fill background
-                        gradient_fill_element = background_properties_element.find(
-                            ".//a:gradFill", namespaces=self.nsmap
-                        )
-                        if gradient_fill_element is not None:
-                            gradient_fill = GradientFill()
-                            # Extract linear gradient properties (angle, scaled)
-                            linear_element = gradient_fill_element.find(
-                                ".//a:lin", namespaces=self.nsmap
+                            if srgb_color_element is not None:
+                                common_slide_data.background_color = srgb_color_element.get(
+                                    "val"
+                                )
+                        else:
+                            # Check for gradient fill background
+                            gradient_fill_element = background_properties_element.find(
+                                ".//a:gradFill", namespaces=self.nsmap
                             )
-                            if linear_element is not None:
-                                gradient_fill.angle = (
-                                    int(linear_element.get("ang", 0))
-                                    if linear_element.get("ang") is not None
-                                    else None
+                            if gradient_fill_element is not None:
+                                gradient_fill = GradientFill()
+                                # Extract linear gradient properties (angle, scaled)
+                                linear_element = gradient_fill_element.find(
+                                    ".//a:lin", namespaces=self.nsmap
                                 )
-                                gradient_fill.scaled = (
-                                    linear_element.get("scaled", "0") == "1"
-                                )
+                                if linear_element is not None:
+                                    gradient_fill.angle = (
+                                        int(linear_element.get("ang", 0))
+                                        if linear_element.get("ang") is not None
+                                        else None
+                                    )
+                                    gradient_fill.scaled = (
+                                        linear_element.get("scaled", "0") == "1"
+                                    )
 
-                            # Extract gradient stop list
-                            gradient_stop_list_element = gradient_fill_element.find(
-                                ".//a:gsLst", namespaces=self.nsmap
-                            )
-                            if gradient_stop_list_element is not None:
-                                # Iterate through each gradient stop
-                                for (
-                                    gradient_stop_element
-                                ) in gradient_stop_list_element.findall(
-                                    ".//a:gs", namespaces=self.nsmap
-                                ):
-                                    position = int(gradient_stop_element.get("pos", 0))
-                                    stop_color = None
-                                    stop_scheme_color = None
-                                    # Extract SRGB color for the stop
-                                    srgb_color_element = gradient_stop_element.find(
-                                        ".//a:srgbClr", namespaces=self.nsmap
-                                    )
-                                    if srgb_color_element is not None:
-                                        stop_color = srgb_color_element.get("val")
-                                    else:
-                                        # Extract scheme color for the stop
-                                        scheme_color_element = (
-                                            gradient_stop_element.find(
-                                                ".//a:schemeClr", namespaces=self.nsmap
+                                # Extract gradient stop list
+                                gradient_stop_list_element = gradient_fill_element.find(
+                                    ".//a:gsLst", namespaces=self.nsmap
+                                )
+                                if gradient_stop_list_element is not None:
+                                    # Iterate through each gradient stop
+                                    for (
+                                        gradient_stop_element
+                                    ) in gradient_stop_list_element.findall(
+                                        ".//a:gs", namespaces=self.nsmap
+                                    ):
+                                        position = int(gradient_stop_element.get("pos", 0))
+                                        stop_color = None
+                                        stop_scheme_color = None
+                                        # Extract SRGB color for the stop
+                                        srgb_color_element = gradient_stop_element.find(
+                                            ".//a:srgbClr", namespaces=self.nsmap
+                                        )
+                                        if srgb_color_element is not None:
+                                            stop_color = srgb_color_element.get("val")
+                                        else:
+                                            # Extract scheme color for the stop
+                                            scheme_color_element = (
+                                                gradient_stop_element.find(
+                                                    ".//a:schemeClr", namespaces=self.nsmap
+                                                )
+                                            )
+                                            if scheme_color_element is not None:
+                                                stop_scheme_color = (
+                                                    scheme_color_element.get("val")
+                                                )
+                                        # Append the gradient stop to the list
+                                        gradient_fill.stops.append(
+                                            GradientStop(
+                                                pos=position,
+                                                color=stop_color,
+                                                scheme_color=stop_scheme_color,
                                             )
                                         )
-                                        if scheme_color_element is not None:
-                                            stop_scheme_color = (
-                                                scheme_color_element.get("val")
-                                            )
-                                    # Append the gradient stop to the list
-                                    gradient_fill.stops.append(
-                                        GradientStop(
-                                            pos=position,
-                                            color=stop_color,
-                                            scheme_color=stop_scheme_color,
-                                        )
-                                    )
-                            common_slide_data.background_gradient_fill = gradient_fill
+                                common_slide_data.background_gradient_fill = gradient_fill
+
+        # Inherit background properties from layout if no slide-level background is found
+        if (not common_slide_data.background_color and 
+            not common_slide_data.background_gradient_fill and 
+            not common_slide_data.background_reference and 
+            slide_layout_obj):
+            
+            # Inherit background properties from layout
+            if slide_layout_obj.background_color:
+                common_slide_data.background_color = slide_layout_obj.background_color
+            elif slide_layout_obj.background_gradient_fill:
+                common_slide_data.background_gradient_fill = slide_layout_obj.background_gradient_fill
+            elif slide_layout_obj.background_reference:
+                common_slide_data.background_reference = slide_layout_obj.background_reference
 
         return common_slide_data
 
@@ -239,7 +272,7 @@ class SlideParser:
 
         return Slide(
             slide_number=slide_number,
-            common_slide_data=self._extract_common_slide_data(),
+            common_slide_data=self._extract_common_slide_data(slide_layout_obj),
             shapes=shapes,
             pictures=pictures,
             group_shapes=group_shapes,
