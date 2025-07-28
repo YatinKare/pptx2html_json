@@ -136,6 +136,7 @@ class CommonSlideData:
     background_color: str | None = None
     background_gradient_fill: GradientFill | None = None
     background_reference: BackgroundReference | None = None
+    background_image_path: str | None = None  # Path to extracted background image file
     cx: int = 0
     cy: int = 0
 
@@ -213,6 +214,12 @@ class SlideLayout:
     background_color: str | None = None
     background_gradient_fill: GradientFill | None = None
     background_reference: BackgroundReference | None = None
+    # Text styles from <p:txStyles> in slide layout
+    title_style: ParagraphProperties | None = None
+    body_style: ParagraphProperties | None = None
+    other_style: ParagraphProperties | None = None
+    # Reference to the slide master for this layout
+    slide_master: "SlideMaster" = None
 
 
 @dataclass
@@ -223,6 +230,17 @@ class SlideMaster:
     background_color: str | None = None
     background_gradient_fill: GradientFill | None = None
     background_reference: BackgroundReference | None = None
+    # Text styles from <p:txStyles> in slide master
+    title_style: ParagraphProperties | None = None
+    body_style: ParagraphProperties | None = None
+    other_style: ParagraphProperties | None = None
+
+
+@dataclass
+class PresentationDefaults:
+    """Default text styles for the entire presentation."""
+    default_paragraph_properties: ParagraphProperties = field(default_factory=ParagraphProperties)
+    default_run_properties: RunProperties = field(default_factory=RunProperties)
 
 
 @dataclass

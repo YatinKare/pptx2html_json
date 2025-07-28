@@ -13,6 +13,7 @@ def extract_text_frame_properties(
     shape_element,
     slide_layout_obj: SlideLayout | None,
     ph_type: str | None = None,
+    style_resolver=None,
 ) -> TextFrame:
     # Initialize an empty TextFrame object to store parsed text data
     text_frame = TextFrame()
@@ -44,7 +45,7 @@ def extract_text_frame_properties(
     ):
         # Extract properties for the current paragraph
         paragraph_object = extract_paragraph_properties(
-            parser_instance, paragraph_element, slide_layout_obj, ph_type
+            parser_instance, paragraph_element, slide_layout_obj, ph_type, style_resolver
         )
         # Only add the paragraph to the text frame if it contains actual text runs
         if paragraph_object.text_runs:
@@ -57,6 +58,7 @@ def extract_paragraph_properties(
     paragraph_element,
     slide_layout_obj: SlideLayout | None,
     ph_type: str | None = None,
+    style_resolver=None,
 ) -> Paragraph:
     # Initialize a Paragraph object to store parsed paragraph data
     paragraph_object = Paragraph()
@@ -72,56 +74,24 @@ def extract_paragraph_properties(
         and paragraph_properties_element.get("lvl") is not None
     ):
         current_level = int(paragraph_properties_element.get("lvl"))
-        paragraph_object.properties.level = current_level
 
-    # Get inherited properties from slide layout if available
-    if slide_layout_obj and current_level is not None:
-        inherited_properties = slide_layout_obj.list_styles.get(current_level)
-        if inherited_properties:
-            # Create a new ParagraphProperties object by copying inherited properties
-            # and then updating with any directly specified properties.
-            # This ensures that direct properties override inherited ones.
-            paragraph_object.properties = ParagraphProperties(
-                align=inherited_properties.align,
-                indent=inherited_properties.indent,
-                bullet_type=inherited_properties.bullet_type,
-                bullet_char=inherited_properties.bullet_char,
-                bullet_font_face=inherited_properties.bullet_font_face,
-                bullet_size_pct=inherited_properties.bullet_size_pct,
-                bullet_size_pts=inherited_properties.bullet_size_pts,
-                bullet_auto_num_type=inherited_properties.bullet_auto_num_type,
-                bullet_start_at=inherited_properties.bullet_start_at,
-                bullet_image_path=inherited_properties.bullet_image_path,
-                level=inherited_properties.level,
-            )
-
-    # Apply direct properties from the current paragraph's XML, overriding inherited ones
-    if paragraph_properties_element is not None:
-        if paragraph_properties_element.get("algn") is not None:
-            paragraph_object.properties.align = paragraph_properties_element.get("algn")
-        if paragraph_properties_element.get("indent") is not None:
-            paragraph_object.properties.indent = int(
-                paragraph_properties_element.get("indent")
-            )
-        # Level is already set, no need to re-set it here unless it's explicitly overridden
-
-        # Apply sophisticated bullet resolution using proper inheritance hierarchy
-        _resolve_bullet_properties_intelligently(
-            parser_instance,
-            paragraph_object,
-            paragraph_properties_element,
-            slide_layout_obj,
-            ph_type,
-            current_level,
+    # Use StyleResolver if available, otherwise fall back to old logic
+    if style_resolver:
+        # Use the new centralized StyleResolver
+        paragraph_object.properties = style_resolver.resolve_paragraph_properties(
+            paragraph_element, slide_layout_obj, ph_type, current_level
         )
-
-    # If no explicit alignment found, use sophisticated alignment resolution
-    if not paragraph_object.properties.align:
-        # Use sophisticated alignment resolution instead of naive "first found wins"
-        resolved_align = _resolve_paragraph_alignment_intelligently(
-            parser_instance, slide_layout_obj, ph_type, current_level
-        )
-        paragraph_object.properties.align = resolved_align
+        
+        # Override with any direct properties from the paragraph's XML
+        if paragraph_properties_element is not None:
+            if paragraph_properties_element.get("algn") is not None:
+                paragraph_object.properties.align = paragraph_properties_element.get("algn")
+            if paragraph_properties_element.get("indent") is not None:
+                paragraph_object.properties.indent = int(
+                    paragraph_properties_element.get("indent")
+                )
+            if paragraph_properties_element.get("lvl") is not None:
+                paragraph_object.properties.level = int(paragraph_properties_element.get("lvl"))
 
     # Iterate through all run elements (a:r) within the paragraph
     for run_element in paragraph_element.findall(
@@ -140,6 +110,8 @@ def extract_paragraph_properties(
                 ph_type,
                 current_level,
                 paragraph_properties_element,
+                paragraph_object.properties,  # Pass resolved paragraph properties
+                style_resolver,
             )
             # Append a new TextRun object to the paragraph's text runs
             paragraph_object.text_runs.append(
@@ -155,112 +127,32 @@ def extract_run_properties(
     ph_type: str | None = None,
     paragraph_level: int | None = None,
     paragraph_properties_element=None,
+    resolved_paragraph_properties: ParagraphProperties | None = None,
+    style_resolver=None,
 ) -> RunProperties:
     """Extract run properties from a text run element."""
-    run_properties = RunProperties()
     
-    # Extract from <a:rPr> on the run
-    run_properties_element = run_element.find(".//a:rPr", namespaces=parser_instance.nsmap)
-    if run_properties_element is not None:
-        # Extract font size
-        if run_properties_element.get("sz") is not None:
-            run_properties.font_size = int(run_properties_element.get("sz"))
-        # Extract bold property
-        if run_properties_element.get("b") == "1":
-            run_properties.bold = True
-        # Extract italic property
-        if run_properties_element.get("i") == "1":
-            run_properties.italic = True
-        # Extract color
-        solid_fill_element = run_properties_element.find(".//a:solidFill", namespaces=parser_instance.nsmap)
-        if solid_fill_element is not None:
-            srgb_color_element = solid_fill_element.find(".//a:srgbClr", namespaces=parser_instance.nsmap)
-            if srgb_color_element is not None:
-                run_properties.color = srgb_color_element.get("val")
-            else:
-                scheme_color_element = solid_fill_element.find(".//a:schemeClr", namespaces=parser_instance.nsmap)
-                if scheme_color_element is not None:
-                    run_properties.scheme_color = scheme_color_element.get("val")
-        # Extract font face (explicit font)
-        latin_font_element = run_properties_element.find(".//a:latin", namespaces=parser_instance.nsmap)
-        if latin_font_element is not None:
-            run_properties.font_face = latin_font_element.get("typeface")
+    # Use StyleResolver if available, otherwise fall back to old logic
+    if (style_resolver and resolved_paragraph_properties):
         
-        # Extract font reference (theme-based font)
-        font_ref_element = run_properties_element.find(".//a:fontRef", namespaces=parser_instance.nsmap)
-        if font_ref_element is not None:
-            run_properties.font_ref = font_ref_element.get("idx")  # "major" or "minor"
-        # Extract underline
-        underline_element = run_properties_element.find(".//a:u", namespaces=parser_instance.nsmap)
-        if underline_element is not None:
-            run_properties.underline = True
-        # Extract capitalization (cap attribute)
-        if run_properties_element.get("cap") is not None:
-            run_properties.cap = run_properties_element.get("cap")
-
-    return run_properties
+        # Extract the run properties element from XML
+        run_properties_element = run_element.find(".//a:rPr", namespaces=parser_instance.nsmap)
+        
+        # Use the new centralized StyleResolver
+        run_properties = style_resolver.resolve_run_properties(
+            run_properties_element, resolved_paragraph_properties, slide_layout_obj, paragraph_level
+        )
+        
+        return run_properties
 
 
-def _extract_font_size_property(run_properties: RunProperties, run_properties_element):
-    """Extract font size from run properties element."""
-    if run_properties_element.get("sz") is not None:
-        run_properties.font_size = int(run_properties_element.get("sz"))
 
 
-def _extract_text_style_properties(
-    run_properties: RunProperties, run_properties_element
-):
-    """Extract bold and italic properties from run properties element."""
-    if run_properties_element.get("b") == "1":
-        run_properties.bold = True
-    if run_properties_element.get("i") == "1":
-        run_properties.italic = True
 
 
-def _extract_color_properties(
-    run_properties: RunProperties, run_properties_element, nsmap
-):
-    """Extract color properties from run properties element."""
-    solid_fill_element = run_properties_element.find(".//a:solidFill", namespaces=nsmap)
-    if solid_fill_element is not None:
-        srgb_color_element = solid_fill_element.find(".//a:srgbClr", namespaces=nsmap)
-        if srgb_color_element is not None:
-            run_properties.color = srgb_color_element.get("val")
-        else:
-            scheme_color_element = solid_fill_element.find(
-                ".//a:schemeClr", namespaces=nsmap
-            )
-            if scheme_color_element is not None:
-                run_properties.scheme_color = scheme_color_element.get("val")
 
 
-def _extract_font_properties(
-    run_properties: RunProperties, run_properties_element, nsmap
-):
-    """Extract font face and font reference properties from run properties element."""
-    # Extract font face (explicit font)
-    latin_font_element = run_properties_element.find(".//a:latin", namespaces=nsmap)
-    if latin_font_element is not None:
-        run_properties.font_face = latin_font_element.get("typeface")
 
-    # Extract font reference (theme-based font)
-    font_ref_element = run_properties_element.find(".//a:fontRef", namespaces=nsmap)
-    if font_ref_element is not None:
-        run_properties.font_ref = font_ref_element.get("idx")  # "major" or "minor"
-
-
-def _extract_formatting_properties(
-    run_properties: RunProperties, run_properties_element, nsmap
-):
-    """Extract underline and capitalization properties from run properties element."""
-    # Extract underline
-    underline_element = run_properties_element.find(".//a:u", namespaces=nsmap)
-    if underline_element is not None:
-        run_properties.underline = True
-
-    # Extract capitalization (cap attribute)
-    if run_properties_element.get("cap") is not None:
-        run_properties.cap = run_properties_element.get("cap")
 
 
 def _extract_layout_default_run_properties(
@@ -798,362 +690,144 @@ def _get_presentation_bullet_properties(parser_instance, level: int | None):
     return None
 
 
-def _resolve_font_size_intelligently(
-    parser_instance,
-    paragraph_properties_element,
-    slide_layout_obj: SlideLayout | None,
-    ph_type: str | None,
-    paragraph_level: int | None,
-) -> int | None:
-    """Intelligently resolve font size using the complete 6-level OpenXML hierarchy.
 
-    Font Size Hierarchy:
-    1. Direct Run Properties (Most Powerful): sz in <a:rPr> - already checked
-    2. Paragraph-Level Default: sz in <a:defRPr> inside paragraph's <a:pPr>
-    3. List Style Level: sz in <a:defRPr> of corresponding list style (master)
-    4. Placeholder Style Level: sz in placeholder's default style on slide master
-    5. Presentation Default: sz in <p:defaultTextStyle> in presentation.xml
-    6. Application Default: Fallback size if no value found
 
+def _get_layout_text_style_font_size(slide_layout_obj: SlideLayout, ph_type: str) -> int | None:
+    """Get font size from layout text styles based on placeholder type.
+    
     Args:
-        parser_instance: Slide parser instance
-        paragraph_properties_element: XML element containing paragraph properties
-        slide_layout_obj: Slide layout object
-        ph_type: Placeholder type
-        paragraph_level: Paragraph level (0-based)
-
+        slide_layout_obj: SlideLayout object with parsed text styles
+        ph_type: Placeholder type (title, body, etc.)
+        
     Returns:
-        int: Resolved font size or None if no explicit size found
+        Font size in PowerPoint units or None if not found
     """
-
-    # 2. Paragraph-Level Default: Check <a:defRPr> in paragraph's <a:pPr>
-    if paragraph_properties_element is not None:
-        def_rpr_element = paragraph_properties_element.find(
-            ".//a:defRPr", namespaces=parser_instance.nsmap
-        )
-        if def_rpr_element is not None and def_rpr_element.get("sz") is not None:
-            return int(def_rpr_element.get("sz"))
-
-    # 3. List Style Level: Check master slide list styles for this level
-    if (
-        slide_layout_obj
-        and paragraph_level is not None
-        and slide_layout_obj.list_styles
-        and paragraph_level in slide_layout_obj.list_styles
-    ):
-            level_props = slide_layout_obj.list_styles[paragraph_level]
-            if (
-                level_props
-                and level_props.default_run_properties
-                and level_props.default_run_properties.font_size is not None
-            ):
-                return level_props.default_run_properties.font_size
-
-    # 4. Placeholder Style Level: Check placeholder's default style on slide master
-    # TODO: This would require parsing slide master txStyles (p:titleStyle, p:bodyStyle)
-    # For now, this level is skipped as it requires master slide parsing
-
-    # 5. Presentation Default: Check p:defaultTextStyle in presentation
-    if (
-        hasattr(parser_instance, "presentation_defaults")
-        and parser_instance.presentation_defaults
-    ):
-        # Use provided level or fallback to level 0
-        effective_level = paragraph_level if paragraph_level is not None else 0
-
-        # Check if we have defaults for this level
-        if effective_level in parser_instance.presentation_defaults:
-            level_props = parser_instance.presentation_defaults[effective_level]
-            if (
-                level_props
-                and level_props.default_run_properties
-                and level_props.default_run_properties.font_size is not None
-            ):
-                return level_props.default_run_properties.font_size
-
-        # Fallback to level 0 if specific level not found
-        if effective_level != 0 and 0 in parser_instance.presentation_defaults:
-            level_0_props = parser_instance.presentation_defaults[0]
-            if (
-                level_0_props
-                and level_0_props.default_run_properties
-                and level_0_props.default_run_properties.font_size is not None
-            ):
-                return level_0_props.default_run_properties.font_size
-
-    # 6. Application Default: Return standard default font size
-    # PowerPoint's default is typically 18pt for body text and larger for titles
+    if not slide_layout_obj:
+        return None
+    
+    # Map placeholder types to text style properties
     if ph_type in ["title", "ctrTitle"]:
-        return 4400  # 44pt in hundredths of a point
+        text_style = slide_layout_obj.title_style
+    elif ph_type in ["body", "obj", "content"]:
+        text_style = slide_layout_obj.body_style
     else:
-        return 1800  # 18pt in hundredths of a point
-
-
-def _apply_inherited_run_properties(
-    run_properties: RunProperties,
-    parser_instance,
-    paragraph_properties_element,
-    slide_layout_obj: SlideLayout | None,
-    ph_type: str | None,
-    paragraph_level: int | None,
-):
-    """Apply inherited run properties for properties not explicitly set.
-
-    This applies the same inheritance hierarchy for other run properties like
-    bold, italic, font face, color, etc.
-    """
-    # Apply bold inheritance if not set
-    if not run_properties.bold:
-        inherited_bold = _resolve_run_property_intelligently(
-            parser_instance,
-            paragraph_properties_element,
-            slide_layout_obj,
-            ph_type,
-            paragraph_level,
-            "bold",
-        )
-        if inherited_bold:
-            run_properties.bold = inherited_bold
-
-    # Apply italic inheritance if not set
-    if not run_properties.italic:
-        inherited_italic = _resolve_run_property_intelligently(
-            parser_instance,
-            paragraph_properties_element,
-            slide_layout_obj,
-            ph_type,
-            paragraph_level,
-            "italic",
-        )
-        if inherited_italic:
-            run_properties.italic = inherited_italic
-
-    # Apply font inheritance if not set (handles both explicit fonts and theme references)
-    if not run_properties.font_face and not run_properties.font_ref:
-        resolved_font_info = _resolve_font_intelligently(
-            parser_instance,
-            paragraph_properties_element,
-            slide_layout_obj,
-            ph_type,
-            paragraph_level,
-        )
-        if resolved_font_info:
-            if resolved_font_info.get("font_face"):
-                run_properties.font_face = resolved_font_info["font_face"]
-            elif resolved_font_info.get("font_ref"):
-                run_properties.font_ref = resolved_font_info["font_ref"]
-
-    # Apply color inheritance if not set
-    if not run_properties.color and not run_properties.scheme_color:
-        inherited_color = _resolve_run_property_intelligently(
-            parser_instance,
-            paragraph_properties_element,
-            slide_layout_obj,
-            ph_type,
-            paragraph_level,
-            "color",
-        )
-        if inherited_color:
-            if inherited_color.startswith("#"):
-                run_properties.color = inherited_color
-            else:
-                run_properties.scheme_color = inherited_color
-
-
-def _resolve_run_property_intelligently(
-    parser_instance,
-    paragraph_properties_element,
-    slide_layout_obj: SlideLayout | None,
-    ph_type: str | None,
-    paragraph_level: int | None,
-    property_name: str,
-):
-    """Resolve a specific run property using the inheritance hierarchy."""
-
-    # 2. Paragraph-Level Default
-    if paragraph_properties_element is not None:
-        def_rpr_element = paragraph_properties_element.find(
-            ".//a:defRPr", namespaces=parser_instance.nsmap
-        )
-        if def_rpr_element is not None:
-            value = _extract_property_from_def_rpr(
-                def_rpr_element, property_name, parser_instance.nsmap
-            )
-            if value is not None:
-                return value
-
-    # 3. List Style Level
-    if (
-        slide_layout_obj
-        and paragraph_level is not None
-        and slide_layout_obj.list_styles
-        and paragraph_level in slide_layout_obj.list_styles
-    ):
-            level_props = slide_layout_obj.list_styles[paragraph_level]
-            if level_props and level_props.default_run_properties:
-                value = getattr(level_props.default_run_properties, property_name, None)
-                if value is not None:
-                    return value
-
-    # 5. Presentation Default
-    if (
-        hasattr(parser_instance, "presentation_defaults")
-        and parser_instance.presentation_defaults
-    ):
-        effective_level = paragraph_level if paragraph_level is not None else 0
-
-        if effective_level in parser_instance.presentation_defaults:
-            level_props = parser_instance.presentation_defaults[effective_level]
-            if level_props and level_props.default_run_properties:
-                value = getattr(level_props.default_run_properties, property_name, None)
-                if value is not None:
-                    return value
-
-        # Fallback to level 0
-        if effective_level != 0 and 0 in parser_instance.presentation_defaults:
-            level_0_props = parser_instance.presentation_defaults[0]
-            if level_0_props and level_0_props.default_run_properties:
-                value = getattr(
-                    level_0_props.default_run_properties, property_name, None
-                )
-                if value is not None:
-                    return value
-
+        text_style = slide_layout_obj.other_style
+    
+    # Extract font size from text style
+    if (text_style and 
+        text_style.default_run_properties and 
+        text_style.default_run_properties.font_size is not None):
+        return text_style.default_run_properties.font_size
+    
     return None
 
 
-def _extract_property_from_def_rpr(def_rpr_element, property_name: str, nsmap):
-    """Extract a specific property from a defRPr element."""
-    if property_name == "bold":
-        return def_rpr_element.get("b") == "1" if def_rpr_element.get("b") else None
-    elif property_name == "italic":
-        return def_rpr_element.get("i") == "1" if def_rpr_element.get("i") else None
-    elif property_name == "font_face":
-        latin_font_element = def_rpr_element.find(".//a:latin", namespaces=nsmap)
-        return (
-            latin_font_element.get("typeface")
-            if latin_font_element is not None
-            else None
-        )
-    elif property_name == "font_ref":
-        font_ref_element = def_rpr_element.find(".//a:fontRef", namespaces=nsmap)
-        return font_ref_element.get("idx") if font_ref_element is not None else None
-    elif property_name == "color":
-        solid_fill_element = def_rpr_element.find(".//a:solidFill", namespaces=nsmap)
-        if solid_fill_element is not None:
-            srgb_color_element = solid_fill_element.find(
-                ".//a:srgbClr", namespaces=nsmap
-            )
-            if srgb_color_element is not None:
-                return "#" + srgb_color_element.get("val")
-            scheme_color_element = solid_fill_element.find(
-                ".//a:schemeClr", namespaces=nsmap
-            )
-            if scheme_color_element is not None:
-                return scheme_color_element.get("val")
-
+def _get_master_text_style_font_size(slide_layout_obj: SlideLayout, ph_type: str) -> int | None:
+    """Get font size from master text styles based on placeholder type.
+    
+    Args:
+        slide_layout_obj: SlideLayout object that may reference a master
+        ph_type: Placeholder type (title, body, etc.)
+        
+    Returns:
+        Font size in PowerPoint units or None if not found
+    """
+    if not slide_layout_obj or not slide_layout_obj.slide_master:
+        return None
+    
+    slide_master = slide_layout_obj.slide_master
+    
+    # Map placeholder types to master text style properties
+    if ph_type in ["title", "ctrTitle"]:
+        text_style = slide_master.title_style
+    elif ph_type in ["body", "obj", "content"]:
+        text_style = slide_master.body_style
+    else:
+        text_style = slide_master.other_style
+    
+    # Extract font size from master text style
+    if (text_style and 
+        text_style.default_run_properties and 
+        text_style.default_run_properties.font_size is not None):
+        return text_style.default_run_properties.font_size
+    
+    # Fallback to master list styles if text styles don't have font size
+    if (slide_layout_obj.list_styles and 
+        0 in slide_layout_obj.list_styles):
+        level_0_props = slide_layout_obj.list_styles[0]
+        if (level_0_props and 
+            level_0_props.default_run_properties and 
+            level_0_props.default_run_properties.font_size is not None):
+            return level_0_props.default_run_properties.font_size
+    
     return None
 
 
-def _resolve_font_intelligently(
-    parser_instance,
-    paragraph_properties_element,
-    slide_layout_obj: SlideLayout | None,
-    ph_type: str | None,
-    paragraph_level: int | None,
-) -> dict | None:
-    """Intelligently resolve font using the complete 7-level OpenXML hierarchy with theme resolution.
-
-    Font Resolution Hierarchy:
-    1. Direct Run Properties: <a:latin> or <a:fontRef> in <a:rPr> - already checked
-    2. Paragraph-Level Default: <a:defRPr> inside paragraph's <a:pPr>
-    3. List Style Level: <a:defRPr> of corresponding list style (master)
-    4. Placeholder/Master Style Font Reference: <a:fontRef> in <p:bodyStyle>/<p:titleStyle>
-    5. Theme Font Scheme Resolution: Resolve major/minor from theme.xml
-    6. Presentation Default: <p:defaultTextStyle> in presentation.xml
-    7. Application Default: Fallback font if no value found
-
+def _get_layout_text_style_font_info(slide_layout_obj: SlideLayout, ph_type: str) -> dict | None:
+    """Get font information from layout text styles based on placeholder type.
+    
     Args:
-        parser_instance: Slide parser instance
-        paragraph_properties_element: XML element containing paragraph properties
-        slide_layout_obj: Slide layout object
-        ph_type: Placeholder type
-        paragraph_level: Paragraph level (0-based)
-
+        slide_layout_obj: SlideLayout object containing text styles
+        ph_type: Placeholder type (title, body, etc.)
+        
     Returns:
-        dict: Font information with "font_face" or "font_ref" keys, or None if not found
+        Dict with font_face or font_ref key, or None if not found
     """
-
-    # 2. Paragraph-Level Default: Check <a:defRPr> in paragraph's <a:pPr>
-    if paragraph_properties_element is not None:
-        def_rpr_element = paragraph_properties_element.find(
-            ".//a:defRPr", namespaces=parser_instance.nsmap
-        )
-        if def_rpr_element is not None:
-            # Check for explicit font first
-            font_face = _extract_property_from_def_rpr(
-                def_rpr_element, "font_face", parser_instance.nsmap
-            )
-            if font_face:
-                return {"font_face": font_face}
-            # Check for font reference
-            font_ref = _extract_property_from_def_rpr(
-                def_rpr_element, "font_ref", parser_instance.nsmap
-            )
-            if font_ref:
-                return {"font_ref": font_ref}
-
-    # 3. List Style Level: Check master slide list styles for this level
-    if (
-        slide_layout_obj
-        and paragraph_level is not None
-        and slide_layout_obj.list_styles
-        and paragraph_level in slide_layout_obj.list_styles
-    ):
-            level_props = slide_layout_obj.list_styles[paragraph_level]
-            if level_props and level_props.default_run_properties:
-                if level_props.default_run_properties.font_face:
-                    return {"font_face": level_props.default_run_properties.font_face}
-                elif level_props.default_run_properties.font_ref:
-                    return {"font_ref": level_props.default_run_properties.font_ref}
-
-    # 4. Placeholder/Master Style Font Reference: Check placeholder style on slide master
-    # TODO: This would require parsing slide master txStyles (p:bodyStyle, p:titleStyle)
-    # This is where <a:fontRef> elements are most commonly found
-    # For now, this level is skipped as it requires master slide parsing
-
-    # 5. Theme Font Scheme Resolution is handled at the CSS generation level
-    # When we have a font_ref, the ThemeResolver will resolve it to actual font
-
-    # 6. Presentation Default: Check p:defaultTextStyle in presentation
-    if (
-        hasattr(parser_instance, "presentation_defaults")
-        and parser_instance.presentation_defaults
-    ):
-        # Use provided level or fallback to level 0
-        effective_level = paragraph_level if paragraph_level is not None else 0
-
-        # Check if we have defaults for this level
-        if effective_level in parser_instance.presentation_defaults:
-            level_props = parser_instance.presentation_defaults[effective_level]
-            if level_props and level_props.default_run_properties:
-                if level_props.default_run_properties.font_face:
-                    return {"font_face": level_props.default_run_properties.font_face}
-                elif level_props.default_run_properties.font_ref:
-                    return {"font_ref": level_props.default_run_properties.font_ref}
-
-        # Fallback to level 0 if specific level not found
-        if effective_level != 0 and 0 in parser_instance.presentation_defaults:
-            level_0_props = parser_instance.presentation_defaults[0]
-            if level_0_props and level_0_props.default_run_properties:
-                if level_0_props.default_run_properties.font_face:
-                    return {"font_face": level_0_props.default_run_properties.font_face}
-                elif level_0_props.default_run_properties.font_ref:
-                    return {"font_ref": level_0_props.default_run_properties.font_ref}
-
-    # 7. Application Default: Return default font reference based on placeholder type
-    # Most PowerPoint presentations use theme fonts, so we return a font reference
+    if not slide_layout_obj:
+        return None
+    
+    # Map placeholder types to layout text style properties
     if ph_type in ["title", "ctrTitle"]:
-        return {"font_ref": "major"}  # Titles typically use major font
+        text_style = slide_layout_obj.title_style
+    elif ph_type in ["body", "obj", "content"]:
+        text_style = slide_layout_obj.body_style
     else:
-        return {"font_ref": "minor"}  # Body text typically uses minor font
+        text_style = slide_layout_obj.other_style
+    
+    # Extract font information from layout text style
+    if (text_style and text_style.default_run_properties):
+        if text_style.default_run_properties.font_face:
+            return {"font_face": text_style.default_run_properties.font_face}
+        elif text_style.default_run_properties.font_ref:
+            return {"font_ref": text_style.default_run_properties.font_ref}
+    
+    return None
+
+
+def _get_master_text_style_font_info(slide_master, ph_type: str) -> dict | None:
+    """Get font information from master text styles based on placeholder type.
+    
+    Args:
+        slide_master: SlideMaster object containing text styles
+        ph_type: Placeholder type (title, body, etc.)
+        
+    Returns:
+        Dict with font_face or font_ref key, or None if not found
+    """
+    if not slide_master:
+        return None
+    
+    # Map placeholder types to master text style properties
+    if ph_type in ["title", "ctrTitle"]:
+        text_style = slide_master.title_style
+    elif ph_type in ["body", "obj", "content"]:
+        text_style = slide_master.body_style
+    else:
+        text_style = slide_master.other_style
+    
+    # Extract font information from master text style
+    if (text_style and text_style.default_run_properties):
+        if text_style.default_run_properties.font_face:
+            return {"font_face": text_style.default_run_properties.font_face}
+        elif text_style.default_run_properties.font_ref:
+            return {"font_ref": text_style.default_run_properties.font_ref}
+    
+    return None
+
+
+
+
+
+
+
+

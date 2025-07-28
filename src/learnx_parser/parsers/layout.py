@@ -318,7 +318,16 @@ class LayoutParser:
         # Parse font face (explicit font)
         latin_font_element = def_rpr_element.find(".//a:latin", namespaces=self.nsmap)
         if latin_font_element is not None:
-            run_props.font_face = latin_font_element.get("typeface")
+            typeface = latin_font_element.get("typeface")
+            if typeface in ["+mj-lt", "+mj-ea", "+mj-cs"]:
+                # This is a major font reference
+                run_props.font_ref = "major"
+            elif typeface in ["+mn-lt", "+mn-ea", "+mn-cs"]:
+                # This is a minor font reference
+                run_props.font_ref = "minor"
+            else:
+                # This is a literal font face
+                run_props.font_face = typeface
 
         # Parse font reference (theme-based font)
         font_ref_element = def_rpr_element.find(".//a:fontRef", namespaces=self.nsmap)
@@ -426,6 +435,7 @@ class LayoutParser:
                 # Construct the absolute path to the slide master XML file
                 slide_master_path = os.path.join(
                     self.pptx_unpacked_path,
+                    "ppt",
                     slide_master_target.lstrip("/").replace("../", ""),
                 )
 
@@ -436,6 +446,79 @@ class LayoutParser:
             )
             slide_master_object = slide_master_parser.parse_master()
         return slide_master_object
+
+    def _parse_text_styles(self) -> tuple[ParagraphProperties | None, ParagraphProperties | None, ParagraphProperties | None]:
+        """Parse text styles from <p:txStyles> element in slide layout.
+        
+        Returns:
+            Tuple of (title_style, body_style, other_style)
+        """
+        title_style = None
+        body_style = None
+        other_style = None
+        
+        # Look for txStyles element in slide layout
+        tx_styles_element = self.root.find(".//p:txStyles", namespaces=self.nsmap)
+        if tx_styles_element is not None:
+            # Parse title style
+            title_style_element = tx_styles_element.find(".//p:titleStyle", namespaces=self.nsmap)
+            if title_style_element is not None:
+                title_style = self._parse_text_style_element(title_style_element)
+            
+            # Parse body style
+            body_style_element = tx_styles_element.find(".//p:bodyStyle", namespaces=self.nsmap)
+            if body_style_element is not None:
+                body_style = self._parse_text_style_element(body_style_element)
+            
+            # Parse other style
+            other_style_element = tx_styles_element.find(".//p:otherStyle", namespaces=self.nsmap)
+            if other_style_element is not None:
+                other_style = self._parse_text_style_element(other_style_element)
+        
+        return title_style, body_style, other_style
+
+    def _parse_text_style_element(self, style_element) -> ParagraphProperties | None:
+        """Parse a single text style element (titleStyle, bodyStyle, otherStyle).
+        
+        Args:
+            style_element: XML element containing text style properties
+            
+        Returns:
+            ParagraphProperties with default run properties containing font size
+        """
+        # Look for default paragraph properties (defPPr)
+        def_p_pr_element = style_element.find(".//a:defPPr", namespaces=self.nsmap)
+        if def_p_pr_element is not None:
+            # Create ParagraphProperties object
+            props = ParagraphProperties()
+            
+            # Parse paragraph-level properties
+            if def_p_pr_element.get("algn") is not None:
+                props.align = def_p_pr_element.get("algn")
+            
+            # Parse default run properties (defRPr) - this is where font size is usually defined
+            def_rpr_element = def_p_pr_element.find(".//a:defRPr", namespaces=self.nsmap)
+            if def_rpr_element is not None:
+                props.default_run_properties = self._parse_default_run_properties(def_rpr_element)
+            
+            return props
+        
+        # Check for level 1 paragraph properties (lvl1pPr) - Galaxy presentation uses this structure
+        lvl1_element = style_element.find(".//a:lvl1pPr", namespaces=self.nsmap)
+        if lvl1_element is not None:
+            props = ParagraphProperties()
+            # Parse paragraph-level properties
+            if lvl1_element.get("algn") is not None:
+                props.align = lvl1_element.get("algn")
+                
+            # Parse default run properties (defRPr) - this is where font size is defined
+            def_rpr_element = lvl1_element.find(".//a:defRPr", namespaces=self.nsmap)
+            if def_rpr_element is not None:
+                props.default_run_properties = self._parse_default_run_properties(def_rpr_element)
+            
+            return props
+        
+        return None
 
     def parse_layout(self) -> SlideLayout:
         layout_name = self.root.find(".//p:cSld", namespaces=self.nsmap).get("name")
@@ -449,13 +532,37 @@ class LayoutParser:
         placeholders = self._parse_placeholders()
         list_styles = self._extract_list_styles()
         background_color, background_gradient_fill, background_reference = self._extract_background_properties()
+        title_style, body_style, other_style = self._parse_text_styles()
 
+        # Get slide master object
+        slide_master_obj = self._get_slide_master_obj()
+        
+        # Inherit text styles from master if layout doesn't define its own
+        if slide_master_obj:
+            if not title_style:
+                title_style = slide_master_obj.title_style
+            if not body_style:
+                body_style = slide_master_obj.body_style
+            if not other_style:
+                other_style = slide_master_obj.other_style
+            
+            # Inherit list styles from master - merge master styles with layout styles
+            # Master list styles should be the default, layout can override specific levels
+            if slide_master_obj.list_styles:
+                # Start with master list styles as the base
+                merged_list_styles = slide_master_obj.list_styles.copy()
+                
+                # Override with layout-specific list styles if they exist
+                if list_styles:
+                    merged_list_styles.update(list_styles)
+                
+                list_styles = merged_list_styles
+        
         # Inherit background properties from slide master if no layout-level background is found
         if (not background_color and 
             not background_gradient_fill and 
             not background_reference):
             
-            slide_master_obj = self._get_slide_master_obj()
             if slide_master_obj:
                 if slide_master_obj.background_color:
                     background_color = slide_master_obj.background_color
@@ -476,4 +583,8 @@ class LayoutParser:
             background_color=background_color,
             background_gradient_fill=background_gradient_fill,
             background_reference=background_reference,
+            title_style=title_style,
+            body_style=body_style,
+            other_style=other_style,
+            slide_master=slide_master_obj,
         )

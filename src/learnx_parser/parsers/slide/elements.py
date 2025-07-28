@@ -17,13 +17,14 @@ from learnx_parser.parsers.slide.properties import (
 )
 
 
-def parse_shape_element(parser_instance, shape_element, slide_layout_obj) -> Shape:
+def parse_shape_element(parser_instance, shape_element, slide_layout_obj, style_resolver) -> Shape:
     """Parse a shape element from XML to Shape object.
 
     Args:
         parser_instance: Parser instance with namespace map and relationships
         shape_element: XML element containing shape data
         slide_layout_obj: Slide layout object for inheritance
+        style_resolver: StyleResolver instance for resolving text properties
 
     Returns:
         Shape: Parsed shape object
@@ -87,7 +88,7 @@ def parse_shape_element(parser_instance, shape_element, slide_layout_obj) -> Sha
         from learnx_parser.parsers.slide.text import extract_text_frame_properties
 
         text_frame = extract_text_frame_properties(
-            parser_instance, shape_element, slide_layout_obj, ph_type
+            parser_instance, shape_element, slide_layout_obj, ph_type, style_resolver
         )
 
     return Shape(
@@ -206,7 +207,7 @@ def parse_picture_element(parser_instance, picture_element) -> Picture:
 
 
 def parse_group_shape_element(
-    parser_instance, group_shape_element, slide_layout_obj
+    parser_instance, group_shape_element, slide_layout_obj, style_resolver
 ) -> GroupShape:
     """Parse a group shape element from XML to GroupShape object.
 
@@ -214,6 +215,7 @@ def parse_group_shape_element(
         parser_instance: Parser instance with namespace map and relationships
         group_shape_element: XML element containing group shape data
         slide_layout_obj: Slide layout object for inheritance
+        style_resolver: StyleResolver instance for resolving text properties
 
     Returns:
         GroupShape: Parsed group shape object

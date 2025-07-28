@@ -499,11 +499,7 @@ def get_run_style_css(
                 styles.append(font_css)
         else:
             # Fallback to hard-coded fonts when no theme resolver available
-            if placeholder_type == "title":
-                styles.append(
-                    "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
-                )
-            elif placeholder_type == "body":
+            if placeholder_type == "title" or placeholder_type == "body":
                 styles.append(
                     "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
                 )
@@ -513,18 +509,11 @@ def get_run_style_css(
                 )
 
         if run.properties.font_size:
-            # Convert half-points to pixels (approximation)
-            font_size_px = run.properties.font_size / 100 * 0.75
-            styles.append(f"font-size: {font_size_px}px;")
-        elif placeholder_type:
-            # Apply slide master default font sizes based on placeholder type
-            if placeholder_type == "title":
-                # Title style: 40 points from slide master
-                styles.append("font-size: 30px;")
-            elif placeholder_type == "body":
-                # Body style: 28 points from slide master
-                styles.append("font-size: 21px;")
-            # Add more placeholder types as needed
+            # Convert PowerPoint units (hundredths of a point) to pixels
+            # PowerPoint sz attribute = font size * 100, so divide by 100 to get points
+            # 1 point = 1.333 pixels. Font size is in 100ths of a point.
+            font_size_px = (run.properties.font_size / 100) * 1.333
+            styles.append(f"font-size: {font_size_px:.2f}px;")
 
         if run.properties.bold:
             styles.append("font-weight: bold;")
@@ -542,7 +531,7 @@ def get_run_style_css(
             elif run.properties.cap == "small":
                 styles.append("text-transform: lowercase;")
 
-        # Color - use explicit color or theme color
+        # Color - use explicit color or theme color following OOXML hierarchy
         if run.properties.color:
             styles.append(f"color: #{run.properties.color};")
         elif theme_resolver:

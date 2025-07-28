@@ -1,6 +1,11 @@
+import os
 from lxml import etree
 
 from learnx_parser.models.core import ParagraphProperties, RunProperties
+from learnx_parser.models.presentation import Presentation
+from learnx_parser.parsers.layout import LayoutParser
+from learnx_parser.parsers.master import SlideMasterParser
+from learnx_parser.utils.file_utils import find_files
 
 
 class PresentationParser:
@@ -189,3 +194,96 @@ class PresentationParser:
                     run_props.scheme_color = scheme_color_element.get("val")
 
         return run_props
+
+    def parse(self):
+        """
+        Parse all presentation-level data including slide masters, layouts, and defaults.
+        
+        This is the main entry point for the PresentationParser that coordinates
+        parsing of all shared presentation resources.
+        
+        Returns:
+            Presentation: Object containing all parsed presentation-wide data
+        """
+        # Get the base directory for the PPTX unpacked content
+        pptx_unpacked_path = os.path.dirname(os.path.dirname(self.presentation_xml_path))
+        
+        # Parse presentation defaults
+        presentation_defaults = self.get_default_text_style()
+        
+        # Parse slide masters
+        slide_masters = self._parse_slide_masters(pptx_unpacked_path)
+        
+        # Parse slide layouts
+        slide_layouts = self._parse_slide_layouts(pptx_unpacked_path)
+        
+        # Create and return the Presentation object
+        return Presentation(
+            slide_masters=slide_masters,
+            slide_layouts=slide_layouts,
+            presentation_defaults=presentation_defaults
+        )
+
+    def _parse_slide_masters(self, pptx_unpacked_path):
+        """
+        Parse all slide master files and return them in a dictionary.
+        
+        Args:
+            pptx_unpacked_path: Path to the unpacked PPTX directory
+            
+        Returns:
+            dict[str, SlideMaster]: Dictionary keyed by master filename
+        """
+        slide_masters = {}
+        
+        # Find all slide master files
+        ppt_path = os.path.join(pptx_unpacked_path, "ppt")
+        master_files = find_files(ppt_path, "slideMaster*.xml")
+        
+        for master_file in master_files:
+            try:
+                # Parse the slide master using SlideMasterParser
+                master_parser = SlideMasterParser(master_file, pptx_unpacked_path)
+                slide_master = master_parser.parse_master()
+                
+                # Use the filename as the key
+                filename = os.path.basename(master_file)
+                slide_masters[filename] = slide_master
+                
+            except Exception as e:
+                print(f"Warning: Could not parse slide master {master_file}: {e}")
+                continue
+        
+        return slide_masters
+
+    def _parse_slide_layouts(self, pptx_unpacked_path):
+        """
+        Parse all slide layout files and return them in a dictionary.
+        
+        Args:
+            pptx_unpacked_path: Path to the unpacked PPTX directory
+            
+        Returns:
+            dict[str, SlideLayout]: Dictionary keyed by layout filename
+        """
+        slide_layouts = {}
+        
+        # Find all slide layout files
+        ppt_path = os.path.join(pptx_unpacked_path, "ppt")
+        layout_files = find_files(ppt_path, "slideLayout*.xml")
+        
+        for layout_file in layout_files:
+            try:
+                # Parse the slide layout using LayoutParser
+                layout_parser = LayoutParser(layout_file, pptx_unpacked_path)
+                slide_layout = layout_parser.parse_layout()
+                
+                # Use the filename as the key
+                filename = os.path.basename(layout_file)
+                slide_layouts[filename] = slide_layout
+                
+            except Exception as e:
+                print(f"Warning: Could not parse slide layout {layout_file}: {e}")
+                continue
+        
+        return slide_layouts

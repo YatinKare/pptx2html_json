@@ -8,13 +8,16 @@ from learnx_parser.models.core import (
     GradientFill,
     GradientStop,
     Hyperlink,
+    PresentationDefaults,
     Slide,
     SlideLayout,
 )
+from learnx_parser.models.presentation import Presentation
 from learnx_parser.parsers.layout import LayoutParser
 from learnx_parser.parsers.slide.shapes import (
     parse_shape_tree,
 )
+from learnx_parser.services.style_resolver import StyleResolver
 
 
 class SlideParser:
@@ -25,7 +28,9 @@ class SlideParser:
         pptx_unpacked_path,
         slide_width,
         slide_height,
+        presentation=None,
         presentation_defaults=None,
+        style_resolver=None,
     ):
         # Path to the XML file for the current slide
         self.slide_xml_path = slide_xml_path
@@ -45,8 +50,30 @@ class SlideParser:
         self.slide_width = slide_width
         # Height of the slide in EMUs, inherited from presentation properties
         self.slide_height = slide_height
+        
+        # Store the presentation object containing all shared resources
+        self.presentation = presentation
+        
         # Presentation-level default text styles for theme inheritance
-        self.presentation_defaults = presentation_defaults or {}
+        self.presentation_defaults = presentation_defaults or (presentation.presentation_defaults if presentation else {})
+        
+        # Style resolver instance - create from presentation data or use passed instance
+        if style_resolver:
+            self.style_resolver = style_resolver
+        elif presentation:
+            # Create StyleResolver with presentation data
+            # We'll need the slide layout to determine the slide master
+            slide_layout = self._get_slide_layout_obj()
+            if slide_layout and slide_layout.slide_master:
+                presentation_defaults_obj = PresentationDefaults()
+                self.style_resolver = StyleResolver(
+                    slide_master=slide_layout.slide_master,
+                    presentation_defaults=presentation_defaults_obj
+                )
+            else:
+                self.style_resolver = None
+        else:
+            self.style_resolver = None
 
     def _parse_rels(self):
         # Initialize an empty dictionary to store relationships
@@ -62,6 +89,31 @@ class SlideParser:
                 # Store the relationship ID and its target (e.g., media file path, slide layout path)
                 relationships[relationship.get("Id")] = relationship.get("Target")
         return relationships
+
+    def _resolve_relationship(self, r_embed: str) -> str | None:
+        """Resolve a relationship ID to an absolute file path.
+        
+        Args:
+            r_embed: Relationship ID (e.g., "rId2")
+            
+        Returns:
+            Absolute path to the resolved file, or None if not found
+        """
+        if r_embed in self.rels:
+            relative_path = self.rels[r_embed]
+            # Convert relative path to absolute path
+            if relative_path.startswith("../"):
+                # Handle relative paths like "../media/image1.jpeg"
+                absolute_path = os.path.join(self.pptx_unpacked_path, "ppt", relative_path[3:])
+            else:
+                # Handle direct paths like "media/image1.jpeg"
+                absolute_path = os.path.join(self.pptx_unpacked_path, "ppt", relative_path)
+            
+            # Verify the file exists
+            if os.path.exists(absolute_path):
+                return absolute_path
+        
+        return None
 
     def _extract_common_slide_data(self, slide_layout_obj: SlideLayout | None = None) -> CommonSlideData:
         # Initialize CommonSlideData with slide width and height
@@ -172,11 +224,31 @@ class SlideParser:
                                             )
                                         )
                                 common_slide_data.background_gradient_fill = gradient_fill
+                            else:
+                                # Check for image fill background (blipFill)
+                                blip_fill_element = background_properties_element.find(
+                                    ".//a:blipFill", namespaces=self.nsmap
+                                )
+                                if blip_fill_element is not None:
+                                    # Extract the relationship ID (r:embed)
+                                    blip_element = blip_fill_element.find(
+                                        ".//a:blip", namespaces=self.nsmap
+                                    )
+                                    if blip_element is not None:
+                                        r_embed = blip_element.get(
+                                            "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed"
+                                        )
+                                        if r_embed:
+                                            # Resolve the relationship to get the image path
+                                            image_path = self._resolve_relationship(r_embed)
+                                            if image_path:
+                                                common_slide_data.background_image_path = image_path
 
         # Inherit background properties from layout if no slide-level background is found
         if (not common_slide_data.background_color and 
             not common_slide_data.background_gradient_fill and 
             not common_slide_data.background_reference and 
+            not common_slide_data.background_image_path and 
             slide_layout_obj):
             
             # Inherit background properties from layout
@@ -190,7 +262,21 @@ class SlideParser:
         return common_slide_data
 
     def _get_slide_layout_obj(self) -> SlideLayout | None:
-        # Initialize slide layout relationship ID to None
+        # If we have the presentation object with pre-parsed layouts, use those
+        if self.presentation and self.presentation.slide_layouts:
+            # Find the slide layout relationship
+            for rel_id, target in self.rels.items():
+                if "slideLayout" in target:
+                    # Extract the layout filename from the target path
+                    layout_filename = os.path.basename(target)
+                    
+                    # Look up the pre-parsed layout from the presentation object
+                    if layout_filename in self.presentation.slide_layouts:
+                        layout_obj = self.presentation.slide_layouts[layout_filename]
+                        return layout_obj
+                    break
+
+        # Fallback to the original parsing logic if presentation object is not available
         slide_layout_relationship_id = None
         # Iterate through all relationships to find the one pointing to the slide layout
         for rel_id, target in self.rels.items():
@@ -227,7 +313,7 @@ class SlideParser:
         if shape_tree_root is None:
             shape_tree_root = self.root
         # Parse the shape tree to extract all shapes, pictures, group shapes, and graphic frames
-        return parse_shape_tree(self, shape_tree_root, slide_layout_obj)
+        return parse_shape_tree(self, shape_tree_root, slide_layout_obj, self.style_resolver)
 
     def _apply_inherited_transforms(self, shapes, pictures, slide_layout_object):
         # If a slide layout object exists, apply inherited transforms to placeholders
@@ -265,6 +351,7 @@ class SlideParser:
 
     def parse_slide(self, slide_number: int) -> Slide:
         slide_layout_obj = self._get_slide_layout_obj()
+        
         shapes, pictures, group_shapes, graphic_frames = self._parse_slide_elements(
             slide_layout_obj
         )

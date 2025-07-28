@@ -19,6 +19,7 @@ from learnx_parser.writers.css_utils import (
     ZIndexLayers,
     emu_to_px,
     get_image_crop_css,
+    get_paragraph_style_css,
     get_run_style_css,
     get_shape_style_css,
     get_text_frame_alignment_css,
@@ -288,7 +289,7 @@ def render_shape_html(
 def render_text_frame_html(
     text_frame, theme_resolver=None, placeholder_type=None, slide_background_color=None
 ) -> str:
-    """Render a text frame to HTML.
+    """Render a text frame to HTML with proper list grouping and nesting.
 
     Args:
         text_frame: TextFrame object containing paragraphs
@@ -301,13 +302,154 @@ def render_text_frame_html(
     if not text_frame or not text_frame.paragraphs:
         return ""
 
-    # Always use bullet list rendering - CSS will handle bullet display based on bullet_type
-    return _render_as_bullet_list(
-        text_frame.paragraphs,
-        theme_resolver=theme_resolver,
-        placeholder_type=placeholder_type,
-        slide_background_color=slide_background_color,
-    )
+    html_elements = []
+    list_stack = []  # Stack of (list_html_parts, level, list_type) for nested lists
+    
+    for para in text_frame.paragraphs:
+        # Skip empty paragraphs
+        text_content = "".join([run.text for run in para.text_runs]).strip()
+        if not text_content:
+            continue
+            
+        is_list_item = (
+            para.properties and 
+            para.properties.bullet_type is not None
+        )
+        
+        para_level = para.properties.level if para.properties and para.properties.level is not None else 0
+        
+        if is_list_item:
+            # Handle list scenarios (A and B)
+            
+            # Pop stack until we're at the correct parent level for nesting
+            while list_stack and list_stack[-1][1] > para_level:
+                list_parts, level, list_type = list_stack.pop()
+                completed_list = f"<{list_type}>{''.join(list_parts)}</{list_type}>"
+                
+                if list_stack:
+                    # Add completed list to parent's last item
+                    parent_parts, parent_level, parent_list_type = list_stack[-1]
+                    if parent_parts:
+                        # Insert nested list before closing the last </li>
+                        parent_parts[-1] = parent_parts[-1][:-5] + completed_list + "</li>"
+                else:
+                    # Add completed list to final elements
+                    html_elements.append(completed_list)
+            
+            # Determine list type based on bullet type
+            list_type = "ol" if para.properties.bullet_type == "autoNum" else "ul"
+            
+            # Check if we need to start a new list or continue existing one
+            if not list_stack or list_stack[-1][1] != para_level:
+                # Scenario A: Start new list
+                list_stack.append(([], para_level, list_type))
+            
+            # Scenario B: Add to existing list (current list is on top of stack)
+            current_list_parts, current_level, current_list_type = list_stack[-1]
+            
+            # Create list item content
+            item_content = _render_paragraph_runs(
+                para, theme_resolver, placeholder_type, slide_background_color
+            )
+            
+            # Apply paragraph-level styling to list item
+            paragraph_css = get_paragraph_style_css(para)
+            
+            # Handle bullet_type="none" - hide bullet for this list item
+            if para.properties.bullet_type == "none":
+                if paragraph_css:
+                    list_item_html = f'<li style="{paragraph_css} list-style-type: none;">{item_content}</li>'
+                else:
+                    list_item_html = f'<li style="list-style-type: none;">{item_content}</li>'
+            else:
+                # Normal list item with bullet
+                if paragraph_css:
+                    list_item_html = f'<li style="{paragraph_css}">{item_content}</li>'
+                else:
+                    list_item_html = f"<li>{item_content}</li>"
+            
+            # Add the list item to the current list
+            current_list_parts.append(list_item_html)
+            
+        else:
+            # Handle non-bullet scenarios (C and D)
+            
+            # Scenario C: Close any open lists
+            while list_stack:
+                list_parts, level, list_type = list_stack.pop()
+                completed_list = f"<{list_type}>{''.join(list_parts)}</{list_type}>"
+                
+                if list_stack:
+                    # Add completed list to parent's last item
+                    parent_parts, parent_level, parent_list_type = list_stack[-1]
+                    if parent_parts:
+                        # Insert nested list before closing the last </li>
+                        parent_parts[-1] = parent_parts[-1][:-5] + completed_list + "</li>"
+                else:
+                    # Add completed list to final elements
+                    html_elements.append(completed_list)
+            
+            # Scenario D: Create normal paragraph
+            paragraph_html = _render_paragraph_runs(
+                para, theme_resolver, placeholder_type, slide_background_color
+            )
+            
+            paragraph_css = get_paragraph_style_css(para)
+            
+            if paragraph_html:
+                if paragraph_css:
+                    html_elements.append(f'<p style="{paragraph_css}">{paragraph_html}</p>')
+                else:
+                    html_elements.append(f"<p>{paragraph_html}</p>")
+    
+    # Handle any remaining lists at the end
+    while list_stack:
+        list_parts, level, list_type = list_stack.pop()
+        completed_list = f"<{list_type}>{''.join(list_parts)}</{list_type}>"
+        
+        if list_stack:
+            # Add completed list to parent's last item
+            parent_parts, parent_level, parent_list_type = list_stack[-1]
+            if parent_parts:
+                # Insert nested list before closing the last </li>
+                parent_parts[-1] = parent_parts[-1][:-5] + completed_list + "</li>"
+        else:
+            # Add completed list to final elements
+            html_elements.append(completed_list)
+    
+    return "".join(html_elements)
+
+
+def _render_as_regular_text(
+    paragraphs, theme_resolver=None, placeholder_type=None, slide_background_color=None
+) -> str:
+    """Render paragraphs as regular text without bullet formatting."""
+    if not paragraphs:
+        return ""
+
+    html_content = ""
+    for paragraph in paragraphs:
+        # Skip empty paragraphs
+        text_content = "".join([run.text for run in paragraph.text_runs]).strip()
+        if not text_content:
+            continue
+            
+        # Render paragraph content
+        paragraph_html = _render_paragraph_runs(
+            paragraph, theme_resolver, placeholder_type, slide_background_color
+        )
+        
+        # Apply paragraph-level styling (including text alignment)
+        paragraph_css = get_paragraph_style_css(paragraph)
+        
+        # Wrap in paragraph tag with styling
+        if paragraph_html:
+            if paragraph_css:
+                html_content += f'<p style="{paragraph_css}">{paragraph_html}</p>'
+            else:
+                html_content += f"<p>{paragraph_html}</p>"
+
+    return html_content
 
 
 def _render_as_bullet_list(
@@ -373,6 +515,9 @@ def _build_nested_list(
                 paragraph, theme_resolver, placeholder_type, slide_background_color
             )
 
+            # Apply paragraph-level styling to list item
+            paragraph_css = get_paragraph_style_css(paragraph)
+
             # Look ahead for nested items
             nested_start = i + 1
             nested_paragraphs = []
@@ -401,8 +546,11 @@ def _build_nested_list(
                 )
                 i = j - 1  # Skip the nested paragraphs we just processed
 
-            # Add the list item
-            result_html += f"<li>{item_content}{nested_html}</li>"
+            # Add the list item with paragraph styling
+            if paragraph_css:
+                result_html += f'<li style="{paragraph_css}">{item_content}{nested_html}</li>'
+            else:
+                result_html += f"<li>{item_content}{nested_html}</li>"
             i += 1
         else:
             # para_level > current_level - this shouldn't happen in well-formed lists
@@ -430,6 +578,13 @@ def _get_list_style_for_level(
     # Remove hardcoded colors - let text color come from run properties
     # Add proper bullet positioning
     additional_styles = "list-style-position: outside; padding-left: 20px;"
+    
+    # Add CSS list-style-type for auto-numbering
+    if (paragraph.properties and 
+        paragraph.properties.bullet_type == "autoNum" and 
+        paragraph.properties.bullet_auto_num_type):
+        list_style_type = _get_css_list_style_type(paragraph.properties.bullet_auto_num_type)
+        additional_styles += f" list-style-type: {list_style_type};"
 
     if base_style:
         return f"{base_style} {additional_styles}"
@@ -474,3 +629,18 @@ def _render_paragraph_runs(
             item_content += run.text
 
     return item_content
+
+
+def _get_css_list_style_type(bullet_auto_num_type: str) -> str:
+    """Map OOXML auto-numbering types to CSS list-style-type values."""
+    mapping = {
+        "arabicPeriod": "decimal",
+        "alphaLcPeriod": "lower-alpha", 
+        "romanLcPeriod": "lower-roman",
+        "alphaUcPeriod": "upper-alpha",
+        "romanUcPeriod": "upper-roman",
+        "arabicParenR": "decimal",
+        "alphaLcParenR": "lower-alpha",
+        "romanLcParenR": "lower-roman",
+    }
+    return mapping.get(bullet_auto_num_type, "decimal")

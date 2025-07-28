@@ -3,10 +3,12 @@ import shutil
 
 from lxml import etree
 
-from learnx_parser.models.core import Slide
+from learnx_parser.models.core import PresentationDefaults, Slide
+from learnx_parser.models.presentation import Presentation
 from learnx_parser.parsers.presentation import PresentationParser
 from learnx_parser.parsers.slide.base import SlideParser
 from learnx_parser.services.background_renderer import BackgroundRenderer
+from learnx_parser.services.style_resolver import StyleResolver
 from learnx_parser.writers.html_writer import HtmlWriter
 from learnx_parser.writers.json_writer import JsonWriter
 
@@ -167,7 +169,8 @@ class DocumentParser:
         has_background = (
             slide.common_slide_data.background_color or
             slide.common_slide_data.background_gradient_fill or
-            slide.common_slide_data.background_reference
+            slide.common_slide_data.background_reference or
+            slide.common_slide_data.background_image_path
         )
         
         if not has_background:
@@ -183,11 +186,34 @@ class DocumentParser:
         background_filename = f"background_{slide_number}.png"
         background_path = os.path.join(media_output_directory, background_filename)
         
-        # Generate background image using the renderer
+        # Get theme colors from html_writer's theme resolver
+        theme_colors = None
+        if self.html_writer.theme_resolver:
+            # Build theme colors dictionary for background generation
+            theme_colors = {
+                "bg1": self.html_writer.theme_resolver.resolve_scheme_color("bg1"),
+                "bg2": self.html_writer.theme_resolver.resolve_scheme_color("bg2"),
+                "accent1": self.html_writer.theme_resolver.resolve_scheme_color("accent1"),
+                "accent2": self.html_writer.theme_resolver.resolve_scheme_color("accent2"),
+                "accent3": self.html_writer.theme_resolver.resolve_scheme_color("accent3"),
+                "accent4": self.html_writer.theme_resolver.resolve_scheme_color("accent4"),
+                "accent5": self.html_writer.theme_resolver.resolve_scheme_color("accent5"),
+                "accent6": self.html_writer.theme_resolver.resolve_scheme_color("accent6"),
+                "lt1": self.html_writer.theme_resolver.resolve_scheme_color("lt1"),
+                "lt2": self.html_writer.theme_resolver.resolve_scheme_color("lt2"),
+                "dk1": self.html_writer.theme_resolver.resolve_scheme_color("dk1"),
+                "dk2": self.html_writer.theme_resolver.resolve_scheme_color("dk2"),
+            }
+            # Filter out None values
+            theme_colors = {k: v for k, v in theme_colors.items() if v is not None}
+
+        # Generate background image using the renderer with theme colors
         generated_path = self.background_renderer.generate_background_image(
             slide.common_slide_data,
-            background_path
+            background_path,
+            theme_colors
         )
+        
         
         # Return relative path for HTML usage
         if generated_path:
@@ -196,10 +222,11 @@ class DocumentParser:
         return None
 
     def parse_presentation(self):
+        # Parse all presentation-level data using the new unified approach
+        presentation = self.presentation_parser.parse()
+        
         # Get the overall slide width and height from the presentation properties
         slide_width, slide_height = self.presentation_parser.get_slide_size()
-        # Extract presentation-level default text styles for theme inheritance
-        presentation_defaults = self.presentation_parser.get_default_text_style()
         # Initialize the BackgroundRenderer with proper slide dimensions
         self.background_renderer = BackgroundRenderer(slide_width=1280, slide_height=720)
         # Get a list of all slide XML paths and their corresponding relationship file paths
@@ -212,6 +239,7 @@ class DocumentParser:
         ):
             # Calculate the 1-based slide number
             current_slide_number = i + 1
+            
             # Process the current slide: parse its content, copy media, and write HTML/JSON output
             current_slide_parser = SlideParser(
                 slide_xml_file_path,
@@ -219,7 +247,7 @@ class DocumentParser:
                 self.pptx_unpacked_path,
                 slide_width,
                 slide_height,
-                presentation_defaults,
+                presentation=presentation,
             )
             # Parse the slide to get its structured data
             parsed_slide_data = current_slide_parser.parse_slide(

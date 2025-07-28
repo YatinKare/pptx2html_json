@@ -11,13 +11,14 @@ from learnx_parser.parsers.slide.elements import (
 )
 
 
-def parse_shape_tree(parser_instance, shape_tree_root, slide_layout_obj):
+def parse_shape_tree(parser_instance, shape_tree_root, slide_layout_obj, style_resolver):
     """Parse the shape tree to extract all shapes, pictures, group shapes, and graphic frames.
 
     Args:
         parser_instance: Parser instance with namespace map and relationships
         shape_tree_root: Root XML element of the shape tree
         slide_layout_obj: Slide layout object for inheritance
+        style_resolver: StyleResolver instance for resolving text properties
 
     Returns:
         tuple: (shapes, pictures, group_shapes, graphic_frames)
@@ -36,7 +37,7 @@ def parse_shape_tree(parser_instance, shape_tree_root, slide_layout_obj):
             element_tag
             == "{http://schemas.openxmlformats.org/presentationml/2006/main}sp"
         ):
-            shape = parse_shape_element(parser_instance, element, slide_layout_obj)
+            shape = parse_shape_element(parser_instance, element, slide_layout_obj, style_resolver)
             shapes.append(shape)
 
         # Parse picture elements (p:pic)
@@ -53,13 +54,13 @@ def parse_shape_tree(parser_instance, shape_tree_root, slide_layout_obj):
             == "{http://schemas.openxmlformats.org/presentationml/2006/main}grpSp"
         ):
             group_shape = parse_group_shape_element(
-                parser_instance, element, slide_layout_obj
+                parser_instance, element, slide_layout_obj, style_resolver
             )
 
             # Recursively parse children of the group shape
             child_shape_tree = element
             child_shapes, child_pictures, child_group_shapes, child_graphic_frames = (
-                parse_shape_tree(parser_instance, child_shape_tree, slide_layout_obj)
+                parse_shape_tree(parser_instance, child_shape_tree, slide_layout_obj, style_resolver)
             )
 
             # Store children in the group shape

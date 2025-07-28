@@ -26,6 +26,7 @@ dependencies = [
     "pytest>=8.4.1",
     "jsonschema",
     "htpy>=25.7.0",
+    "pillow>=11.3.0",
 ]
 
 [project.urls]
@@ -37,6 +38,7 @@ pythonpath = ["src"]
 [dependency-groups]
 dev = [
     "ruff>=0.12.1",
+    "vulture>=2.14",
 ]
 
 [tool.ruff.lint]

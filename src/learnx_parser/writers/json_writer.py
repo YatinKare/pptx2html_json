@@ -61,11 +61,15 @@ class JsonWriter:
                 current_text_box_content = []
 
                 for paragraph in shape.text_frame.paragraphs:
+                    # Skip paragraphs with no text runs
+                    if not paragraph.text_runs:
+                        continue
+
                     paragraph_text = "".join([run.text for run in paragraph.text_runs])
 
                     paragraph_style = {}
-                    if paragraph.text_runs:
-                        first_run_properties = paragraph.text_runs[0].properties
+                    first_run_properties = paragraph.text_runs[0].properties
+                    if first_run_properties:  # Check if properties exist
                         if first_run_properties.bold:
                             paragraph_style["bold"] = True
                         if first_run_properties.italic:
@@ -210,17 +214,20 @@ class JsonWriter:
         for paragraph in all_paragraphs:
             if paragraph.text_runs:
                 first_run_properties = paragraph.text_runs[0].properties
-                style = {}
-                if first_run_properties.bold:
-                    style["bold"] = True
-                if first_run_properties.italic:
-                    style["italic"] = True
-                if first_run_properties.font_size:
-                    style["fontSize"] = first_run_properties.font_size
-                if first_run_properties.underline:
-                    style["underline"] = True
+                # !!! IMPORTANT: Check if the properties object exists before using it.
+                if first_run_properties:
+                    style = {}
+                    if first_run_properties.bold:
+                        style["bold"] = True
+                    if first_run_properties.italic:
+                        style["italic"] = True
+                    if first_run_properties.font_size:
+                        style["fontSize"] = first_run_properties.font_size
+                    if first_run_properties.underline:
+                        style["underline"] = True
 
-                return style if style else None
+                    # Only return a style dictionary if it's not empty
+                    return style if style else None
 
         return None
 

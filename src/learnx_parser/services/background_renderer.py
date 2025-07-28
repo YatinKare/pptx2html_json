@@ -142,8 +142,14 @@ class BackgroundRenderer:
         
         background_generated = False
         
+        # Handle image background (highest priority)
+        if common_slide_data.background_image_path:
+            background_generated = self._render_image_background(
+                image, common_slide_data.background_image_path
+            )
+        
         # Handle background reference (theme-based)
-        if common_slide_data.background_reference:
+        elif common_slide_data.background_reference:
             background_generated = self._render_background_reference(
                 draw, common_slide_data.background_reference, theme_colors
             )
@@ -193,12 +199,64 @@ class BackgroundRenderer:
             self._fill_solid_color(draw, color)
             return True
         
-        # Default for Galaxy presentation: bg1 = black background
-        if bg_ref.scheme_color == "bg1":
-            self._fill_solid_color(draw, "000000")
-            return True
-        
+        # No hardcoded fallbacks - rely on theme_colors parameter
         return False
+    
+    def _render_image_background(
+        self, 
+        canvas_image: Image.Image, 
+        image_path: str
+    ) -> bool:
+        """Render image background from file.
+        
+        Args:
+            canvas_image: PIL Image object to render onto
+            image_path: Path to the background image file
+            
+        Returns:
+            True if background was rendered, False otherwise
+        """
+        try:
+            # Load the background image
+            background_image = Image.open(image_path)
+            
+            # Convert to RGB if necessary
+            if background_image.mode != 'RGB':
+                background_image = background_image.convert('RGB')
+            
+            # Resize to fit slide dimensions (like CSS background-size: cover)
+            slide_aspect = self.slide_width / self.slide_height
+            image_aspect = background_image.width / background_image.height
+            
+            if image_aspect > slide_aspect:
+                # Image is wider than slide - fit to height
+                new_height = self.slide_height
+                new_width = int(new_height * image_aspect)
+            else:
+                # Image is taller than slide - fit to width
+                new_width = self.slide_width
+                new_height = int(new_width / image_aspect)
+            
+            # Resize the image
+            background_image = background_image.resize((new_width, new_height), Image.LANCZOS)
+            
+            # Center the image on the slide
+            x_offset = (self.slide_width - new_width) // 2
+            y_offset = (self.slide_height - new_height) // 2
+            
+            # Create a white background canvas if the image doesn't fill the entire slide
+            if new_width < self.slide_width or new_height < self.slide_height:
+                # Fill the entire canvas with white first
+                canvas_image.paste(Image.new('RGB', (self.slide_width, self.slide_height), 'white'), (0, 0))
+            
+            # Paste the background image onto the canvas
+            canvas_image.paste(background_image, (x_offset, y_offset))
+            
+            return True
+            
+        except Exception as e:
+            print(f"Error rendering image background from {image_path}: {e}")
+            return False
     
     def _render_solid_background(
         self, 
@@ -274,17 +332,14 @@ class BackgroundRenderer:
         end_color: str, 
         angle: int | None = None
     ):
-        """Fill image with gradient.
+        """Fill image with gradient supporting arbitrary angles.
         
         Args:
             draw: PIL ImageDraw object
             start_color: Start color hex string
             end_color: End color hex string
-            angle: Gradient angle in degrees (PowerPoint format)
+            angle: Gradient angle in PowerPoint format (60,000ths of a degree)
         """
-        # For now, implement simple vertical gradient
-        # TODO: Handle angle-based gradients in future enhancement
-        
         # Parse hex colors
         start_rgb = self._hex_to_rgb(start_color)
         end_rgb = self._hex_to_rgb(end_color)
@@ -292,15 +347,62 @@ class BackgroundRenderer:
         if not start_rgb or not end_rgb:
             return
         
-        # Create vertical gradient
+        # Convert PowerPoint angle to standard degrees
+        if angle is not None:
+            # PowerPoint angles are in 60,000ths of a degree
+            css_angle_deg = (angle / 60000) % 360
+        else:
+            # Default to vertical gradient (top to bottom)
+            css_angle_deg = 90
+        
+        # Convert angle to radians for calculations
+        import math
+        angle_rad = math.radians(css_angle_deg)
+        
+        # Calculate gradient direction vector
+        dx = math.cos(angle_rad)
+        dy = math.sin(angle_rad)
+        
+        # Calculate the gradient line endpoints
+        # For a gradient at angle θ, we need to find the line that goes from
+        # one corner of the image to the opposite corner in that direction
+        
+        # Calculate the distance from center to corners
+        half_width = self.slide_width / 2
+        half_height = self.slide_height / 2
+        
+        # Find the maximum distance in the gradient direction
+        max_distance = abs(half_width * dx) + abs(half_height * dy)
+        
+        # Calculate start and end points of the gradient line
+        start_x = half_width - max_distance * dx
+        start_y = half_height - max_distance * dy
+        end_x = half_width + max_distance * dx
+        end_y = half_height + max_distance * dy
+        
+        # Render gradient by filling each pixel
         for y in range(self.slide_height):
-            ratio = y / self.slide_height
-            r = int(start_rgb[0] * (1 - ratio) + end_rgb[0] * ratio)
-            g = int(start_rgb[1] * (1 - ratio) + end_rgb[1] * ratio)
-            b = int(start_rgb[2] * (1 - ratio) + end_rgb[2] * ratio)
-            
-            color = f"#{r:02x}{g:02x}{b:02x}"
-            draw.line([(0, y), (self.slide_width, y)], fill=color)
+            for x in range(self.slide_width):
+                # Calculate position along gradient line
+                # Project point (x,y) onto the gradient line
+                px = x - start_x
+                py = y - start_y
+                gradient_length = 2 * max_distance
+                
+                if gradient_length > 0:
+                    # Calculate how far along the gradient line this pixel is
+                    projection = (px * dx + py * dy)
+                    ratio = max(0, min(1, projection / gradient_length))
+                else:
+                    ratio = 0
+                
+                # Interpolate color
+                r = int(start_rgb[0] * (1 - ratio) + end_rgb[0] * ratio)
+                g = int(start_rgb[1] * (1 - ratio) + end_rgb[1] * ratio)
+                b = int(start_rgb[2] * (1 - ratio) + end_rgb[2] * ratio)
+                
+                color = f"#{r:02x}{g:02x}{b:02x}"
+                draw.point([(x, y)], fill=color)
     
     def _resolve_color(
         self, 

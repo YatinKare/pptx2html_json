@@ -932,6 +932,10 @@ class HtmlWriter:
 
     def _get_slide_background_color(self, slide: Slide) -> str | None:
         """Extract the dominant background color from slide for contrast calculations.
+        
+        This function has been updated for Goal 1 compatibility. Instead of parsing CSS
+        (which now contains background-image URLs), it directly accesses the slide's
+        background data and resolves theme colors properly.
 
         Args:
             slide: Slide object
@@ -943,32 +947,73 @@ class HtmlWriter:
         if slide.common_slide_data.background_color:
             return slide.common_slide_data.background_color
 
-        # Check for gradient - use first color
+        # Check for gradient - analyze gradient for overall darkness
         if (
             slide.common_slide_data.background_gradient_fill
             and slide.common_slide_data.background_gradient_fill.stops
         ):
-            first_stop = slide.common_slide_data.background_gradient_fill.stops[0]
+            gradient = slide.common_slide_data.background_gradient_fill
+            # For gradient backgrounds, determine the overall darkness by examining all stops
+            total_luminance = 0
+            valid_stops = 0
+            
+            for stop in gradient.stops:
+                stop_color = None
+                if stop.color:
+                    stop_color = stop.color
+                elif stop.scheme_color and self.theme_resolver:
+                    resolved = self.theme_resolver.resolve_scheme_color(stop.scheme_color)
+                    if resolved:
+                        stop_color = resolved
+                
+                if stop_color:
+                    # Calculate luminance for this stop
+                    try:
+                        r = int(stop_color[0:2], 16)
+                        g = int(stop_color[2:4], 16)
+                        b = int(stop_color[4:6], 16)
+                        luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+                        total_luminance += luminance
+                        valid_stops += 1
+                    except (ValueError, IndexError):
+                        continue
+            
+            if valid_stops > 0:
+                avg_luminance = total_luminance / valid_stops
+                # Return a representative color based on average luminance
+                # If average luminance is dark (< 0.5), assume dark background needing white text
+                if avg_luminance < 0.5:
+                    return "000000"  # Dark background - will trigger white text
+                else:
+                    return "FFFFFF"  # Light background - will trigger black text
+            
+            # Fallback to first stop if analysis fails
+            first_stop = gradient.stops[0]
             if first_stop.color:
                 return first_stop.color
-            # If first stop has scheme color, resolve it
             if first_stop.scheme_color and self.theme_resolver:
-                return self.theme_resolver.resolve_scheme_color(first_stop.scheme_color)
+                resolved_color = self.theme_resolver.resolve_scheme_color(first_stop.scheme_color)
+                if resolved_color:
+                    return resolved_color
 
-        # For slides that use theme backgrounds, try to determine from the background CSS
-        # This is a fallback for slides where the background is defined in the theme system
-        background_css = self._get_background_css(slide)
-        if "linear-gradient" in background_css:
-            # Extract first color from gradient - gradients with dark blues typically need white text
-            if "#243FFF" in background_css or "#FF9022" in background_css:
-                return "243FFF"  # Dark blue - needs white text
-        elif "background-color" in background_css:
-            # Extract hex color from background-color property
-            import re
-
-            color_match = re.search(r"#([A-Fa-f0-9]{6})", background_css)
-            if color_match:
-                return color_match.group(1)
+        # Handle background references (theme-based backgrounds)
+        if slide.common_slide_data.background_reference:
+            bg_ref = slide.common_slide_data.background_reference
+            if bg_ref.scheme_color and self.theme_resolver:
+                resolved_color = self.theme_resolver.resolve_scheme_color(bg_ref.scheme_color)
+                if resolved_color:
+                    return resolved_color
+            
+            # Galaxy theme defaults for common scheme colors
+            galaxy_defaults = {
+                "bg1": "000000",  # Black background
+                "bg2": "FFFFFF",  # White background  
+                "accent2": "243FFF",  # Blue accent
+                "accent4": "FF9022",  # Orange accent
+            }
+            
+            if bg_ref.scheme_color in galaxy_defaults:
+                return galaxy_defaults[bg_ref.scheme_color]
 
         # Default for slides without explicit background - assume white background
         return "FFFFFF"
