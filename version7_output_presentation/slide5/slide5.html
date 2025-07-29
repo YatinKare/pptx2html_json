@@ -1,0 +1,57 @@
+<!doctype html><html><head><title>Slide 5</title><style>
+        body { 
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0px;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        
+        #player {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        #player canvas, #player div, #player iframe, #player img {
+            position: absolute;
+        }
+        
+        #resizer { 
+            left: 0px;
+            top: 0px;
+            height: 720px;
+            width: 1280px;
+            overflow: hidden;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -640px;
+            margin-top: -360px;
+            
+        }
+        
+        .shape {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .image {
+            position: absolute;
+        }
+        
+        /* Auto-scaling based on window size */
+        @media all {
+            #resizer {
+                transform: scale(min(calc(100vw / 1280), calc(100vh / 720)));
+            }
+        }
+        </style></head><body><div id="player"><div id="resizer"><div class="shape" style="position: absolute; left: 37px; top: 15px; width: 480px; height: 80px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 28.5px; color: #000000;">Pulmonary Structures</span></li></ul></div><div class="shape" style="position: absolute; left: 231px; top: 319px; width: 500px; height: 371px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">Airway passages</span><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">Conducting zone and respiratory zone</span></li></ul></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">Conducting zone</span><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">Outside the lungs – nasal passages </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">pharynx </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">epiglottis </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">larynx (glottis)</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">Inside the lungs – trachea (1) </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"></span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> bronchus (2 branches) </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">bronchiole </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> …  </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">terminal bronchiole</span></li></ul></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">Respiratory zone</span><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">Respiratory bronchiole </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> …  </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">alveolar sacs</span></li></ul></li></ul></div><div class="shape" style="position: absolute; left: 883px; top: 180px; width: 362px; height: 139px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">What happens to individual airway diameter and length as go deeper into the lungs?</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">Collective x-sectional area?</span></li></ul></div><img class="image" src="media/image9.png" style="position: absolute; left: 731px; top: 319px; width: 514px; height: 373px; z-index: 1;"><img class="image" src="media/image10.jpg" style="position: absolute; left: 57px; top: 108px; width: 314px; height: 199px; z-index: 1; clip-path: inset(5.54% 0.5829999999999984% 11.039000000000001% 26.182%);"><div class="graphic-frame" style="position: absolute; left: 0px; top: 0px; width: 1px; height: 1px; z-index: 1; border: 1px dashed #ccc;"><!-- Graphic Frame content (e.g., charts, tables) would go here --></div><div class="graphic-frame" style="position: absolute; left: 0px; top: 0px; width: 1px; height: 1px; z-index: 1; border: 1px dashed #ccc;"><!-- Graphic Frame content (e.g., charts, tables) would go here --></div></div></div></body></html>

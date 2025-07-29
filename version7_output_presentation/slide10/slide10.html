@@ -1,0 +1,57 @@
+<!doctype html><html><head><title>Slide 10</title><style>
+        body { 
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0px;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        
+        #player {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        #player canvas, #player div, #player iframe, #player img {
+            position: absolute;
+        }
+        
+        #resizer { 
+            left: 0px;
+            top: 0px;
+            height: 720px;
+            width: 1280px;
+            overflow: hidden;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -640px;
+            margin-top: -360px;
+            
+        }
+        
+        .shape {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .image {
+            position: absolute;
+        }
+        
+        /* Auto-scaling based on window size */
+        @media all {
+            #resizer {
+                transform: scale(min(calc(100vw / 1280), calc(100vh / 720)));
+            }
+        }
+        </style></head><body><div id="player"><div id="resizer"><div class="shape" style="position: absolute; left: 43px; top: 24px; width: 923px; height: 65px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 30.0px; color: #000000;">Very Thin Diffusion Barrier for Gas Exchange</span></li></ul></div><div class="shape" style="position: absolute; left: 80px; top: 125px; width: 581px; height: 339px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">Layers of respiratory membrane:</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">1. Fluid layer with surfactant.</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">2. Type I alveolar cell membranes.</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">(3. Narrow interstitial space.)</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">4. Capillary endothelial cell membranes.</span></li></ul></div><img class="image" src="media/image20.png" style="position: absolute; left: 664px; top: 132px; width: 543px; height: 501px; z-index: 1;"><img class="image" src="media/image21.jpeg" style="position: absolute; left: 190px; top: 435px; width: 413px; height: 264px; z-index: 1;"><div class="group-shape" style="position: absolute; left: 0px; top: 0px; width: 1px; height: 1px; z-index: 1;"><div class="shape" style="position: absolute; left: 769px; top: 318px; width: 91px; height: 14px; z-index: 101; background-color: #FF0000; display: flex; flex-direction: column; justify-content: center;"></div><div class="shape" style="position: absolute; left: 753px; top: 456px; width: 91px; height: 14px; z-index: 102; background-color: #00B0F0; transform: rotate(180.0deg); display: flex; flex-direction: column; justify-content: center;"></div><div class="shape" style="position: absolute; left: 859px; top: 281px; width: 93px; height: 97px; z-index: 103; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: center; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#39;+mn-lt&#39;; font-size: 40.5px; font-weight: bold;">O</span><span style="font-family: &#39;+mn-lt&#39;; font-size: 40.5px; font-weight: bold;">2</span></li></ul></div><div class="shape" style="position: absolute; left: 844px; top: 415px; width: 131px; height: 97px; z-index: 104; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: center; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#39;+mn-lt&#39;; font-size: 40.5px; font-weight: bold;">CO</span><span style="font-family: &#39;+mn-lt&#39;; font-size: 40.5px; font-weight: bold;">2</span></li></ul></div></div></div></div></body></html>

@@ -1,0 +1,57 @@
+<!doctype html><html><head><title>Slide 68</title><style>
+        body { 
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0px;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        
+        #player {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        #player canvas, #player div, #player iframe, #player img {
+            position: absolute;
+        }
+        
+        #resizer { 
+            left: 0px;
+            top: 0px;
+            height: 720px;
+            width: 1280px;
+            overflow: hidden;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -640px;
+            margin-top: -360px;
+            
+        }
+        
+        .shape {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .image {
+            position: absolute;
+        }
+        
+        /* Auto-scaling based on window size */
+        @media all {
+            #resizer {
+                transform: scale(min(calc(100vw / 1280), calc(100vh / 720)));
+            }
+        }
+        </style></head><body><div id="player"><div id="resizer"><div class="shape" style="position: absolute; left: 214px; top: 648px; width: 19px; height: 44px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"></div><div class="shape" style="position: absolute; left: 320px; top: 57px; width: 782px; height: 71px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 27.0px; color: #000000;">Pulmonary Mechanoreceptors (2)</span></li></ul></div><div class="shape" style="position: absolute; left: 64px; top: 154px; width: 513px; height: 480px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 16.5px; color: #000000;">Pulmonary irritant receptors </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 16.5px; color: #000000;">(PIR)</span><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">A.k.a. – </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">rapidly adaptive receptors</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;"> on A</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">δ</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;"> fibers</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">Detect frequency of breathing</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">Respond to smoke, smog, and particulates -&gt; cause coughing</span></li></ul></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 16.5px; color: #000000;">Unmyelinated</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 16.5px; color: #000000;"> C fibers</span><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">Sensory neurons located in lungs</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">Stimulated by noxious substances such as capsaicin</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">Produces initial apnea </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">-&gt; rapid, shallow breathing</span></li></ul></li></ul></div><img class="image" src="media/image103.jpeg" style="position: absolute; left: 600px; top: 142px; width: 565px; height: 431px; z-index: 1;"></div></div></body></html>

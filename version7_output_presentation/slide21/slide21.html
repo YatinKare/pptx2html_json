@@ -1,0 +1,57 @@
+<!doctype html><html><head><title>Slide 21</title><style>
+        body { 
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0px;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        
+        #player {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        #player canvas, #player div, #player iframe, #player img {
+            position: absolute;
+        }
+        
+        #resizer { 
+            left: 0px;
+            top: 0px;
+            height: 720px;
+            width: 1280px;
+            overflow: hidden;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -640px;
+            margin-top: -360px;
+            
+        }
+        
+        .shape {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .image {
+            position: absolute;
+        }
+        
+        /* Auto-scaling based on window size */
+        @media all {
+            #resizer {
+                transform: scale(min(calc(100vw / 1280), calc(100vh / 720)));
+            }
+        }
+        </style></head><body><div id="player"><div id="resizer"><div class="shape" style="position: absolute; left: 306px; top: 8px; width: 791px; height: 71px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 30.0px; color: #000000;">Mechanics of Breathing (Ventilation)</span></li></ul></div><div class="shape" style="position: absolute; left: 382px; top: 173px; width: 513px; height: 537px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">Ventilation occurs as a result of pressure gradients induced by changes in lung volume. </span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">During inspiration:</span><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">Contraction of inspiratory muscles  </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">  chest </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">vol</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">  pleural </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">vol</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> pleural P </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">   lung </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">vol</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">  </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">alveolar P </span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">atmospheric P &gt; </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">alveolar</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #FF0000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">P </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> generation of pressure gradient</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">air to flows into the lung</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">Energy -&gt; muscular contraction -&gt; works against the elastic recoil forces of the lung. </span></li></ul></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 15.0px; color: #000000;">During (passive) expiration:</span><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">lung </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">vol</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"></span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">alveolar</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> pressure above atmosphere (</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">alveolar</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> P &gt; atmospheric P) </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"></span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> air goes out</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">Elastic recoil forces of the lung contribute to change in pressure gradient.</span></li></ul></li></ul></div><img class="image" src="media/image38.jpg" style="position: absolute; left: 24px; top: 248px; width: 368px; height: 342px; z-index: 1;"><img class="image" src="media/image28.jpeg" style="position: absolute; left: 46px; top: 24px; width: 231px; height: 232px; z-index: 1;"><img class="image" src="media/image39.jpg" style="position: absolute; left: 895px; top: 256px; width: 355px; height: 316px; z-index: 1;"><img class="image" src="media/image40.png" style="position: absolute; left: 512px; top: 81px; width: 253px; height: 87px; z-index: 1; clip-path: inset(1.441% 3.1129999999999995% 51.414% 4.102%);"></div></div></body></html>

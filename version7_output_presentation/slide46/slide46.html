@@ -1,0 +1,57 @@
+<!doctype html><html><head><title>Slide 46</title><style>
+        body { 
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0px;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        
+        #player {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        #player canvas, #player div, #player iframe, #player img {
+            position: absolute;
+        }
+        
+        #resizer { 
+            left: 0px;
+            top: 0px;
+            height: 720px;
+            width: 1280px;
+            overflow: hidden;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -640px;
+            margin-top: -360px;
+            
+        }
+        
+        .shape {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .image {
+            position: absolute;
+        }
+        
+        /* Auto-scaling based on window size */
+        @media all {
+            #resizer {
+                transform: scale(min(calc(100vw / 1280), calc(100vh / 720)));
+            }
+        }
+        </style></head><body><div id="player"><div id="resizer"><div class="shape" style="position: absolute; left: 33px; top: 21px; width: 720px; height: 82px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 30.0px; color: #000000;">Problems Related to Hemoglobin</span></li></ul></div><div class="shape" style="position: absolute; left: 65px; top: 116px; width: 600px; height: 528px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">Methemoglobin</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;"> – Fe</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">2+</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;"> oxidized -&gt; Fe</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">3+</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">, cannot bind with O</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">2</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">.</span><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">Brown blood, brownish-blue mucous membranes.</span></li></ul></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">Carboxyhemoglobin</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;"> (CO-Hb) – carbon monoxide.</span><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">The bond with CO is 210x stronger than the bond with O</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">2</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">.</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">Transport of O</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">2</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> to tissues is impaired.</span></li></ul></li></ul></div><img class="image" src="media/image82.jpg" style="position: absolute; left: 649px; top: 411px; width: 460px; height: 300px; z-index: 1;"><img class="image" src="media/image83.png" style="position: absolute; left: 698px; top: 21px; width: 500px; height: 383px; z-index: 1;"></div></div></body></html>

@@ -1,0 +1,57 @@
+<!doctype html><html><head><title>Slide 11</title><style>
+        body { 
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0px;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        
+        #player {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        #player canvas, #player div, #player iframe, #player img {
+            position: absolute;
+        }
+        
+        #resizer { 
+            left: 0px;
+            top: 0px;
+            height: 720px;
+            width: 1280px;
+            overflow: hidden;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -640px;
+            margin-top: -360px;
+            
+        }
+        
+        .shape {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .image {
+            position: absolute;
+        }
+        
+        /* Auto-scaling based on window size */
+        @media all {
+            #resizer {
+                transform: scale(min(calc(100vw / 1280), calc(100vh / 720)));
+            }
+        }
+        </style></head><body><div id="player"><div id="resizer"><div class="shape" style="position: absolute; left: 49px; top: 15px; width: 632px; height: 80px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 30.0px; color: #000000;">Thoracic Cavity</span></li></ul></div><div class="shape" style="position: absolute; left: 71px; top: 132px; width: 434px; height: 547px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">Thoracic cavity</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;"> surrounded by rib cage (chest wall) and the respiratory muscles.</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;"> </span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">Pleural</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;"> (intra-pleural) </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">space</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;"> </span><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">Thin fluid layer between visceral pleura covering lungs (visceral) and parietal pleura lining thoracic cavity walls.</span></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">*Air-free, </span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;">potential space</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 13.5px; color: #000000;"> -&gt; lungs cling to inside of thorax.</span></li></ul></li><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;">Diaphragm</span><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 18.0px; color: #000000;"> – muscle between thoracic &amp; abdominal cavities.</span></li></ul></div><div class="shape" style="position: absolute; left: 1039px; top: 324px; width: 214px; height: 61px; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start;"><ul style="text-align: left; list-style-position: outside; padding-left: 20px;"><li><span style="font-family: &#34;+mn-lt&#34;, &#34;Arial&#34;, &#34;Helvetica&#34;, &#34;sans-serif&#34;; font-size: 12.0px; color: #000000;">Healthy pleural space (air introduced).</span></li></ul></div><img class="image" src="media/image24.png" style="position: absolute; left: 954px; top: 51px; width: 285px; height: 273px; z-index: 1;"><img class="image" src="media/image25.jpg" style="position: absolute; left: 498px; top: 21px; width: 438px; height: 351px; z-index: 1;"><div class="group-shape" style="position: absolute; left: 0px; top: 0px; width: 1px; height: 1px; z-index: 1;"><div class="shape" style="position: absolute; left: 788px; top: 508px; width: 133px; height: 71px; z-index: 101; display: flex; flex-direction: column; justify-content: center;"></div><div class="group-shape" style="position: absolute; left: 0px; top: 0px; width: 1px; height: 1px; z-index: 2;"><img class="image" src="media/image22.jpg" style="position: absolute; left: 771px; top: 376px; width: 400px; height: 320px; z-index: 302;"><img class="image" src="media/image23.jpg" style="position: absolute; left: 602px; top: 481px; width: 185px; height: 214px; z-index: 303; clip-path: inset(68.858% 37.294% 1.3700000000000045% 17.158%);"></div></div></div></div></body></html>

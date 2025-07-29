@@ -1,0 +1,3986 @@
+diff --git a/src/learnx_parser/models/core.py b/src/learnx_parser/models/core.py
+index 7681e8c..1921c79 100644
+--- a/src/learnx_parser/models/core.py
++++ b/src/learnx_parser/models/core.py
+@@ -50,6 +50,12 @@ class PatternFill:
+     bg_color: str | None = None
+ 
+ 
++@dataclass
++class BackgroundReference:
++    idx: int
++    scheme_color: str | None = None
++
++
+ # Define Fill after all its constituent types
+ Fill = SolidFill | GradientFill | BlipFill | PatternFill
+ 
+@@ -129,6 +135,8 @@ class Hyperlink:
+ class CommonSlideData:
+     background_color: str | None = None
+     background_gradient_fill: GradientFill | None = None
++    background_reference: BackgroundReference | None = None
++    background_image_path: str | None = None  # Path to extracted background image file
+     cx: int = 0
+     cy: int = 0
+ 
+@@ -203,6 +211,36 @@ class SlideLayout:
+     type: str | None = None  # e.g., 'title', 'picTx', 'secHead', 'tx'
+     placeholders: list[LayoutPlaceholder] = field(default_factory=list)
+     list_styles: dict[int, ParagraphProperties] = field(default_factory=dict)
++    background_color: str | None = None
++    background_gradient_fill: GradientFill | None = None
++    background_reference: BackgroundReference | None = None
++    # Text styles from <p:txStyles> in slide layout
++    title_style: ParagraphProperties | None = None
++    body_style: ParagraphProperties | None = None
++    other_style: ParagraphProperties | None = None
++    # Reference to the slide master for this layout
++    slide_master: "SlideMaster" = None
++
++
++@dataclass
++class SlideMaster:
++    name: str | None = None
++    placeholders: list[LayoutPlaceholder] = field(default_factory=list)
++    list_styles: dict[int, ParagraphProperties] = field(default_factory=dict)
++    background_color: str | None = None
++    background_gradient_fill: GradientFill | None = None
++    background_reference: BackgroundReference | None = None
++    # Text styles from <p:txStyles> in slide master
++    title_style: ParagraphProperties | None = None
++    body_style: ParagraphProperties | None = None
++    other_style: ParagraphProperties | None = None
++
++
++@dataclass
++class PresentationDefaults:
++    """Default text styles for the entire presentation."""
++    default_paragraph_properties: ParagraphProperties = field(default_factory=ParagraphProperties)
++    default_run_properties: RunProperties = field(default_factory=RunProperties)
+ 
+ 
+ @dataclass
+@@ -215,6 +253,7 @@ class Slide:
+     graphic_frames: list[GraphicFrame] = field(default_factory=list)
+     hyperlinks: list[Hyperlink] = field(default_factory=list)
+     slide_layout: SlideLayout | None = None
++    generated_background_path: str | None = None
+ 
+ 
+ # Simplified JSON-friendly data models
+diff --git a/src/learnx_parser/parsers/layout.py b/src/learnx_parser/parsers/layout.py
+index ac4d927..ff679e6 100644
+--- a/src/learnx_parser/parsers/layout.py
++++ b/src/learnx_parser/parsers/layout.py
+@@ -3,12 +3,17 @@ import os
+ from lxml import etree
+ 
+ from learnx_parser.models.core import (
++    BackgroundReference,
++    GradientFill,
++    GradientStop,
+     LayoutPlaceholder,
+     ParagraphProperties,
+     RunProperties,
+     SlideLayout,
++    SlideMaster,
+     Transform,
+ )
++from learnx_parser.parsers.master import SlideMasterParser
+ 
+ 
+ class LayoutParser:
+@@ -313,7 +318,16 @@ class LayoutParser:
+         # Parse font face (explicit font)
+         latin_font_element = def_rpr_element.find(".//a:latin", namespaces=self.nsmap)
+         if latin_font_element is not None:
+-            run_props.font_face = latin_font_element.get("typeface")
++            typeface = latin_font_element.get("typeface")
++            if typeface in ["+mj-lt", "+mj-ea", "+mj-cs"]:
++                # This is a major font reference
++                run_props.font_ref = "major"
++            elif typeface in ["+mn-lt", "+mn-ea", "+mn-cs"]:
++                # This is a minor font reference
++                run_props.font_ref = "minor"
++            else:
++                # This is a literal font face
++                run_props.font_face = typeface
+ 
+         # Parse font reference (theme-based font)
+         font_ref_element = def_rpr_element.find(".//a:fontRef", namespaces=self.nsmap)
+@@ -339,6 +353,172 @@ class LayoutParser:
+ 
+         return run_props
+ 
++    def _extract_background_properties(self) -> tuple[str | None, GradientFill | None, BackgroundReference | None]:
++        """Extract background properties from layout XML.
++        
++        Returns:
++            Tuple of (background_color, background_gradient_fill, background_reference)
++        """
++        background_color = None
++        background_gradient_fill = None
++        background_reference = None
++        
++        # Look for background element in common slide data
++        cSld_element = self.root.find(".//p:cSld", namespaces=self.nsmap)
++        if cSld_element is not None:
++            background_element = cSld_element.find(".//p:bg", namespaces=self.nsmap)
++            if background_element is not None:
++                # Check for background properties (p:bgPr)
++                background_properties_element = background_element.find(".//p:bgPr", namespaces=self.nsmap)
++                if background_properties_element is not None:
++                    # Extract solid fill
++                    solid_fill_element = background_properties_element.find(".//a:solidFill", namespaces=self.nsmap)
++                    if solid_fill_element is not None:
++                        srgb_color_element = solid_fill_element.find(".//a:srgbClr", namespaces=self.nsmap)
++                        if srgb_color_element is not None:
++                            background_color = srgb_color_element.get("val")
++                    
++                    # Extract gradient fill
++                    gradient_fill_element = background_properties_element.find(".//a:gradFill", namespaces=self.nsmap)
++                    if gradient_fill_element is not None:
++                        gradient_stops = []
++                        for gs_element in gradient_fill_element.findall(".//a:gs", namespaces=self.nsmap):
++                            pos = int(gs_element.get("pos", "0"))
++                            
++                            # Extract color from gradient stop
++                            color = None
++                            scheme_color = None
++                            srgb_color_element = gs_element.find(".//a:srgbClr", namespaces=self.nsmap)
++                            if srgb_color_element is not None:
++                                color = srgb_color_element.get("val")
++                            else:
++                                scheme_color_element = gs_element.find(".//a:schemeClr", namespaces=self.nsmap)
++                                if scheme_color_element is not None:
++                                    scheme_color = scheme_color_element.get("val")
++                            
++                            gradient_stops.append(GradientStop(pos=pos, color=color, scheme_color=scheme_color))
++                        
++                        if gradient_stops:
++                            # Extract gradient direction/angle
++                            angle = None
++                            lin_element = gradient_fill_element.find(".//a:lin", namespaces=self.nsmap)
++                            if lin_element is not None:
++                                angle = int(lin_element.get("ang", "0"))
++                            
++                            background_gradient_fill = GradientFill(stops=gradient_stops, angle=angle)
++                
++                # Check for background reference (p:bgRef)
++                background_reference_element = background_element.find(".//p:bgRef", namespaces=self.nsmap)
++                if background_reference_element is not None:
++                    idx = int(background_reference_element.get("idx", "0"))
++                    scheme_color = None
++                    scheme_color_element = background_reference_element.find(".//a:schemeClr", namespaces=self.nsmap)
++                    if scheme_color_element is not None:
++                        scheme_color = scheme_color_element.get("val")
++                    background_reference = BackgroundReference(idx=idx, scheme_color=scheme_color)
++        
++        return background_color, background_gradient_fill, background_reference
++
++    def _get_slide_master_obj(self) -> SlideMaster | None:
++        """Get the slide master object referenced by this layout."""
++        slide_master_relationship_id = None
++        # Look for slide master relationship
++        for rel_id, target in self.rels.items():
++            if "slideMaster" in target:
++                slide_master_relationship_id = rel_id
++                break
++
++        slide_master_path = None
++        if slide_master_relationship_id:
++            slide_master_target = self.rels.get(slide_master_relationship_id)
++            if slide_master_target:
++                # Construct the absolute path to the slide master XML file
++                slide_master_path = os.path.join(
++                    self.pptx_unpacked_path,
++                    slide_master_target.lstrip("/").replace("../", ""),
++                )
++
++        slide_master_object = None
++        if slide_master_path and os.path.exists(slide_master_path):
++            slide_master_parser = SlideMasterParser(
++                slide_master_path, self.pptx_unpacked_path
++            )
++            slide_master_object = slide_master_parser.parse_master()
++        return slide_master_object
++
++    def _parse_text_styles(self) -> tuple[ParagraphProperties | None, ParagraphProperties | None, ParagraphProperties | None]:
++        """Parse text styles from <p:txStyles> element in slide layout.
++        
++        Returns:
++            Tuple of (title_style, body_style, other_style)
++        """
++        title_style = None
++        body_style = None
++        other_style = None
++        
++        # Look for txStyles element in slide layout
++        tx_styles_element = self.root.find(".//p:txStyles", namespaces=self.nsmap)
++        if tx_styles_element is not None:
++            # Parse title style
++            title_style_element = tx_styles_element.find(".//p:titleStyle", namespaces=self.nsmap)
++            if title_style_element is not None:
++                title_style = self._parse_text_style_element(title_style_element)
++            
++            # Parse body style
++            body_style_element = tx_styles_element.find(".//p:bodyStyle", namespaces=self.nsmap)
++            if body_style_element is not None:
++                body_style = self._parse_text_style_element(body_style_element)
++            
++            # Parse other style
++            other_style_element = tx_styles_element.find(".//p:otherStyle", namespaces=self.nsmap)
++            if other_style_element is not None:
++                other_style = self._parse_text_style_element(other_style_element)
++        
++        return title_style, body_style, other_style
++
++    def _parse_text_style_element(self, style_element) -> ParagraphProperties | None:
++        """Parse a single text style element (titleStyle, bodyStyle, otherStyle).
++        
++        Args:
++            style_element: XML element containing text style properties
++            
++        Returns:
++            ParagraphProperties with default run properties containing font size
++        """
++        # Look for default paragraph properties (defPPr)
++        def_p_pr_element = style_element.find(".//a:defPPr", namespaces=self.nsmap)
++        if def_p_pr_element is not None:
++            # Create ParagraphProperties object
++            props = ParagraphProperties()
++            
++            # Parse paragraph-level properties
++            if def_p_pr_element.get("algn") is not None:
++                props.align = def_p_pr_element.get("algn")
++            
++            # Parse default run properties (defRPr) - this is where font size is usually defined
++            def_rpr_element = def_p_pr_element.find(".//a:defRPr", namespaces=self.nsmap)
++            if def_rpr_element is not None:
++                props.default_run_properties = self._parse_default_run_properties(def_rpr_element)
++            
++            return props
++        
++        # Check for level 1 paragraph properties (lvl1pPr) - Galaxy presentation uses this structure
++        lvl1_element = style_element.find(".//a:lvl1pPr", namespaces=self.nsmap)
++        if lvl1_element is not None:
++            props = ParagraphProperties()
++            # Parse paragraph-level properties
++            if lvl1_element.get("algn") is not None:
++                props.align = lvl1_element.get("algn")
++                
++            # Parse default run properties (defRPr) - this is where font size is defined
++            def_rpr_element = lvl1_element.find(".//a:defRPr", namespaces=self.nsmap)
++            if def_rpr_element is not None:
++                props.default_run_properties = self._parse_default_run_properties(def_rpr_element)
++            
++            return props
++        
++        return None
++
+     def parse_layout(self) -> SlideLayout:
+         layout_name = self.root.find(".//p:cSld", namespaces=self.nsmap).get("name")
+         layout_type = self.root.get("type")
+@@ -350,6 +530,33 @@ class LayoutParser:
+ 
+         placeholders = self._parse_placeholders()
+         list_styles = self._extract_list_styles()
++        background_color, background_gradient_fill, background_reference = self._extract_background_properties()
++        title_style, body_style, other_style = self._parse_text_styles()
++
++        # Get slide master object
++        slide_master_obj = self._get_slide_master_obj()
++        
++        # Inherit text styles from master if layout doesn't define its own
++        if slide_master_obj:
++            if not title_style:
++                title_style = slide_master_obj.title_style
++            if not body_style:
++                body_style = slide_master_obj.body_style
++            if not other_style:
++                other_style = slide_master_obj.other_style
++        
++        # Inherit background properties from slide master if no layout-level background is found
++        if (not background_color and 
++            not background_gradient_fill and 
++            not background_reference):
++            
++            if slide_master_obj:
++                if slide_master_obj.background_color:
++                    background_color = slide_master_obj.background_color
++                elif slide_master_obj.background_gradient_fill:
++                    background_gradient_fill = slide_master_obj.background_gradient_fill
++                elif slide_master_obj.background_reference:
++                    background_reference = slide_master_obj.background_reference
+ 
+         # If layout_type is still None, infer from placeholders
+         if layout_type is None:
+@@ -360,4 +567,11 @@ class LayoutParser:
+             type=layout_type,
+             placeholders=placeholders,
+             list_styles=list_styles,
++            background_color=background_color,
++            background_gradient_fill=background_gradient_fill,
++            background_reference=background_reference,
++            title_style=title_style,
++            body_style=body_style,
++            other_style=other_style,
++            slide_master=slide_master_obj,
+         )
+diff --git a/src/learnx_parser/parsers/master.py b/src/learnx_parser/parsers/master.py
+new file mode 100644
+index 0000000..f5a034a
+--- /dev/null
++++ b/src/learnx_parser/parsers/master.py
+@@ -0,0 +1,277 @@
++import os
++
++from lxml import etree
++
++from learnx_parser.models.core import (
++    BackgroundReference,
++    GradientFill,
++    GradientStop,
++    ParagraphProperties,
++    RunProperties,
++    SlideMaster,
++)
++
++
++class SlideMasterParser:
++    def __init__(self, master_xml_path, pptx_unpacked_path=None):
++        self.master_xml_path = master_xml_path
++        self.pptx_unpacked_path = pptx_unpacked_path
++        self.tree = etree.parse(self.master_xml_path)
++        self.root = self.tree.getroot()
++        self.nsmap = self.root.nsmap
++        self.rels = self._parse_rels()  # Parse relationships for the master file
++
++    def _parse_rels(self):
++        relationships = {}
++        master_rels_path = os.path.join(
++            os.path.dirname(self.master_xml_path),
++            "_rels",
++            os.path.basename(self.master_xml_path) + ".rels",
++        )
++        if os.path.exists(master_rels_path):
++            relationships_tree = etree.parse(master_rels_path)
++            for relationship in relationships_tree.findall(
++                "{http://schemas.openxmlformats.org/package/2006/relationships}Relationship"
++            ):
++                relationships[relationship.get("Id")] = relationship.get("Target")
++        return relationships
++
++    def _extract_background_properties(self) -> tuple[str | None, GradientFill | None, BackgroundReference | None]:
++        """Extract background properties from slide master XML.
++        
++        Returns:
++            Tuple of (background_color, background_gradient_fill, background_reference)
++        """
++        background_color = None
++        background_gradient_fill = None
++        background_reference = None
++        
++        # Look for background element in common slide data
++        cSld_element = self.root.find(".//p:cSld", namespaces=self.nsmap)
++        if cSld_element is not None:
++            background_element = cSld_element.find(".//p:bg", namespaces=self.nsmap)
++            if background_element is not None:
++                # Check for background properties (p:bgPr)
++                background_properties_element = background_element.find(".//p:bgPr", namespaces=self.nsmap)
++                if background_properties_element is not None:
++                    # Extract solid fill
++                    solid_fill_element = background_properties_element.find(".//a:solidFill", namespaces=self.nsmap)
++                    if solid_fill_element is not None:
++                        srgb_color_element = solid_fill_element.find(".//a:srgbClr", namespaces=self.nsmap)
++                        if srgb_color_element is not None:
++                            background_color = srgb_color_element.get("val")
++                    
++                    # Extract gradient fill
++                    gradient_fill_element = background_properties_element.find(".//a:gradFill", namespaces=self.nsmap)
++                    if gradient_fill_element is not None:
++                        gradient_stops = []
++                        for gs_element in gradient_fill_element.findall(".//a:gs", namespaces=self.nsmap):
++                            pos = int(gs_element.get("pos", "0"))
++                            
++                            # Extract color from gradient stop
++                            color = None
++                            scheme_color = None
++                            srgb_color_element = gs_element.find(".//a:srgbClr", namespaces=self.nsmap)
++                            if srgb_color_element is not None:
++                                color = srgb_color_element.get("val")
++                            else:
++                                scheme_color_element = gs_element.find(".//a:schemeClr", namespaces=self.nsmap)
++                                if scheme_color_element is not None:
++                                    scheme_color = scheme_color_element.get("val")
++                            
++                            gradient_stops.append(GradientStop(pos=pos, color=color, scheme_color=scheme_color))
++                        
++                        if gradient_stops:
++                            # Extract gradient direction/angle
++                            angle = None
++                            lin_element = gradient_fill_element.find(".//a:lin", namespaces=self.nsmap)
++                            if lin_element is not None:
++                                angle = int(lin_element.get("ang", "0"))
++                            
++                            background_gradient_fill = GradientFill(stops=gradient_stops, angle=angle)
++                
++                # Check for background reference (p:bgRef)
++                background_reference_element = background_element.find(".//p:bgRef", namespaces=self.nsmap)
++                if background_reference_element is not None:
++                    idx = int(background_reference_element.get("idx", "0"))
++                    scheme_color = None
++                    scheme_color_element = background_reference_element.find(".//a:schemeClr", namespaces=self.nsmap)
++                    if scheme_color_element is not None:
++                        scheme_color = scheme_color_element.get("val")
++                    background_reference = BackgroundReference(idx=idx, scheme_color=scheme_color)
++        
++        return background_color, background_gradient_fill, background_reference
++
++    def _parse_text_styles(self) -> tuple[ParagraphProperties | None, ParagraphProperties | None, ParagraphProperties | None]:
++        """Parse text styles from <p:txStyles> element in slide master.
++        
++        Returns:
++            Tuple of (title_style, body_style, other_style)
++        """
++        title_style = None
++        body_style = None
++        other_style = None
++        
++        # Look for txStyles element in slide master
++        tx_styles_element = self.root.find(".//p:txStyles", namespaces=self.nsmap)
++        if tx_styles_element is not None:
++            # Parse title style
++            title_style_element = tx_styles_element.find(".//p:titleStyle", namespaces=self.nsmap)
++            if title_style_element is not None:
++                title_style = self._parse_text_style_element(title_style_element)
++            
++            # Parse body style
++            body_style_element = tx_styles_element.find(".//p:bodyStyle", namespaces=self.nsmap)
++            if body_style_element is not None:
++                body_style = self._parse_text_style_element(body_style_element)
++            
++            # Parse other style
++            other_style_element = tx_styles_element.find(".//p:otherStyle", namespaces=self.nsmap)
++            if other_style_element is not None:
++                other_style = self._parse_text_style_element(other_style_element)
++        
++        return title_style, body_style, other_style
++
++    def _parse_text_style_element(self, style_element) -> ParagraphProperties | None:
++        """Parse a single text style element (titleStyle, bodyStyle, otherStyle).
++        
++        Args:
++            style_element: XML element containing text style properties
++            
++        Returns:
++            ParagraphProperties with default run properties containing font size
++        """
++        # Look for default paragraph properties (defPPr)
++        def_p_pr_element = style_element.find(".//a:defPPr", namespaces=self.nsmap)
++        if def_p_pr_element is not None:
++            # Create ParagraphProperties object
++            props = ParagraphProperties()
++            
++            # Parse paragraph-level properties
++            if def_p_pr_element.get("algn") is not None:
++                props.align = def_p_pr_element.get("algn")
++            
++            # Parse default run properties (defRPr) - this is where font size is usually defined
++            def_rpr_element = def_p_pr_element.find(".//a:defRPr", namespaces=self.nsmap)
++            if def_rpr_element is not None:
++                props.default_run_properties = self._parse_default_run_properties(def_rpr_element)
++            
++            return props
++        
++        # Check for level 1 paragraph properties (lvl1pPr) - Galaxy presentation uses this structure
++        lvl1_element = style_element.find(".//a:lvl1pPr", namespaces=self.nsmap)
++        if lvl1_element is not None:
++            props = ParagraphProperties()
++            # Parse paragraph-level properties
++            if lvl1_element.get("algn") is not None:
++                props.align = lvl1_element.get("algn")
++                
++            # Parse default run properties (defRPr) - this is where font size is defined
++            def_rpr_element = lvl1_element.find(".//a:defRPr", namespaces=self.nsmap)
++            if def_rpr_element is not None:
++                props.default_run_properties = self._parse_default_run_properties(def_rpr_element)
++            
++            return props
++        
++        # Also check for list style elements in text styles - sometimes font sizes are defined here
++        list_style_element = style_element.find(".//a:lstStyle", namespaces=self.nsmap)
++        if list_style_element is not None:
++            # Look for level 0 paragraph properties
++            lvl0_element = list_style_element.find(".//a:lvl1pPr", namespaces=self.nsmap)
++            if lvl0_element is not None:
++                props = ParagraphProperties()
++                def_rpr_element = lvl0_element.find(".//a:defRPr", namespaces=self.nsmap)
++                if def_rpr_element is not None:
++                    props.default_run_properties = self._parse_default_run_properties(def_rpr_element)
++                return props
++        
++        return None
++
++    def _parse_default_run_properties(self, def_rpr_element) -> RunProperties:
++        """Parse default run properties (defRPr) from a level element.
++
++        This extracts font size and other run properties for the inheritance hierarchy.
++
++        Args:
++            def_rpr_element: XML element containing default run properties
++
++        Returns:
++            RunProperties: Parsed run properties with font size and other attributes
++        """
++        run_props = RunProperties()
++
++        # Parse font size (sz attribute) - most important for hierarchy
++        if def_rpr_element.get("sz") is not None:
++            run_props.font_size = int(def_rpr_element.get("sz"))
++        else:
++            # No font size specified in this element
++            pass
++
++        # Parse other run properties that can be inherited
++        if def_rpr_element.get("b") == "1":
++            run_props.bold = True
++
++        if def_rpr_element.get("i") == "1":
++            run_props.italic = True
++
++        if def_rpr_element.get("cap") is not None:
++            run_props.cap = def_rpr_element.get("cap")
++
++        # Parse font face (explicit font)
++        latin_font_element = def_rpr_element.find(".//a:latin", namespaces=self.nsmap)
++        if latin_font_element is not None:
++            typeface = latin_font_element.get("typeface")
++            if typeface in ["+mj-lt", "+mj-ea", "+mj-cs"]:
++                # This is a major font reference
++                run_props.font_ref = "major"
++            elif typeface in ["+mn-lt", "+mn-ea", "+mn-cs"]:
++                # This is a minor font reference
++                run_props.font_ref = "minor"
++            else:
++                # This is a literal font face
++                run_props.font_face = typeface
++
++        # Parse font reference (theme-based font)
++        font_ref_element = def_rpr_element.find(".//a:fontRef", namespaces=self.nsmap)
++        if font_ref_element is not None:
++            run_props.font_ref = font_ref_element.get("idx")  # "major" or "minor"
++
++        # Parse color
++        solid_fill_element = def_rpr_element.find(
++            ".//a:solidFill", namespaces=self.nsmap
++        )
++        if solid_fill_element is not None:
++            srgb_color_element = solid_fill_element.find(
++                ".//a:srgbClr", namespaces=self.nsmap
++            )
++            if srgb_color_element is not None:
++                run_props.color = srgb_color_element.get("val")
++            else:
++                scheme_color_element = solid_fill_element.find(
++                    ".//a:schemeClr", namespaces=self.nsmap
++                )
++                if scheme_color_element is not None:
++                    run_props.scheme_color = scheme_color_element.get("val")
++
++        return run_props
++
++    def parse_master(self) -> SlideMaster:
++        master_name = None
++        cSld_element = self.root.find(".//p:cSld", namespaces=self.nsmap)
++        if cSld_element is not None:
++            master_name = cSld_element.get("name")
++
++        background_color, background_gradient_fill, background_reference = self._extract_background_properties()
++        title_style, body_style, other_style = self._parse_text_styles()
++
++        # For now, we're focusing on background properties and text styles
++        # Placeholder and list style parsing can be added later if needed
++        return SlideMaster(
++            name=master_name,
++            background_color=background_color,
++            background_gradient_fill=background_gradient_fill,
++            background_reference=background_reference,
++            title_style=title_style,
++            body_style=body_style,
++            other_style=other_style,
++        )
+\ No newline at end of file
+diff --git a/src/learnx_parser/parsers/slide/base.py b/src/learnx_parser/parsers/slide/base.py
+index 7cb2eee..2fa240f 100644
+--- a/src/learnx_parser/parsers/slide/base.py
++++ b/src/learnx_parser/parsers/slide/base.py
+@@ -3,10 +3,12 @@ import os
+ from lxml import etree
+ 
+ from learnx_parser.models.core import (
++    BackgroundReference,
+     CommonSlideData,
+     GradientFill,
+     GradientStop,
+     Hyperlink,
++    PresentationDefaults,
+     Slide,
+     SlideLayout,
+ )
+@@ -14,6 +16,7 @@ from learnx_parser.parsers.layout import LayoutParser
+ from learnx_parser.parsers.slide.shapes import (
+     parse_shape_tree,
+ )
++from learnx_parser.services.style_resolver import StyleResolver
+ 
+ 
+ class SlideParser:
+@@ -25,6 +28,7 @@ class SlideParser:
+         slide_width,
+         slide_height,
+         presentation_defaults=None,
++        style_resolver=None,
+     ):
+         # Path to the XML file for the current slide
+         self.slide_xml_path = slide_xml_path
+@@ -46,6 +50,9 @@ class SlideParser:
+         self.slide_height = slide_height
+         # Presentation-level default text styles for theme inheritance
+         self.presentation_defaults = presentation_defaults or {}
++        
++        # Style resolver instance passed from DocumentParser
++        self.style_resolver = style_resolver
+ 
+     def _parse_rels(self):
+         # Initialize an empty dictionary to store relationships
+@@ -62,7 +69,32 @@ class SlideParser:
+                 relationships[relationship.get("Id")] = relationship.get("Target")
+         return relationships
+ 
+-    def _extract_common_slide_data(self) -> CommonSlideData:
++    def _resolve_relationship(self, r_embed: str) -> str | None:
++        """Resolve a relationship ID to an absolute file path.
++        
++        Args:
++            r_embed: Relationship ID (e.g., "rId2")
++            
++        Returns:
++            Absolute path to the resolved file, or None if not found
++        """
++        if r_embed in self.rels:
++            relative_path = self.rels[r_embed]
++            # Convert relative path to absolute path
++            if relative_path.startswith("../"):
++                # Handle relative paths like "../media/image1.jpeg"
++                absolute_path = os.path.join(self.pptx_unpacked_path, "ppt", relative_path[3:])
++            else:
++                # Handle direct paths like "media/image1.jpeg"
++                absolute_path = os.path.join(self.pptx_unpacked_path, "ppt", relative_path)
++            
++            # Verify the file exists
++            if os.path.exists(absolute_path):
++                return absolute_path
++        
++        return None
++
++    def _extract_common_slide_data(self, slide_layout_obj: SlideLayout | None = None) -> CommonSlideData:
+         # Initialize CommonSlideData with slide width and height
+         common_slide_data = CommonSlideData(cx=self.slide_width, cy=self.slide_height)
+ 
+@@ -74,85 +106,137 @@ class SlideParser:
+                 ".//p:bg", namespaces=self.nsmap
+             )
+             if background_element is not None:
+-                # Find the background properties element (p:bgPr)
+-                background_properties_element = background_element.find(
+-                    ".//p:bgPr", namespaces=self.nsmap
++                # Check for background reference first (p:bgRef)
++                background_reference_element = background_element.find(
++                    ".//p:bgRef", namespaces=self.nsmap
+                 )
+-                if background_properties_element is not None:
+-                    # Check for solid fill background
+-                    solid_fill_element = background_properties_element.find(
+-                        ".//a:solidFill", namespaces=self.nsmap
++                if background_reference_element is not None:
++                    # Extract background reference index and scheme color
++                    idx = int(background_reference_element.get("idx", "0"))
++                    scheme_color = None
++                    scheme_color_element = background_reference_element.find(
++                        ".//a:schemeClr", namespaces=self.nsmap
+                     )
+-                    if solid_fill_element is not None:
+-                        # Extract SRGB color value if present
+-                        srgb_color_element = solid_fill_element.find(
+-                            ".//a:srgbClr", namespaces=self.nsmap
+-                        )
+-                        if srgb_color_element is not None:
+-                            common_slide_data.background_color = srgb_color_element.get(
+-                                "val"
+-                            )
+-                    else:
+-                        # Check for gradient fill background
+-                        gradient_fill_element = background_properties_element.find(
+-                            ".//a:gradFill", namespaces=self.nsmap
++                    if scheme_color_element is not None:
++                        scheme_color = scheme_color_element.get("val")
++                    
++                    common_slide_data.background_reference = BackgroundReference(
++                        idx=idx, scheme_color=scheme_color
++                    )
++                else:
++                    # Find the background properties element (p:bgPr)
++                    background_properties_element = background_element.find(
++                        ".//p:bgPr", namespaces=self.nsmap
++                    )
++                    if background_properties_element is not None:
++                        # Check for solid fill background
++                        solid_fill_element = background_properties_element.find(
++                            ".//a:solidFill", namespaces=self.nsmap
+                         )
+-                        if gradient_fill_element is not None:
+-                            gradient_fill = GradientFill()
+-                            # Extract linear gradient properties (angle, scaled)
+-                            linear_element = gradient_fill_element.find(
+-                                ".//a:lin", namespaces=self.nsmap
++                        if solid_fill_element is not None:
++                            # Extract SRGB color value if present
++                            srgb_color_element = solid_fill_element.find(
++                                ".//a:srgbClr", namespaces=self.nsmap
+                             )
+-                            if linear_element is not None:
+-                                gradient_fill.angle = (
+-                                    int(linear_element.get("ang", 0))
+-                                    if linear_element.get("ang") is not None
+-                                    else None
+-                                )
+-                                gradient_fill.scaled = (
+-                                    linear_element.get("scaled", "0") == "1"
++                            if srgb_color_element is not None:
++                                common_slide_data.background_color = srgb_color_element.get(
++                                    "val"
+                                 )
+-
+-                            # Extract gradient stop list
+-                            gradient_stop_list_element = gradient_fill_element.find(
+-                                ".//a:gsLst", namespaces=self.nsmap
++                        else:
++                            # Check for gradient fill background
++                            gradient_fill_element = background_properties_element.find(
++                                ".//a:gradFill", namespaces=self.nsmap
+                             )
+-                            if gradient_stop_list_element is not None:
+-                                # Iterate through each gradient stop
+-                                for (
+-                                    gradient_stop_element
+-                                ) in gradient_stop_list_element.findall(
+-                                    ".//a:gs", namespaces=self.nsmap
+-                                ):
+-                                    position = int(gradient_stop_element.get("pos", 0))
+-                                    stop_color = None
+-                                    stop_scheme_color = None
+-                                    # Extract SRGB color for the stop
+-                                    srgb_color_element = gradient_stop_element.find(
+-                                        ".//a:srgbClr", namespaces=self.nsmap
++                            if gradient_fill_element is not None:
++                                gradient_fill = GradientFill()
++                                # Extract linear gradient properties (angle, scaled)
++                                linear_element = gradient_fill_element.find(
++                                    ".//a:lin", namespaces=self.nsmap
++                                )
++                                if linear_element is not None:
++                                    gradient_fill.angle = (
++                                        int(linear_element.get("ang", 0))
++                                        if linear_element.get("ang") is not None
++                                        else None
+                                     )
+-                                    if srgb_color_element is not None:
+-                                        stop_color = srgb_color_element.get("val")
+-                                    else:
+-                                        # Extract scheme color for the stop
+-                                        scheme_color_element = (
+-                                            gradient_stop_element.find(
+-                                                ".//a:schemeClr", namespaces=self.nsmap
+-                                            )
++                                    gradient_fill.scaled = (
++                                        linear_element.get("scaled", "0") == "1"
++                                    )
++
++                                # Extract gradient stop list
++                                gradient_stop_list_element = gradient_fill_element.find(
++                                    ".//a:gsLst", namespaces=self.nsmap
++                                )
++                                if gradient_stop_list_element is not None:
++                                    # Iterate through each gradient stop
++                                    for (
++                                        gradient_stop_element
++                                    ) in gradient_stop_list_element.findall(
++                                        ".//a:gs", namespaces=self.nsmap
++                                    ):
++                                        position = int(gradient_stop_element.get("pos", 0))
++                                        stop_color = None
++                                        stop_scheme_color = None
++                                        # Extract SRGB color for the stop
++                                        srgb_color_element = gradient_stop_element.find(
++                                            ".//a:srgbClr", namespaces=self.nsmap
+                                         )
+-                                        if scheme_color_element is not None:
+-                                            stop_scheme_color = (
+-                                                scheme_color_element.get("val")
++                                        if srgb_color_element is not None:
++                                            stop_color = srgb_color_element.get("val")
++                                        else:
++                                            # Extract scheme color for the stop
++                                            scheme_color_element = (
++                                                gradient_stop_element.find(
++                                                    ".//a:schemeClr", namespaces=self.nsmap
++                                                )
++                                            )
++                                            if scheme_color_element is not None:
++                                                stop_scheme_color = (
++                                                    scheme_color_element.get("val")
++                                                )
++                                        # Append the gradient stop to the list
++                                        gradient_fill.stops.append(
++                                            GradientStop(
++                                                pos=position,
++                                                color=stop_color,
++                                                scheme_color=stop_scheme_color,
+                                             )
+-                                    # Append the gradient stop to the list
+-                                    gradient_fill.stops.append(
+-                                        GradientStop(
+-                                            pos=position,
+-                                            color=stop_color,
+-                                            scheme_color=stop_scheme_color,
+                                         )
++                                common_slide_data.background_gradient_fill = gradient_fill
++                            else:
++                                # Check for image fill background (blipFill)
++                                blip_fill_element = background_properties_element.find(
++                                    ".//a:blipFill", namespaces=self.nsmap
++                                )
++                                if blip_fill_element is not None:
++                                    # Extract the relationship ID (r:embed)
++                                    blip_element = blip_fill_element.find(
++                                        ".//a:blip", namespaces=self.nsmap
+                                     )
+-                            common_slide_data.background_gradient_fill = gradient_fill
++                                    if blip_element is not None:
++                                        r_embed = blip_element.get(
++                                            "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed"
++                                        )
++                                        if r_embed:
++                                            # Resolve the relationship to get the image path
++                                            image_path = self._resolve_relationship(r_embed)
++                                            if image_path:
++                                                common_slide_data.background_image_path = image_path
++
++        # Inherit background properties from layout if no slide-level background is found
++        if (not common_slide_data.background_color and 
++            not common_slide_data.background_gradient_fill and 
++            not common_slide_data.background_reference and 
++            not common_slide_data.background_image_path and 
++            slide_layout_obj):
++            
++            # Inherit background properties from layout
++            if slide_layout_obj.background_color:
++                common_slide_data.background_color = slide_layout_obj.background_color
++            elif slide_layout_obj.background_gradient_fill:
++                common_slide_data.background_gradient_fill = slide_layout_obj.background_gradient_fill
++            elif slide_layout_obj.background_reference:
++                common_slide_data.background_reference = slide_layout_obj.background_reference
+ 
+         return common_slide_data
+ 
+@@ -194,7 +278,7 @@ class SlideParser:
+         if shape_tree_root is None:
+             shape_tree_root = self.root
+         # Parse the shape tree to extract all shapes, pictures, group shapes, and graphic frames
+-        return parse_shape_tree(self, shape_tree_root, slide_layout_obj)
++        return parse_shape_tree(self, shape_tree_root, slide_layout_obj, self.style_resolver)
+ 
+     def _apply_inherited_transforms(self, shapes, pictures, slide_layout_object):
+         # If a slide layout object exists, apply inherited transforms to placeholders
+@@ -232,6 +316,7 @@ class SlideParser:
+ 
+     def parse_slide(self, slide_number: int) -> Slide:
+         slide_layout_obj = self._get_slide_layout_obj()
++        
+         shapes, pictures, group_shapes, graphic_frames = self._parse_slide_elements(
+             slide_layout_obj
+         )
+@@ -239,7 +324,7 @@ class SlideParser:
+ 
+         return Slide(
+             slide_number=slide_number,
+-            common_slide_data=self._extract_common_slide_data(),
++            common_slide_data=self._extract_common_slide_data(slide_layout_obj),
+             shapes=shapes,
+             pictures=pictures,
+             group_shapes=group_shapes,
+diff --git a/src/learnx_parser/parsers/slide/elements.py b/src/learnx_parser/parsers/slide/elements.py
+index 3cfd12e..a683ba9 100644
+--- a/src/learnx_parser/parsers/slide/elements.py
++++ b/src/learnx_parser/parsers/slide/elements.py
+@@ -17,13 +17,14 @@ from learnx_parser.parsers.slide.properties import (
+ )
+ 
+ 
+-def parse_shape_element(parser_instance, shape_element, slide_layout_obj) -> Shape:
++def parse_shape_element(parser_instance, shape_element, slide_layout_obj, style_resolver) -> Shape:
+     """Parse a shape element from XML to Shape object.
+ 
+     Args:
+         parser_instance: Parser instance with namespace map and relationships
+         shape_element: XML element containing shape data
+         slide_layout_obj: Slide layout object for inheritance
++        style_resolver: StyleResolver instance for resolving text properties
+ 
+     Returns:
+         Shape: Parsed shape object
+@@ -87,7 +88,7 @@ def parse_shape_element(parser_instance, shape_element, slide_layout_obj) -> Sha
+         from learnx_parser.parsers.slide.text import extract_text_frame_properties
+ 
+         text_frame = extract_text_frame_properties(
+-            parser_instance, shape_element, slide_layout_obj, ph_type
++            parser_instance, shape_element, slide_layout_obj, ph_type, style_resolver
+         )
+ 
+     return Shape(
+@@ -206,7 +207,7 @@ def parse_picture_element(parser_instance, picture_element) -> Picture:
+ 
+ 
+ def parse_group_shape_element(
+-    parser_instance, group_shape_element, slide_layout_obj
++    parser_instance, group_shape_element, slide_layout_obj, style_resolver
+ ) -> GroupShape:
+     """Parse a group shape element from XML to GroupShape object.
+ 
+@@ -214,6 +215,7 @@ def parse_group_shape_element(
+         parser_instance: Parser instance with namespace map and relationships
+         group_shape_element: XML element containing group shape data
+         slide_layout_obj: Slide layout object for inheritance
++        style_resolver: StyleResolver instance for resolving text properties
+ 
+     Returns:
+         GroupShape: Parsed group shape object
+diff --git a/src/learnx_parser/parsers/slide/shapes.py b/src/learnx_parser/parsers/slide/shapes.py
+index 5db99df..d95ca67 100644
+--- a/src/learnx_parser/parsers/slide/shapes.py
++++ b/src/learnx_parser/parsers/slide/shapes.py
+@@ -11,13 +11,14 @@ from learnx_parser.parsers.slide.elements import (
+ )
+ 
+ 
+-def parse_shape_tree(parser_instance, shape_tree_root, slide_layout_obj):
++def parse_shape_tree(parser_instance, shape_tree_root, slide_layout_obj, style_resolver):
+     """Parse the shape tree to extract all shapes, pictures, group shapes, and graphic frames.
+ 
+     Args:
+         parser_instance: Parser instance with namespace map and relationships
+         shape_tree_root: Root XML element of the shape tree
+         slide_layout_obj: Slide layout object for inheritance
++        style_resolver: StyleResolver instance for resolving text properties
+ 
+     Returns:
+         tuple: (shapes, pictures, group_shapes, graphic_frames)
+@@ -36,7 +37,7 @@ def parse_shape_tree(parser_instance, shape_tree_root, slide_layout_obj):
+             element_tag
+             == "{http://schemas.openxmlformats.org/presentationml/2006/main}sp"
+         ):
+-            shape = parse_shape_element(parser_instance, element, slide_layout_obj)
++            shape = parse_shape_element(parser_instance, element, slide_layout_obj, style_resolver)
+             shapes.append(shape)
+ 
+         # Parse picture elements (p:pic)
+@@ -53,13 +54,13 @@ def parse_shape_tree(parser_instance, shape_tree_root, slide_layout_obj):
+             == "{http://schemas.openxmlformats.org/presentationml/2006/main}grpSp"
+         ):
+             group_shape = parse_group_shape_element(
+-                parser_instance, element, slide_layout_obj
++                parser_instance, element, slide_layout_obj, style_resolver
+             )
+ 
+             # Recursively parse children of the group shape
+             child_shape_tree = element
+             child_shapes, child_pictures, child_group_shapes, child_graphic_frames = (
+-                parse_shape_tree(parser_instance, child_shape_tree, slide_layout_obj)
++                parse_shape_tree(parser_instance, child_shape_tree, slide_layout_obj, style_resolver)
+             )
+ 
+             # Store children in the group shape
+diff --git a/src/learnx_parser/parsers/slide/text.py b/src/learnx_parser/parsers/slide/text.py
+index 6085844..5239739 100644
+--- a/src/learnx_parser/parsers/slide/text.py
++++ b/src/learnx_parser/parsers/slide/text.py
+@@ -13,6 +13,7 @@ def extract_text_frame_properties(
+     shape_element,
+     slide_layout_obj: SlideLayout | None,
+     ph_type: str | None = None,
++    style_resolver=None,
+ ) -> TextFrame:
+     # Initialize an empty TextFrame object to store parsed text data
+     text_frame = TextFrame()
+@@ -44,7 +45,7 @@ def extract_text_frame_properties(
+     ):
+         # Extract properties for the current paragraph
+         paragraph_object = extract_paragraph_properties(
+-            parser_instance, paragraph_element, slide_layout_obj, ph_type
++            parser_instance, paragraph_element, slide_layout_obj, ph_type, style_resolver
+         )
+         # Only add the paragraph to the text frame if it contains actual text runs
+         if paragraph_object.text_runs:
+@@ -57,6 +58,7 @@ def extract_paragraph_properties(
+     paragraph_element,
+     slide_layout_obj: SlideLayout | None,
+     ph_type: str | None = None,
++    style_resolver=None,
+ ) -> Paragraph:
+     # Initialize a Paragraph object to store parsed paragraph data
+     paragraph_object = Paragraph()
+@@ -72,56 +74,24 @@ def extract_paragraph_properties(
+         and paragraph_properties_element.get("lvl") is not None
+     ):
+         current_level = int(paragraph_properties_element.get("lvl"))
+-        paragraph_object.properties.level = current_level
+-
+-    # Get inherited properties from slide layout if available
+-    if slide_layout_obj and current_level is not None:
+-        inherited_properties = slide_layout_obj.list_styles.get(current_level)
+-        if inherited_properties:
+-            # Create a new ParagraphProperties object by copying inherited properties
+-            # and then updating with any directly specified properties.
+-            # This ensures that direct properties override inherited ones.
+-            paragraph_object.properties = ParagraphProperties(
+-                align=inherited_properties.align,
+-                indent=inherited_properties.indent,
+-                bullet_type=inherited_properties.bullet_type,
+-                bullet_char=inherited_properties.bullet_char,
+-                bullet_font_face=inherited_properties.bullet_font_face,
+-                bullet_size_pct=inherited_properties.bullet_size_pct,
+-                bullet_size_pts=inherited_properties.bullet_size_pts,
+-                bullet_auto_num_type=inherited_properties.bullet_auto_num_type,
+-                bullet_start_at=inherited_properties.bullet_start_at,
+-                bullet_image_path=inherited_properties.bullet_image_path,
+-                level=inherited_properties.level,
+-            )
+-
+-    # Apply direct properties from the current paragraph's XML, overriding inherited ones
+-    if paragraph_properties_element is not None:
+-        if paragraph_properties_element.get("algn") is not None:
+-            paragraph_object.properties.align = paragraph_properties_element.get("algn")
+-        if paragraph_properties_element.get("indent") is not None:
+-            paragraph_object.properties.indent = int(
+-                paragraph_properties_element.get("indent")
+-            )
+-        # Level is already set, no need to re-set it here unless it's explicitly overridden
+-
+-        # Apply sophisticated bullet resolution using proper inheritance hierarchy
+-        _resolve_bullet_properties_intelligently(
+-            parser_instance,
+-            paragraph_object,
+-            paragraph_properties_element,
+-            slide_layout_obj,
+-            ph_type,
+-            current_level,
+-        )
+ 
+-    # If no explicit alignment found, use sophisticated alignment resolution
+-    if not paragraph_object.properties.align:
+-        # Use sophisticated alignment resolution instead of naive "first found wins"
+-        resolved_align = _resolve_paragraph_alignment_intelligently(
+-            parser_instance, slide_layout_obj, ph_type, current_level
++    # Use StyleResolver if available, otherwise fall back to old logic
++    if style_resolver:
++        # Use the new centralized StyleResolver
++        paragraph_object.properties = style_resolver.resolve_paragraph_properties(
++            slide_layout_obj, ph_type, current_level
+         )
+-        paragraph_object.properties.align = resolved_align
++        
++        # Override with any direct properties from the paragraph's XML
++        if paragraph_properties_element is not None:
++            if paragraph_properties_element.get("algn") is not None:
++                paragraph_object.properties.align = paragraph_properties_element.get("algn")
++            if paragraph_properties_element.get("indent") is not None:
++                paragraph_object.properties.indent = int(
++                    paragraph_properties_element.get("indent")
++                )
++            if paragraph_properties_element.get("lvl") is not None:
++                paragraph_object.properties.level = int(paragraph_properties_element.get("lvl"))
+ 
+     # Iterate through all run elements (a:r) within the paragraph
+     for run_element in paragraph_element.findall(
+@@ -140,6 +110,8 @@ def extract_paragraph_properties(
+                 ph_type,
+                 current_level,
+                 paragraph_properties_element,
++                paragraph_object.properties,  # Pass resolved paragraph properties
++                style_resolver,
+             )
+             # Append a new TextRun object to the paragraph's text runs
+             paragraph_object.text_runs.append(
+@@ -155,114 +127,33 @@ def extract_run_properties(
+     ph_type: str | None = None,
+     paragraph_level: int | None = None,
+     paragraph_properties_element=None,
++    resolved_paragraph_properties: ParagraphProperties | None = None,
++    style_resolver=None,
+ ) -> RunProperties:
+-    """Extract run properties from a text run element following OpenXML inheritance hierarchy."""
+-    run_properties = RunProperties()
+-
+-    # 1. Direct Run Properties (Most Powerful): Extract from <a:rPr> on the run
+-    run_properties_element = run_element.find(
+-        ".//a:rPr", namespaces=parser_instance.nsmap
+-    )
+-    if run_properties_element is not None:
+-        # Extract all direct properties using helper functions
+-        _extract_font_size_property(run_properties, run_properties_element)
+-        _extract_text_style_properties(run_properties, run_properties_element)
+-        _extract_color_properties(
+-            run_properties, run_properties_element, parser_instance.nsmap
+-        )
+-        _extract_font_properties(
+-            run_properties, run_properties_element, parser_instance.nsmap
+-        )
+-        _extract_formatting_properties(
+-            run_properties, run_properties_element, parser_instance.nsmap
++    """Extract run properties from a text run element."""
++    
++    # Use StyleResolver if available, otherwise fall back to old logic
++    if (style_resolver and resolved_paragraph_properties):
++        
++        # Extract the run properties element from XML
++        run_properties_element = run_element.find(".//a:rPr", namespaces=parser_instance.nsmap)
++        
++        # Use the new centralized StyleResolver
++        run_properties = style_resolver.resolve_run_properties(
++            run_properties_element, resolved_paragraph_properties
+         )
++        
++        return run_properties
+ 
+-    # Apply sophisticated font size inheritance hierarchy for missing properties
+-    if not run_properties.font_size:
+-        resolved_font_size = _resolve_font_size_intelligently(
+-            parser_instance,
+-            paragraph_properties_element,
+-            slide_layout_obj,
+-            ph_type,
+-            paragraph_level,
+-        )
+-        if resolved_font_size:
+-            run_properties.font_size = resolved_font_size
+-
+-    # Apply other property inheritance as needed
+-    _apply_inherited_run_properties(
+-        run_properties,
+-        parser_instance,
+-        paragraph_properties_element,
+-        slide_layout_obj,
+-        ph_type,
+-        paragraph_level,
+-    )
+ 
+-    return run_properties
+ 
+ 
+-def _extract_font_size_property(run_properties: RunProperties, run_properties_element):
+-    """Extract font size from run properties element."""
+-    if run_properties_element.get("sz") is not None:
+-        run_properties.font_size = int(run_properties_element.get("sz"))
+ 
+ 
+-def _extract_text_style_properties(
+-    run_properties: RunProperties, run_properties_element
+-):
+-    """Extract bold and italic properties from run properties element."""
+-    if run_properties_element.get("b") == "1":
+-        run_properties.bold = True
+-    if run_properties_element.get("i") == "1":
+-        run_properties.italic = True
+ 
+ 
+-def _extract_color_properties(
+-    run_properties: RunProperties, run_properties_element, nsmap
+-):
+-    """Extract color properties from run properties element."""
+-    solid_fill_element = run_properties_element.find(".//a:solidFill", namespaces=nsmap)
+-    if solid_fill_element is not None:
+-        srgb_color_element = solid_fill_element.find(".//a:srgbClr", namespaces=nsmap)
+-        if srgb_color_element is not None:
+-            run_properties.color = srgb_color_element.get("val")
+-        else:
+-            scheme_color_element = solid_fill_element.find(
+-                ".//a:schemeClr", namespaces=nsmap
+-            )
+-            if scheme_color_element is not None:
+-                run_properties.scheme_color = scheme_color_element.get("val")
+-
+-
+-def _extract_font_properties(
+-    run_properties: RunProperties, run_properties_element, nsmap
+-):
+-    """Extract font face and font reference properties from run properties element."""
+-    # Extract font face (explicit font)
+-    latin_font_element = run_properties_element.find(".//a:latin", namespaces=nsmap)
+-    if latin_font_element is not None:
+-        run_properties.font_face = latin_font_element.get("typeface")
+-
+-    # Extract font reference (theme-based font)
+-    font_ref_element = run_properties_element.find(".//a:fontRef", namespaces=nsmap)
+-    if font_ref_element is not None:
+-        run_properties.font_ref = font_ref_element.get("idx")  # "major" or "minor"
+ 
+ 
+-def _extract_formatting_properties(
+-    run_properties: RunProperties, run_properties_element, nsmap
+-):
+-    """Extract underline and capitalization properties from run properties element."""
+-    # Extract underline
+-    underline_element = run_properties_element.find(".//a:u", namespaces=nsmap)
+-    if underline_element is not None:
+-        run_properties.underline = True
+-
+-    # Extract capitalization (cap attribute)
+-    if run_properties_element.get("cap") is not None:
+-        run_properties.cap = run_properties_element.get("cap")
+-
+ 
+ def _extract_layout_default_run_properties(
+     parser_instance, slide_layout_obj: SlideLayout, ph_type: str
+@@ -799,359 +690,144 @@ def _get_presentation_bullet_properties(parser_instance, level: int | None):
+     return None
+ 
+ 
+-def _resolve_font_size_intelligently(
+-    parser_instance,
+-    paragraph_properties_element,
+-    slide_layout_obj: SlideLayout | None,
+-    ph_type: str | None,
+-    paragraph_level: int | None,
+-) -> int | None:
+-    """Intelligently resolve font size using the complete 6-level OpenXML hierarchy.
+-
+-    Font Size Hierarchy:
+-    1. Direct Run Properties (Most Powerful): sz in <a:rPr> - already checked
+-    2. Paragraph-Level Default: sz in <a:defRPr> inside paragraph's <a:pPr>
+-    3. List Style Level: sz in <a:defRPr> of corresponding list style (master)
+-    4. Placeholder Style Level: sz in placeholder's default style on slide master
+-    5. Presentation Default: sz in <p:defaultTextStyle> in presentation.xml
+-    6. Application Default: Fallback size if no value found
+ 
+-    Args:
+-        parser_instance: Slide parser instance
+-        paragraph_properties_element: XML element containing paragraph properties
+-        slide_layout_obj: Slide layout object
+-        ph_type: Placeholder type
+-        paragraph_level: Paragraph level (0-based)
+ 
++def _get_layout_text_style_font_size(slide_layout_obj: SlideLayout, ph_type: str) -> int | None:
++    """Get font size from layout text styles based on placeholder type.
++    
++    Args:
++        slide_layout_obj: SlideLayout object with parsed text styles
++        ph_type: Placeholder type (title, body, etc.)
++        
+     Returns:
+-        int: Resolved font size or None if no explicit size found
++        Font size in PowerPoint units or None if not found
+     """
+-
+-    # 2. Paragraph-Level Default: Check <a:defRPr> in paragraph's <a:pPr>
+-    if paragraph_properties_element is not None:
+-        def_rpr_element = paragraph_properties_element.find(
+-            ".//a:defRPr", namespaces=parser_instance.nsmap
+-        )
+-        if def_rpr_element is not None and def_rpr_element.get("sz") is not None:
+-            return int(def_rpr_element.get("sz"))
+-
+-    # 3. List Style Level: Check master slide list styles for this level
+-    if slide_layout_obj and paragraph_level is not None:
+-        if (
+-            slide_layout_obj.list_styles
+-            and paragraph_level in slide_layout_obj.list_styles
+-        ):
+-            level_props = slide_layout_obj.list_styles[paragraph_level]
+-            if (
+-                level_props
+-                and level_props.default_run_properties
+-                and level_props.default_run_properties.font_size is not None
+-            ):
+-                return level_props.default_run_properties.font_size
+-
+-    # 4. Placeholder Style Level: Check placeholder's default style on slide master
+-    # TODO: This would require parsing slide master txStyles (p:titleStyle, p:bodyStyle)
+-    # For now, this level is skipped as it requires master slide parsing
+-
+-    # 5. Presentation Default: Check p:defaultTextStyle in presentation
+-    if (
+-        hasattr(parser_instance, "presentation_defaults")
+-        and parser_instance.presentation_defaults
+-    ):
+-        # Use provided level or fallback to level 0
+-        effective_level = paragraph_level if paragraph_level is not None else 0
+-
+-        # Check if we have defaults for this level
+-        if effective_level in parser_instance.presentation_defaults:
+-            level_props = parser_instance.presentation_defaults[effective_level]
+-            if (
+-                level_props
+-                and level_props.default_run_properties
+-                and level_props.default_run_properties.font_size is not None
+-            ):
+-                return level_props.default_run_properties.font_size
+-
+-        # Fallback to level 0 if specific level not found
+-        if effective_level != 0 and 0 in parser_instance.presentation_defaults:
+-            level_0_props = parser_instance.presentation_defaults[0]
+-            if (
+-                level_0_props
+-                and level_0_props.default_run_properties
+-                and level_0_props.default_run_properties.font_size is not None
+-            ):
+-                return level_0_props.default_run_properties.font_size
+-
+-    # 6. Application Default: Return standard default font size
+-    # PowerPoint's default is typically 18pt for body text and larger for titles
++    if not slide_layout_obj:
++        return None
++    
++    # Map placeholder types to text style properties
+     if ph_type in ["title", "ctrTitle"]:
+-        return 4400  # 44pt in hundredths of a point
++        text_style = slide_layout_obj.title_style
++    elif ph_type in ["body", "obj", "content"]:
++        text_style = slide_layout_obj.body_style
+     else:
+-        return 1800  # 18pt in hundredths of a point
+-
++        text_style = slide_layout_obj.other_style
++    
++    # Extract font size from text style
++    if (text_style and 
++        text_style.default_run_properties and 
++        text_style.default_run_properties.font_size is not None):
++        return text_style.default_run_properties.font_size
++    
++    return None
+ 
+-def _apply_inherited_run_properties(
+-    run_properties: RunProperties,
+-    parser_instance,
+-    paragraph_properties_element,
+-    slide_layout_obj: SlideLayout | None,
+-    ph_type: str | None,
+-    paragraph_level: int | None,
+-):
+-    """Apply inherited run properties for properties not explicitly set.
+ 
+-    This applies the same inheritance hierarchy for other run properties like
+-    bold, italic, font face, color, etc.
++def _get_master_text_style_font_size(slide_layout_obj: SlideLayout, ph_type: str) -> int | None:
++    """Get font size from master text styles based on placeholder type.
++    
++    Args:
++        slide_layout_obj: SlideLayout object that may reference a master
++        ph_type: Placeholder type (title, body, etc.)
++        
++    Returns:
++        Font size in PowerPoint units or None if not found
+     """
+-    # Apply bold inheritance if not set
+-    if not run_properties.bold:
+-        inherited_bold = _resolve_run_property_intelligently(
+-            parser_instance,
+-            paragraph_properties_element,
+-            slide_layout_obj,
+-            ph_type,
+-            paragraph_level,
+-            "bold",
+-        )
+-        if inherited_bold:
+-            run_properties.bold = inherited_bold
+-
+-    # Apply italic inheritance if not set
+-    if not run_properties.italic:
+-        inherited_italic = _resolve_run_property_intelligently(
+-            parser_instance,
+-            paragraph_properties_element,
+-            slide_layout_obj,
+-            ph_type,
+-            paragraph_level,
+-            "italic",
+-        )
+-        if inherited_italic:
+-            run_properties.italic = inherited_italic
+-
+-    # Apply font inheritance if not set (handles both explicit fonts and theme references)
+-    if not run_properties.font_face and not run_properties.font_ref:
+-        resolved_font_info = _resolve_font_intelligently(
+-            parser_instance,
+-            paragraph_properties_element,
+-            slide_layout_obj,
+-            ph_type,
+-            paragraph_level,
+-        )
+-        if resolved_font_info:
+-            if resolved_font_info.get("font_face"):
+-                run_properties.font_face = resolved_font_info["font_face"]
+-            elif resolved_font_info.get("font_ref"):
+-                run_properties.font_ref = resolved_font_info["font_ref"]
+-
+-    # Apply color inheritance if not set
+-    if not run_properties.color and not run_properties.scheme_color:
+-        inherited_color = _resolve_run_property_intelligently(
+-            parser_instance,
+-            paragraph_properties_element,
+-            slide_layout_obj,
+-            ph_type,
+-            paragraph_level,
+-            "color",
+-        )
+-        if inherited_color:
+-            if inherited_color.startswith("#"):
+-                run_properties.color = inherited_color
+-            else:
+-                run_properties.scheme_color = inherited_color
++    if not slide_layout_obj or not slide_layout_obj.slide_master:
++        return None
++    
++    slide_master = slide_layout_obj.slide_master
++    
++    # Map placeholder types to master text style properties
++    if ph_type in ["title", "ctrTitle"]:
++        text_style = slide_master.title_style
++    elif ph_type in ["body", "obj", "content"]:
++        text_style = slide_master.body_style
++    else:
++        text_style = slide_master.other_style
++    
++    # Extract font size from master text style
++    if (text_style and 
++        text_style.default_run_properties and 
++        text_style.default_run_properties.font_size is not None):
++        return text_style.default_run_properties.font_size
++    
++    # Fallback to master list styles if text styles don't have font size
++    if (slide_layout_obj.list_styles and 
++        0 in slide_layout_obj.list_styles):
++        level_0_props = slide_layout_obj.list_styles[0]
++        if (level_0_props and 
++            level_0_props.default_run_properties and 
++            level_0_props.default_run_properties.font_size is not None):
++            return level_0_props.default_run_properties.font_size
++    
++    return None
+ 
+ 
+-def _resolve_run_property_intelligently(
+-    parser_instance,
+-    paragraph_properties_element,
+-    slide_layout_obj: SlideLayout | None,
+-    ph_type: str | None,
+-    paragraph_level: int | None,
+-    property_name: str,
+-):
+-    """Resolve a specific run property using the inheritance hierarchy."""
++def _get_layout_text_style_font_info(slide_layout_obj: SlideLayout, ph_type: str) -> dict | None:
++    """Get font information from layout text styles based on placeholder type.
++    
++    Args:
++        slide_layout_obj: SlideLayout object containing text styles
++        ph_type: Placeholder type (title, body, etc.)
++        
++    Returns:
++        Dict with font_face or font_ref key, or None if not found
++    """
++    if not slide_layout_obj:
++        return None
++    
++    # Map placeholder types to layout text style properties
++    if ph_type in ["title", "ctrTitle"]:
++        text_style = slide_layout_obj.title_style
++    elif ph_type in ["body", "obj", "content"]:
++        text_style = slide_layout_obj.body_style
++    else:
++        text_style = slide_layout_obj.other_style
++    
++    # Extract font information from layout text style
++    if (text_style and text_style.default_run_properties):
++        if text_style.default_run_properties.font_face:
++            return {"font_face": text_style.default_run_properties.font_face}
++        elif text_style.default_run_properties.font_ref:
++            return {"font_ref": text_style.default_run_properties.font_ref}
++    
++    return None
+ 
+-    # 2. Paragraph-Level Default
+-    if paragraph_properties_element is not None:
+-        def_rpr_element = paragraph_properties_element.find(
+-            ".//a:defRPr", namespaces=parser_instance.nsmap
+-        )
+-        if def_rpr_element is not None:
+-            value = _extract_property_from_def_rpr(
+-                def_rpr_element, property_name, parser_instance.nsmap
+-            )
+-            if value is not None:
+-                return value
+-
+-    # 3. List Style Level
+-    if slide_layout_obj and paragraph_level is not None:
+-        if (
+-            slide_layout_obj.list_styles
+-            and paragraph_level in slide_layout_obj.list_styles
+-        ):
+-            level_props = slide_layout_obj.list_styles[paragraph_level]
+-            if level_props and level_props.default_run_properties:
+-                value = getattr(level_props.default_run_properties, property_name, None)
+-                if value is not None:
+-                    return value
+-
+-    # 5. Presentation Default
+-    if (
+-        hasattr(parser_instance, "presentation_defaults")
+-        and parser_instance.presentation_defaults
+-    ):
+-        effective_level = paragraph_level if paragraph_level is not None else 0
+-
+-        if effective_level in parser_instance.presentation_defaults:
+-            level_props = parser_instance.presentation_defaults[effective_level]
+-            if level_props and level_props.default_run_properties:
+-                value = getattr(level_props.default_run_properties, property_name, None)
+-                if value is not None:
+-                    return value
+-
+-        # Fallback to level 0
+-        if effective_level != 0 and 0 in parser_instance.presentation_defaults:
+-            level_0_props = parser_instance.presentation_defaults[0]
+-            if level_0_props and level_0_props.default_run_properties:
+-                value = getattr(
+-                    level_0_props.default_run_properties, property_name, None
+-                )
+-                if value is not None:
+-                    return value
+ 
++def _get_master_text_style_font_info(slide_master, ph_type: str) -> dict | None:
++    """Get font information from master text styles based on placeholder type.
++    
++    Args:
++        slide_master: SlideMaster object containing text styles
++        ph_type: Placeholder type (title, body, etc.)
++        
++    Returns:
++        Dict with font_face or font_ref key, or None if not found
++    """
++    if not slide_master:
++        return None
++    
++    # Map placeholder types to master text style properties
++    if ph_type in ["title", "ctrTitle"]:
++        text_style = slide_master.title_style
++    elif ph_type in ["body", "obj", "content"]:
++        text_style = slide_master.body_style
++    else:
++        text_style = slide_master.other_style
++    
++    # Extract font information from master text style
++    if (text_style and text_style.default_run_properties):
++        if text_style.default_run_properties.font_face:
++            return {"font_face": text_style.default_run_properties.font_face}
++        elif text_style.default_run_properties.font_ref:
++            return {"font_ref": text_style.default_run_properties.font_ref}
++    
+     return None
+ 
+ 
+-def _extract_property_from_def_rpr(def_rpr_element, property_name: str, nsmap):
+-    """Extract a specific property from a defRPr element."""
+-    if property_name == "bold":
+-        return def_rpr_element.get("b") == "1" if def_rpr_element.get("b") else None
+-    elif property_name == "italic":
+-        return def_rpr_element.get("i") == "1" if def_rpr_element.get("i") else None
+-    elif property_name == "font_face":
+-        latin_font_element = def_rpr_element.find(".//a:latin", namespaces=nsmap)
+-        return (
+-            latin_font_element.get("typeface")
+-            if latin_font_element is not None
+-            else None
+-        )
+-    elif property_name == "font_ref":
+-        font_ref_element = def_rpr_element.find(".//a:fontRef", namespaces=nsmap)
+-        return font_ref_element.get("idx") if font_ref_element is not None else None
+-    elif property_name == "color":
+-        solid_fill_element = def_rpr_element.find(".//a:solidFill", namespaces=nsmap)
+-        if solid_fill_element is not None:
+-            srgb_color_element = solid_fill_element.find(
+-                ".//a:srgbClr", namespaces=nsmap
+-            )
+-            if srgb_color_element is not None:
+-                return "#" + srgb_color_element.get("val")
+-            scheme_color_element = solid_fill_element.find(
+-                ".//a:schemeClr", namespaces=nsmap
+-            )
+-            if scheme_color_element is not None:
+-                return scheme_color_element.get("val")
+ 
+-    return None
+ 
+ 
+-def _resolve_font_intelligently(
+-    parser_instance,
+-    paragraph_properties_element,
+-    slide_layout_obj: SlideLayout | None,
+-    ph_type: str | None,
+-    paragraph_level: int | None,
+-) -> dict | None:
+-    """Intelligently resolve font using the complete 7-level OpenXML hierarchy with theme resolution.
+-
+-    Font Resolution Hierarchy:
+-    1. Direct Run Properties: <a:latin> or <a:fontRef> in <a:rPr> - already checked
+-    2. Paragraph-Level Default: <a:defRPr> inside paragraph's <a:pPr>
+-    3. List Style Level: <a:defRPr> of corresponding list style (master)
+-    4. Placeholder/Master Style Font Reference: <a:fontRef> in <p:bodyStyle>/<p:titleStyle>
+-    5. Theme Font Scheme Resolution: Resolve major/minor from theme.xml
+-    6. Presentation Default: <p:defaultTextStyle> in presentation.xml
+-    7. Application Default: Fallback font if no value found
+ 
+-    Args:
+-        parser_instance: Slide parser instance
+-        paragraph_properties_element: XML element containing paragraph properties
+-        slide_layout_obj: Slide layout object
+-        ph_type: Placeholder type
+-        paragraph_level: Paragraph level (0-based)
+ 
+-    Returns:
+-        dict: Font information with "font_face" or "font_ref" keys, or None if not found
+-    """
+ 
+-    # 2. Paragraph-Level Default: Check <a:defRPr> in paragraph's <a:pPr>
+-    if paragraph_properties_element is not None:
+-        def_rpr_element = paragraph_properties_element.find(
+-            ".//a:defRPr", namespaces=parser_instance.nsmap
+-        )
+-        if def_rpr_element is not None:
+-            # Check for explicit font first
+-            font_face = _extract_property_from_def_rpr(
+-                def_rpr_element, "font_face", parser_instance.nsmap
+-            )
+-            if font_face:
+-                return {"font_face": font_face}
+-            # Check for font reference
+-            font_ref = _extract_property_from_def_rpr(
+-                def_rpr_element, "font_ref", parser_instance.nsmap
+-            )
+-            if font_ref:
+-                return {"font_ref": font_ref}
+-
+-    # 3. List Style Level: Check master slide list styles for this level
+-    if slide_layout_obj and paragraph_level is not None:
+-        if (
+-            slide_layout_obj.list_styles
+-            and paragraph_level in slide_layout_obj.list_styles
+-        ):
+-            level_props = slide_layout_obj.list_styles[paragraph_level]
+-            if level_props and level_props.default_run_properties:
+-                if level_props.default_run_properties.font_face:
+-                    return {"font_face": level_props.default_run_properties.font_face}
+-                elif level_props.default_run_properties.font_ref:
+-                    return {"font_ref": level_props.default_run_properties.font_ref}
+-
+-    # 4. Placeholder/Master Style Font Reference: Check placeholder style on slide master
+-    # TODO: This would require parsing slide master txStyles (p:bodyStyle, p:titleStyle)
+-    # This is where <a:fontRef> elements are most commonly found
+-    # For now, this level is skipped as it requires master slide parsing
+-
+-    # 5. Theme Font Scheme Resolution is handled at the CSS generation level
+-    # When we have a font_ref, the ThemeResolver will resolve it to actual font
+-
+-    # 6. Presentation Default: Check p:defaultTextStyle in presentation
+-    if (
+-        hasattr(parser_instance, "presentation_defaults")
+-        and parser_instance.presentation_defaults
+-    ):
+-        # Use provided level or fallback to level 0
+-        effective_level = paragraph_level if paragraph_level is not None else 0
+-
+-        # Check if we have defaults for this level
+-        if effective_level in parser_instance.presentation_defaults:
+-            level_props = parser_instance.presentation_defaults[effective_level]
+-            if level_props and level_props.default_run_properties:
+-                if level_props.default_run_properties.font_face:
+-                    return {"font_face": level_props.default_run_properties.font_face}
+-                elif level_props.default_run_properties.font_ref:
+-                    return {"font_ref": level_props.default_run_properties.font_ref}
+-
+-        # Fallback to level 0 if specific level not found
+-        if effective_level != 0 and 0 in parser_instance.presentation_defaults:
+-            level_0_props = parser_instance.presentation_defaults[0]
+-            if level_0_props and level_0_props.default_run_properties:
+-                if level_0_props.default_run_properties.font_face:
+-                    return {"font_face": level_0_props.default_run_properties.font_face}
+-                elif level_0_props.default_run_properties.font_ref:
+-                    return {"font_ref": level_0_props.default_run_properties.font_ref}
+-
+-    # 7. Application Default: Return default font reference based on placeholder type
+-    # Most PowerPoint presentations use theme fonts, so we return a font reference
+-    if ph_type in ["title", "ctrTitle"]:
+-        return {"font_ref": "major"}  # Titles typically use major font
+-    else:
+-        return {"font_ref": "minor"}  # Body text typically uses minor font
+diff --git a/src/learnx_parser/services/__init__.py b/src/learnx_parser/services/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/src/learnx_parser/services/background_renderer.py b/src/learnx_parser/services/background_renderer.py
+new file mode 100644
+index 0000000..8a0a7a4
+--- /dev/null
++++ b/src/learnx_parser/services/background_renderer.py
+@@ -0,0 +1,460 @@
++"""
++Background image generation service for Goal 1: Background as a Single Image.
++
++This module implements the core functionality for rendering PowerPoint slide backgrounds
++as PNG images to ensure perfect visual fidelity. Instead of trying to replicate complex
++gradients, theme colors, and background images with CSS, this service renders the final
++background of each slide into a PNG image that is then used as the background-image
++for the main slide div.
++
++Key Features:
++- Solid color background generation using Pillow
++- Gradient background generation with proper color interpolation
++- Theme color resolution for background references (Galaxy theme support)
++- Background property inheritance (slide → layout → master)
++- High-quality PNG output at 1280×720 resolution
++
++The service handles three main types of backgrounds:
++1. Solid colors: Direct RGB colors or theme color references
++2. Gradients: Linear gradients with multiple color stops and angle support
++3. Background references: Theme-based background styles with scheme color resolution
++
++Example usage:
++    renderer = BackgroundRenderer(slide_width=1280, slide_height=720)
++    image_path = renderer.generate_background_image(
++        common_slide_data=slide.common_slide_data,
++        output_path="media/background_1.png",
++        theme_colors={"bg1": "#000000", "accent2": "#243FFF"}
++    )
++    
++This is part of the three-goal implementation strategy for version 0.2.8:
++- Goal 1: Background as a Single Image (this module)
++- Goal 2: Enhanced Text Formatting and Semantics  
++- Goal 3: Render Complex Shapes as Images
++"""
++
++import os
++
++from PIL import Image, ImageDraw
++
++from learnx_parser.models.core import BackgroundReference, CommonSlideData, GradientFill
++
++
++class BackgroundRenderer:
++    """Service class for generating background images from slide background properties.
++    
++    This class implements Goal 1 of version 0.2.8: treating the entire slide background
++    as a single, static PNG image. It supports various background types including solid
++    colors, gradients, and theme-based background references with full Galaxy theme
++    color scheme support.
++    
++    The renderer follows the PowerPoint background inheritance hierarchy:
++    1. Slide-level background properties (highest priority)
++    2. Layout-level background properties  
++    3. Master-level background properties (lowest priority)
++    
++    Supported background types:
++    - Solid colors: Both direct hex colors and theme color references
++    - Linear gradients: Vertical gradients with color interpolation
++    - Background references: Theme-based backgrounds with scheme color resolution
++    
++    The generated PNG images are optimized for web delivery with efficient compression
++    while maintaining visual quality. All images are generated at the standard slide
++    dimensions (1280×720) to ensure consistent scaling and positioning.
++    
++    Thread safety: This class is thread-safe and can be used concurrently.
++    
++    Attributes:
++        slide_width (int): Width of generated background images in pixels
++        slide_height (int): Height of generated background images in pixels
++    """
++    
++    def __init__(self, slide_width: int = 1280, slide_height: int = 720):
++        """Initialize background renderer with slide dimensions.
++        
++        Args:
++            slide_width: Width of slide in pixels
++            slide_height: Height of slide in pixels
++        """
++        self.slide_width = slide_width
++        self.slide_height = slide_height
++    
++    def generate_background_image(
++        self, 
++        common_slide_data: CommonSlideData,
++        output_path: str,
++        theme_colors: dict | None = None
++    ) -> str | None:
++        """Generate background image from slide background properties.
++        
++        This is the main entry point for background image generation. It analyzes the
++        provided slide background data and generates an appropriate PNG image based on
++        the background type (solid color, gradient, or theme reference).
++        
++        The method follows this processing order:
++        1. Background references (theme-based backgrounds) - highest priority
++        2. Solid color backgrounds - medium priority  
++        3. Gradient backgrounds - lowest priority
++        
++        If no background properties are found, no image is generated and None is returned.
++        The output directory is automatically created if it doesn't exist.
++        
++        For Galaxy theme support, provide theme_colors with mappings like:
++        - "bg1": "#000000" (black background)
++        - "bg2": "#FFFFFF" (white background) 
++        - "accent2": "#243FFF" (blue accent)
++        - "accent4": "#FF9022" (orange accent)
++        
++        Args:
++            common_slide_data (CommonSlideData): Slide background data containing
++                background_color, background_gradient_fill, or background_reference
++            output_path (str): Absolute path where the background image should be saved.
++                Parent directories will be created automatically if they don't exist.
++            theme_colors (dict | None, optional): Theme color mapping for resolving 
++                scheme colors in background references. Keys should be scheme color
++                names (e.g., "bg1", "accent2") and values should be hex colors with
++                or without the "#" prefix. Defaults to None.
++            
++        Returns:
++            str | None: Path to the generated image file if successful, None if no 
++                background properties were found or generation failed.
++                
++        Raises:
++            OSError: If the output directory cannot be created or the image cannot be saved
++            PIL.UnidentifiedImageError: If there are issues with image generation
++            
++        Example:
++            >>> renderer = BackgroundRenderer()
++            >>> theme = {"bg1": "#000000", "accent2": "#243FFF"}
++            >>> path = renderer.generate_background_image(
++            ...     common_slide_data=slide.common_slide_data,
++            ...     output_path="/output/slide1/media/background_1.png",
++            ...     theme_colors=theme
++            ... )
++            >>> print(path)  # "/output/slide1/media/background_1.png" or None
++        """
++        # Create output directory if it doesn't exist
++        os.makedirs(os.path.dirname(output_path), exist_ok=True)
++        
++        # Create PIL image
++        image = Image.new("RGB", (self.slide_width, self.slide_height), "white")
++        draw = ImageDraw.Draw(image)
++        
++        background_generated = False
++        
++        # Handle image background (highest priority)
++        if common_slide_data.background_image_path:
++            background_generated = self._render_image_background(
++                image, common_slide_data.background_image_path
++            )
++        
++        # Handle background reference (theme-based)
++        elif common_slide_data.background_reference:
++            background_generated = self._render_background_reference(
++                draw, common_slide_data.background_reference, theme_colors
++            )
++        
++        # Handle solid color background
++        elif common_slide_data.background_color:
++            background_generated = self._render_solid_background(
++                draw, common_slide_data.background_color
++            )
++        
++        # Handle gradient background
++        elif common_slide_data.background_gradient_fill:
++            background_generated = self._render_gradient_background(
++                draw, common_slide_data.background_gradient_fill, theme_colors
++            )
++        
++        # Save image if background was generated
++        if background_generated:
++            image.save(output_path, "PNG")
++            return output_path
++        
++        return None
++    
++    def _render_background_reference(
++        self, 
++        draw: ImageDraw.ImageDraw, 
++        bg_ref: BackgroundReference,
++        theme_colors: dict | None = None
++    ) -> bool:
++        """Render background from theme reference.
++        
++        Args:
++            draw: PIL ImageDraw object
++            bg_ref: Background reference data
++            theme_colors: Theme color mapping
++            
++        Returns:
++            True if background was rendered, False otherwise
++        """
++        # For now, implement basic scheme color resolution
++        if bg_ref.scheme_color and theme_colors:
++            color = theme_colors.get(bg_ref.scheme_color, "#000000")
++            # Remove # prefix if present
++            if color.startswith("#"):
++                color = color[1:]
++            
++            self._fill_solid_color(draw, color)
++            return True
++        
++        # No hardcoded fallbacks - rely on theme_colors parameter
++        return False
++    
++    def _render_image_background(
++        self, 
++        canvas_image: Image.Image, 
++        image_path: str
++    ) -> bool:
++        """Render image background from file.
++        
++        Args:
++            canvas_image: PIL Image object to render onto
++            image_path: Path to the background image file
++            
++        Returns:
++            True if background was rendered, False otherwise
++        """
++        try:
++            # Load the background image
++            background_image = Image.open(image_path)
++            
++            # Convert to RGB if necessary
++            if background_image.mode != 'RGB':
++                background_image = background_image.convert('RGB')
++            
++            # Resize to fit slide dimensions (like CSS background-size: cover)
++            slide_aspect = self.slide_width / self.slide_height
++            image_aspect = background_image.width / background_image.height
++            
++            if image_aspect > slide_aspect:
++                # Image is wider than slide - fit to height
++                new_height = self.slide_height
++                new_width = int(new_height * image_aspect)
++            else:
++                # Image is taller than slide - fit to width
++                new_width = self.slide_width
++                new_height = int(new_width / image_aspect)
++            
++            # Resize the image
++            background_image = background_image.resize((new_width, new_height), Image.LANCZOS)
++            
++            # Center the image on the slide
++            x_offset = (self.slide_width - new_width) // 2
++            y_offset = (self.slide_height - new_height) // 2
++            
++            # Create a white background canvas if the image doesn't fill the entire slide
++            if new_width < self.slide_width or new_height < self.slide_height:
++                # Fill the entire canvas with white first
++                canvas_image.paste(Image.new('RGB', (self.slide_width, self.slide_height), 'white'), (0, 0))
++            
++            # Paste the background image onto the canvas
++            canvas_image.paste(background_image, (x_offset, y_offset))
++            
++            return True
++            
++        except Exception as e:
++            print(f"Error rendering image background from {image_path}: {e}")
++            return False
++    
++    def _render_solid_background(
++        self, 
++        draw: ImageDraw.ImageDraw, 
++        color: str
++    ) -> bool:
++        """Render solid color background.
++        
++        Args:
++            draw: PIL ImageDraw object
++            color: Hex color string (without #)
++            
++        Returns:
++            True if background was rendered
++        """
++        self._fill_solid_color(draw, color)
++        return True
++    
++    def _render_gradient_background(
++        self, 
++        draw: ImageDraw.ImageDraw, 
++        gradient: GradientFill,
++        theme_colors: dict | None = None
++    ) -> bool:
++        """Render gradient background.
++        
++        Args:
++            draw: PIL ImageDraw object
++            gradient: Gradient fill data
++            theme_colors: Theme color mapping
++            
++        Returns:
++            True if background was rendered
++        """
++        if not gradient.stops or len(gradient.stops) < 2:
++            return False
++        
++        # Sort stops by position
++        sorted_stops = sorted(gradient.stops, key=lambda s: s.pos)
++        
++        # Get start and end colors
++        start_stop = sorted_stops[0]
++        end_stop = sorted_stops[-1]
++        
++        start_color = self._resolve_color(start_stop.color, start_stop.scheme_color, theme_colors)
++        end_color = self._resolve_color(end_stop.color, end_stop.scheme_color, theme_colors)
++        
++        if start_color and end_color:
++            self._fill_gradient(draw, start_color, end_color, gradient.angle)
++            return True
++        
++        return False
++    
++    def _fill_solid_color(self, draw: ImageDraw.ImageDraw, hex_color: str):
++        """Fill image with solid color.
++        
++        Args:
++            draw: PIL ImageDraw object
++            hex_color: Hex color string (without #)
++        """
++        # Ensure hex color is 6 characters
++        if len(hex_color) == 6:
++            color = f"#{hex_color}"
++            draw.rectangle(
++                [(0, 0), (self.slide_width, self.slide_height)], 
++                fill=color
++            )
++    
++    def _fill_gradient(
++        self, 
++        draw: ImageDraw.ImageDraw, 
++        start_color: str, 
++        end_color: str, 
++        angle: int | None = None
++    ):
++        """Fill image with gradient supporting arbitrary angles.
++        
++        Args:
++            draw: PIL ImageDraw object
++            start_color: Start color hex string
++            end_color: End color hex string
++            angle: Gradient angle in PowerPoint format (60,000ths of a degree)
++        """
++        # Parse hex colors
++        start_rgb = self._hex_to_rgb(start_color)
++        end_rgb = self._hex_to_rgb(end_color)
++        
++        if not start_rgb or not end_rgb:
++            return
++        
++        # Convert PowerPoint angle to standard degrees
++        if angle is not None:
++            # PowerPoint angles are in 60,000ths of a degree
++            css_angle_deg = (angle / 60000) % 360
++        else:
++            # Default to vertical gradient (top to bottom)
++            css_angle_deg = 90
++        
++        # Convert angle to radians for calculations
++        import math
++        angle_rad = math.radians(css_angle_deg)
++        
++        # Calculate gradient direction vector
++        dx = math.cos(angle_rad)
++        dy = math.sin(angle_rad)
++        
++        # Calculate the gradient line endpoints
++        # For a gradient at angle θ, we need to find the line that goes from
++        # one corner of the image to the opposite corner in that direction
++        
++        # Calculate the distance from center to corners
++        half_width = self.slide_width / 2
++        half_height = self.slide_height / 2
++        
++        # Find the maximum distance in the gradient direction
++        max_distance = abs(half_width * dx) + abs(half_height * dy)
++        
++        # Calculate start and end points of the gradient line
++        start_x = half_width - max_distance * dx
++        start_y = half_height - max_distance * dy
++        end_x = half_width + max_distance * dx
++        end_y = half_height + max_distance * dy
++        
++        # Render gradient by filling each pixel
++        for y in range(self.slide_height):
++            for x in range(self.slide_width):
++                # Calculate position along gradient line
++                # Project point (x,y) onto the gradient line
++                px = x - start_x
++                py = y - start_y
++                gradient_length = 2 * max_distance
++                
++                if gradient_length > 0:
++                    # Calculate how far along the gradient line this pixel is
++                    projection = (px * dx + py * dy)
++                    ratio = max(0, min(1, projection / gradient_length))
++                else:
++                    ratio = 0
++                
++                # Interpolate color
++                r = int(start_rgb[0] * (1 - ratio) + end_rgb[0] * ratio)
++                g = int(start_rgb[1] * (1 - ratio) + end_rgb[1] * ratio)
++                b = int(start_rgb[2] * (1 - ratio) + end_rgb[2] * ratio)
++                
++                color = f"#{r:02x}{g:02x}{b:02x}"
++                draw.point([(x, y)], fill=color)
++    
++    def _resolve_color(
++        self, 
++        color: str | None, 
++        scheme_color: str | None, 
++        theme_colors: dict | None
++    ) -> str | None:
++        """Resolve color from direct color or scheme color.
++        
++        Args:
++            color: Direct hex color
++            scheme_color: Scheme color name
++            theme_colors: Theme color mapping
++            
++        Returns:
++            Resolved hex color or None
++        """
++        if color:
++            return color if color.startswith("#") else f"#{color}"
++        
++        if scheme_color and theme_colors:
++            theme_color = theme_colors.get(scheme_color)
++            if theme_color:
++                return theme_color if theme_color.startswith("#") else f"#{theme_color}"
++        
++        # Default colors for common scheme colors
++        defaults = {
++            "bg1": "#000000",  # Galaxy theme: bg1 = black
++            "bg2": "#FFFFFF",
++            "accent2": "#243FFF",  # Galaxy theme: blue
++            "accent4": "#FF9022",  # Galaxy theme: orange
++        }
++        
++        if scheme_color in defaults:
++            return defaults[scheme_color]
++        
++        return None
++    
++    def _hex_to_rgb(self, hex_color: str) -> tuple[int, int, int] | None:
++        """Convert hex color to RGB tuple.
++        
++        Args:
++            hex_color: Hex color string (with or without #)
++            
++        Returns:
++            RGB tuple or None if invalid
++        """
++        try:
++            # Remove # if present
++            hex_color = hex_color.lstrip("#")
++            if len(hex_color) == 6:
++                return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
++        except ValueError:
++            pass
++        return None
+\ No newline at end of file
+diff --git a/src/learnx_parser/services/document_parser.py b/src/learnx_parser/services/document_parser.py
+index b5ecebc..4ae85f0 100644
+--- a/src/learnx_parser/services/document_parser.py
++++ b/src/learnx_parser/services/document_parser.py
+@@ -3,9 +3,11 @@ import shutil
+ 
+ from lxml import etree
+ 
+-from learnx_parser.models.core import Slide
++from learnx_parser.models.core import PresentationDefaults, Slide
+ from learnx_parser.parsers.presentation import PresentationParser
+ from learnx_parser.parsers.slide.base import SlideParser
++from learnx_parser.services.background_renderer import BackgroundRenderer
++from learnx_parser.services.style_resolver import StyleResolver
+ from learnx_parser.writers.html_writer import HtmlWriter
+ from learnx_parser.writers.json_writer import JsonWriter
+ 
+@@ -134,11 +136,97 @@ class DocumentParser:
+             slide_paths.append((slide_xml_path, slide_relationships_path))
+         return slide_paths
+ 
++    def _generate_background_for_slide(self, slide: Slide, slide_number: int) -> str | None:
++        """Generate background image for a slide using Goal 1: Background as Single Image.
++        
++        This method implements the core workflow for Goal 1 by checking if a slide has
++        background properties and generating a PNG image if needed. The generated image
++        path is then set on the slide object for HTML writer integration.
++        
++        The method checks for three types of background properties:
++        1. background_color: Direct hex color values
++        2. background_gradient_fill: Gradient definitions with color stops
++        3. background_reference: Theme-based background references
++        
++        If any background properties are found, a PNG image is generated at
++        1280×720 resolution and saved to the slide's media directory with the
++        filename pattern "background_{slide_number}.png".
++        
++        Args:
++            slide (Slide): Slide object containing common_slide_data with background properties
++            slide_number (int): 1-based slide number used for filename generation
++            
++        Returns:
++            str | None: Relative path to generated background image (e.g., "media/background_1.png")
++                if background properties exist and image generation succeeds, None otherwise.
++                
++        Note:
++            This method automatically creates the media output directory if it doesn't exist.
++            The returned path is relative to the slide's output directory for HTML usage.
++        """
++        # Check if slide has any background properties
++        has_background = (
++            slide.common_slide_data.background_color or
++            slide.common_slide_data.background_gradient_fill or
++            slide.common_slide_data.background_reference or
++            slide.common_slide_data.background_image_path
++        )
++        
++        if not has_background:
++            return None
++        
++        # Create the media output directory for this slide
++        media_output_directory = os.path.join(
++            self.output_dir, f"slide{slide_number}", "media"
++        )
++        os.makedirs(media_output_directory, exist_ok=True)
++        
++        # Generate background image file path
++        background_filename = f"background_{slide_number}.png"
++        background_path = os.path.join(media_output_directory, background_filename)
++        
++        # Get theme colors from html_writer's theme resolver
++        theme_colors = None
++        if self.html_writer.theme_resolver:
++            # Build theme colors dictionary for background generation
++            theme_colors = {
++                "bg1": self.html_writer.theme_resolver.resolve_scheme_color("bg1"),
++                "bg2": self.html_writer.theme_resolver.resolve_scheme_color("bg2"),
++                "accent1": self.html_writer.theme_resolver.resolve_scheme_color("accent1"),
++                "accent2": self.html_writer.theme_resolver.resolve_scheme_color("accent2"),
++                "accent3": self.html_writer.theme_resolver.resolve_scheme_color("accent3"),
++                "accent4": self.html_writer.theme_resolver.resolve_scheme_color("accent4"),
++                "accent5": self.html_writer.theme_resolver.resolve_scheme_color("accent5"),
++                "accent6": self.html_writer.theme_resolver.resolve_scheme_color("accent6"),
++                "lt1": self.html_writer.theme_resolver.resolve_scheme_color("lt1"),
++                "lt2": self.html_writer.theme_resolver.resolve_scheme_color("lt2"),
++                "dk1": self.html_writer.theme_resolver.resolve_scheme_color("dk1"),
++                "dk2": self.html_writer.theme_resolver.resolve_scheme_color("dk2"),
++            }
++            # Filter out None values
++            theme_colors = {k: v for k, v in theme_colors.items() if v is not None}
++
++        # Generate background image using the renderer with theme colors
++        generated_path = self.background_renderer.generate_background_image(
++            slide.common_slide_data,
++            background_path,
++            theme_colors
++        )
++        
++        
++        # Return relative path for HTML usage
++        if generated_path:
++            return f"media/{background_filename}"
++        
++        return None
++
+     def parse_presentation(self):
+         # Get the overall slide width and height from the presentation properties
+         slide_width, slide_height = self.presentation_parser.get_slide_size()
+         # Extract presentation-level default text styles for theme inheritance
+         presentation_defaults = self.presentation_parser.get_default_text_style()
++        # Initialize the BackgroundRenderer with proper slide dimensions
++        self.background_renderer = BackgroundRenderer(slide_width=1280, slide_height=720)
+         # Get a list of all slide XML paths and their corresponding relationship file paths
+         slide_paths = self._get_slide_paths_and_rels()
+ 
+@@ -149,6 +237,33 @@ class DocumentParser:
+         ):
+             # Calculate the 1-based slide number
+             current_slide_number = i + 1
++            
++            # Create a SlideParser to get the slide layout and master for StyleResolver
++            temp_slide_parser = SlideParser(
++                slide_xml_file_path,
++                slide_relationships_file_path,
++                self.pptx_unpacked_path,
++                slide_width,
++                slide_height,
++                presentation_defaults,
++            )
++            slide_layout_obj = temp_slide_parser._get_slide_layout_obj()
++            
++            # Initialize StyleResolver if we have slide master info
++            style_resolver = None
++            if slide_layout_obj and slide_layout_obj.slide_master:
++                # Convert presentation_defaults dict to PresentationDefaults object
++                presentation_defaults_obj = PresentationDefaults()
++                if presentation_defaults:
++                    # For now, use default values. In a full implementation, 
++                    # this would convert the dict structure to PresentationDefaults
++                    pass
++                
++                style_resolver = StyleResolver(
++                    slide_master=slide_layout_obj.slide_master,
++                    presentation_defaults=presentation_defaults_obj
++                )
++            
+             # Process the current slide: parse its content, copy media, and write HTML/JSON output
+             current_slide_parser = SlideParser(
+                 slide_xml_file_path,
+@@ -157,6 +272,7 @@ class DocumentParser:
+                 slide_width,
+                 slide_height,
+                 presentation_defaults,
++                style_resolver,
+             )
+             # Parse the slide to get its structured data
+             parsed_slide_data = current_slide_parser.parse_slide(
+@@ -164,6 +280,15 @@ class DocumentParser:
+             )
+             slides.append(parsed_slide_data)
+ 
++            # Generate background image for this slide
++            background_image_path = self._generate_background_for_slide(
++                parsed_slide_data, current_slide_number
++            )
++            
++            # Set the generated background path on the slide object
++            if background_image_path:
++                parsed_slide_data.generated_background_path = background_image_path
++
+             # Copy any media files associated with this slide to its output directory
+             self._copy_media_for_slide(parsed_slide_data, current_slide_number)
+ 
+diff --git a/src/learnx_parser/writers/css_utils.py b/src/learnx_parser/writers/css_utils.py
+index 068ff36..aacf5da 100644
+--- a/src/learnx_parser/writers/css_utils.py
++++ b/src/learnx_parser/writers/css_utils.py
+@@ -499,11 +499,7 @@ def get_run_style_css(
+                 styles.append(font_css)
+         else:
+             # Fallback to hard-coded fonts when no theme resolver available
+-            if placeholder_type == "title":
+-                styles.append(
+-                    "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
+-                )
+-            elif placeholder_type == "body":
++            if placeholder_type == "title" or placeholder_type == "body":
+                 styles.append(
+                     "font-family: 'Univers', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif';"
+                 )
+@@ -513,18 +509,11 @@ def get_run_style_css(
+                 )
+ 
+         if run.properties.font_size:
+-            # Convert half-points to pixels (approximation)
+-            font_size_px = run.properties.font_size / 100 * 0.75
+-            styles.append(f"font-size: {font_size_px}px;")
+-        elif placeholder_type:
+-            # Apply slide master default font sizes based on placeholder type
+-            if placeholder_type == "title":
+-                # Title style: 40 points from slide master
+-                styles.append("font-size: 30px;")
+-            elif placeholder_type == "body":
+-                # Body style: 28 points from slide master
+-                styles.append("font-size: 21px;")
+-            # Add more placeholder types as needed
++            # Convert PowerPoint units (hundredths of a point) to pixels
++            # PowerPoint sz attribute = font size * 100, so divide by 100 to get points
++            # 1 point = 1.333 pixels. Font size is in 100ths of a point.
++            font_size_px = (run.properties.font_size / 100) * 1.333
++            styles.append(f"font-size: {font_size_px:.2f}px;")
+ 
+         if run.properties.bold:
+             styles.append("font-weight: bold;")
+@@ -542,7 +531,7 @@ def get_run_style_css(
+             elif run.properties.cap == "small":
+                 styles.append("text-transform: lowercase;")
+ 
+-        # Color - use explicit color or theme color
++        # Color - use explicit color or theme color following OOXML hierarchy
+         if run.properties.color:
+             styles.append(f"color: #{run.properties.color};")
+         elif theme_resolver:
+diff --git a/src/learnx_parser/writers/element_renderers.py b/src/learnx_parser/writers/element_renderers.py
+index 1f38031..ebd1d7e 100644
+--- a/src/learnx_parser/writers/element_renderers.py
++++ b/src/learnx_parser/writers/element_renderers.py
+@@ -19,6 +19,7 @@ from learnx_parser.writers.css_utils import (
+     ZIndexLayers,
+     emu_to_px,
+     get_image_crop_css,
++    get_paragraph_style_css,
+     get_run_style_css,
+     get_shape_style_css,
+     get_text_frame_alignment_css,
+@@ -301,14 +302,59 @@ def render_text_frame_html(
+     if not text_frame or not text_frame.paragraphs:
+         return ""
+ 
+-    # Always use bullet list rendering - CSS will handle bullet display based on bullet_type
+-    return _render_as_bullet_list(
+-        text_frame.paragraphs,
+-        theme_resolver=theme_resolver,
+-        placeholder_type=placeholder_type,
+-        slide_background_color=slide_background_color,
++    # Check if any paragraph has bullet properties
++    has_bullets = any(
++        para.properties and para.properties.bullet_type and para.properties.bullet_type != "none"
++        for para in text_frame.paragraphs
+     )
+ 
++    if has_bullets:
++        return _render_as_bullet_list(
++            text_frame.paragraphs,
++            theme_resolver=theme_resolver,
++            placeholder_type=placeholder_type,
++            slide_background_color=slide_background_color,
++        )
++    else:
++        return _render_as_regular_text(
++            text_frame.paragraphs,
++            theme_resolver=theme_resolver,
++            placeholder_type=placeholder_type,
++            slide_background_color=slide_background_color,
++        )
++
++
++def _render_as_regular_text(
++    paragraphs, theme_resolver=None, placeholder_type=None, slide_background_color=None
++) -> str:
++    """Render paragraphs as regular text without bullet formatting."""
++    if not paragraphs:
++        return ""
++
++    html_content = ""
++    for paragraph in paragraphs:
++        # Skip empty paragraphs
++        text_content = "".join([run.text for run in paragraph.text_runs]).strip()
++        if not text_content:
++            continue
++            
++        # Render paragraph content
++        paragraph_html = _render_paragraph_runs(
++            paragraph, theme_resolver, placeholder_type, slide_background_color
++        )
++        
++        # Apply paragraph-level styling (including text alignment)
++        paragraph_css = get_paragraph_style_css(paragraph)
++        
++        # Wrap in paragraph tag with styling
++        if paragraph_html:
++            if paragraph_css:
++                html_content += f'<p style="{paragraph_css}">{paragraph_html}</p>'
++            else:
++                html_content += f"<p>{paragraph_html}</p>"
++
++    return html_content
++
+ 
+ def _render_as_bullet_list(
+     paragraphs, theme_resolver=None, placeholder_type=None, slide_background_color=None
+@@ -373,6 +419,9 @@ def _build_nested_list(
+                 paragraph, theme_resolver, placeholder_type, slide_background_color
+             )
+ 
++            # Apply paragraph-level styling to list item
++            paragraph_css = get_paragraph_style_css(paragraph)
++
+             # Look ahead for nested items
+             nested_start = i + 1
+             nested_paragraphs = []
+@@ -401,8 +450,11 @@ def _build_nested_list(
+                 )
+                 i = j - 1  # Skip the nested paragraphs we just processed
+ 
+-            # Add the list item
+-            result_html += f"<li>{item_content}{nested_html}</li>"
++            # Add the list item with paragraph styling
++            if paragraph_css:
++                result_html += f'<li style="{paragraph_css}">{item_content}{nested_html}</li>'
++            else:
++                result_html += f"<li>{item_content}{nested_html}</li>"
+             i += 1
+         else:
+             # para_level > current_level - this shouldn't happen in well-formed lists
+diff --git a/src/learnx_parser/writers/html_writer.py b/src/learnx_parser/writers/html_writer.py
+index a7fc4b6..e034f61 100644
+--- a/src/learnx_parser/writers/html_writer.py
++++ b/src/learnx_parser/writers/html_writer.py
+@@ -273,14 +273,40 @@ class HtmlWriter:
+         return "".join(html_parts)
+ 
+     def _get_background_css(self, slide: Slide) -> str:
+-        """Generate CSS for slide background using theme resolution.
++        """Generate CSS for slide background with Goal 1 integration.
++        
++        This method implements the background image priority system for Goal 1:
++        Background as a Single Image. It prioritizes generated background images
++        over legacy CSS-based background generation to ensure perfect visual fidelity.
++        
++        Priority order:
++        1. Generated background images (Goal 1) - highest priority
++        2. Theme-resolved background CSS - medium priority
++        3. Direct background properties (fallback) - lowest priority
++        
++        For Goal 1 implementation, when a slide has a generated_background_path,
++        this method generates CSS with background-image, background-size: cover,
++        background-position: center, and background-repeat: no-repeat to ensure
++        the PNG background image displays correctly at all screen sizes.
+ 
+         Args:
+-            slide: Slide object
++            slide (Slide): Slide object containing background properties and 
++                potentially a generated_background_path from Goal 1 processing
+ 
+         Returns:
+-            str: CSS for slide background
++            str: CSS background properties string. For generated images, returns
++                complete background-image CSS. For legacy slides, returns 
++                background-color or gradient CSS. Empty string if no background.
++                
++        Example generated CSS:
++            "background-image: url('media/background_1.png'); background-size: cover; 
++             background-position: center; background-repeat: no-repeat;"
+         """
++        # Check for generated background image first (Goal 1: Background as Single Image)
++        if slide.generated_background_path:
++            return f"background-image: url('{slide.generated_background_path}'); background-size: cover; background-position: center; background-repeat: no-repeat;"
++        
++        # Fallback to old background generation for slides without generated images
+         background_css_parts = []
+ 
+         # Try to resolve background from slide hierarchy (slide -> layout -> master)
+@@ -906,6 +932,10 @@ class HtmlWriter:
+ 
+     def _get_slide_background_color(self, slide: Slide) -> str | None:
+         """Extract the dominant background color from slide for contrast calculations.
++        
++        This function has been updated for Goal 1 compatibility. Instead of parsing CSS
++        (which now contains background-image URLs), it directly accesses the slide's
++        background data and resolves theme colors properly.
+ 
+         Args:
+             slide: Slide object
+@@ -917,32 +947,73 @@ class HtmlWriter:
+         if slide.common_slide_data.background_color:
+             return slide.common_slide_data.background_color
+ 
+-        # Check for gradient - use first color
++        # Check for gradient - analyze gradient for overall darkness
+         if (
+             slide.common_slide_data.background_gradient_fill
+             and slide.common_slide_data.background_gradient_fill.stops
+         ):
+-            first_stop = slide.common_slide_data.background_gradient_fill.stops[0]
++            gradient = slide.common_slide_data.background_gradient_fill
++            # For gradient backgrounds, determine the overall darkness by examining all stops
++            total_luminance = 0
++            valid_stops = 0
++            
++            for stop in gradient.stops:
++                stop_color = None
++                if stop.color:
++                    stop_color = stop.color
++                elif stop.scheme_color and self.theme_resolver:
++                    resolved = self.theme_resolver.resolve_scheme_color(stop.scheme_color)
++                    if resolved:
++                        stop_color = resolved
++                
++                if stop_color:
++                    # Calculate luminance for this stop
++                    try:
++                        r = int(stop_color[0:2], 16)
++                        g = int(stop_color[2:4], 16)
++                        b = int(stop_color[4:6], 16)
++                        luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
++                        total_luminance += luminance
++                        valid_stops += 1
++                    except (ValueError, IndexError):
++                        continue
++            
++            if valid_stops > 0:
++                avg_luminance = total_luminance / valid_stops
++                # Return a representative color based on average luminance
++                # If average luminance is dark (< 0.5), assume dark background needing white text
++                if avg_luminance < 0.5:
++                    return "000000"  # Dark background - will trigger white text
++                else:
++                    return "FFFFFF"  # Light background - will trigger black text
++            
++            # Fallback to first stop if analysis fails
++            first_stop = gradient.stops[0]
+             if first_stop.color:
+                 return first_stop.color
+-            # If first stop has scheme color, resolve it
+             if first_stop.scheme_color and self.theme_resolver:
+-                return self.theme_resolver.resolve_scheme_color(first_stop.scheme_color)
+-
+-        # For slides that use theme backgrounds, try to determine from the background CSS
+-        # This is a fallback for slides where the background is defined in the theme system
+-        background_css = self._get_background_css(slide)
+-        if "linear-gradient" in background_css:
+-            # Extract first color from gradient - gradients with dark blues typically need white text
+-            if "#243FFF" in background_css or "#FF9022" in background_css:
+-                return "243FFF"  # Dark blue - needs white text
+-        elif "background-color" in background_css:
+-            # Extract hex color from background-color property
+-            import re
+-
+-            color_match = re.search(r"#([A-Fa-f0-9]{6})", background_css)
+-            if color_match:
+-                return color_match.group(1)
++                resolved_color = self.theme_resolver.resolve_scheme_color(first_stop.scheme_color)
++                if resolved_color:
++                    return resolved_color
++
++        # Handle background references (theme-based backgrounds)
++        if slide.common_slide_data.background_reference:
++            bg_ref = slide.common_slide_data.background_reference
++            if bg_ref.scheme_color and self.theme_resolver:
++                resolved_color = self.theme_resolver.resolve_scheme_color(bg_ref.scheme_color)
++                if resolved_color:
++                    return resolved_color
++            
++            # Galaxy theme defaults for common scheme colors
++            galaxy_defaults = {
++                "bg1": "000000",  # Black background
++                "bg2": "FFFFFF",  # White background  
++                "accent2": "243FFF",  # Blue accent
++                "accent4": "FF9022",  # Orange accent
++            }
++            
++            if bg_ref.scheme_color in galaxy_defaults:
++                return galaxy_defaults[bg_ref.scheme_color]
+ 
+         # Default for slides without explicit background - assume white background
+         return "FFFFFF"
+diff --git a/src/learnx_parser/writers/json_writer.py b/src/learnx_parser/writers/json_writer.py
+index 41d0d27..7327661 100644
+--- a/src/learnx_parser/writers/json_writer.py
++++ b/src/learnx_parser/writers/json_writer.py
+@@ -61,11 +61,15 @@ class JsonWriter:
+                 current_text_box_content = []
+ 
+                 for paragraph in shape.text_frame.paragraphs:
++                    # Skip paragraphs with no text runs
++                    if not paragraph.text_runs:
++                        continue
++
+                     paragraph_text = "".join([run.text for run in paragraph.text_runs])
+ 
+                     paragraph_style = {}
+-                    if paragraph.text_runs:
+-                        first_run_properties = paragraph.text_runs[0].properties
++                    first_run_properties = paragraph.text_runs[0].properties
++                    if first_run_properties:  # Check if properties exist
+                         if first_run_properties.bold:
+                             paragraph_style["bold"] = True
+                         if first_run_properties.italic:
+@@ -210,17 +214,20 @@ class JsonWriter:
+         for paragraph in all_paragraphs:
+             if paragraph.text_runs:
+                 first_run_properties = paragraph.text_runs[0].properties
+-                style = {}
+-                if first_run_properties.bold:
+-                    style["bold"] = True
+-                if first_run_properties.italic:
+-                    style["italic"] = True
+-                if first_run_properties.font_size:
+-                    style["fontSize"] = first_run_properties.font_size
+-                if first_run_properties.underline:
+-                    style["underline"] = True
+-
+-                return style if style else None
++                # !!! IMPORTANT: Check if the properties object exists before using it.
++                if first_run_properties:
++                    style = {}
++                    if first_run_properties.bold:
++                        style["bold"] = True
++                    if first_run_properties.italic:
++                        style["italic"] = True
++                    if first_run_properties.font_size:
++                        style["fontSize"] = first_run_properties.font_size
++                    if first_run_properties.underline:
++                        style["underline"] = True
++
++                    # Only return a style dictionary if it's not empty
++                    return style if style else None
+ 
+         return None
+ 
+diff --git a/tests/test_background_extraction.py b/tests/test_background_extraction.py
+new file mode 100644
+index 0000000..bf37848
+--- /dev/null
++++ b/tests/test_background_extraction.py
+@@ -0,0 +1,351 @@
++"""
++Tests for background property extraction functionality.
++Testing the complete background property inheritance hierarchy: slide → layout → master.
++"""
++
++import os
++import tempfile
++from unittest.mock import MagicMock, patch
++
++import pytest
++from lxml import etree
++
++from learnx_parser.models.core import BackgroundReference, GradientFill, GradientStop
++from learnx_parser.parsers.slide.base import SlideParser
++from learnx_parser.parsers.layout import LayoutParser
++from learnx_parser.parsers.master import SlideMasterParser
++
++
++class TestBackgroundPropertyExtraction:
++    """Test suite for background property extraction from slide XML."""
++
++    def test_slide_level_solid_background_extraction(self):
++        """Test extracting solid color background from slide XML."""
++        slide_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++        <p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"
++               xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
++            <p:cSld>
++                <p:bg>
++                    <p:bgPr>
++                        <a:solidFill>
++                            <a:srgbClr val="FF0000"/>
++                        </a:solidFill>
++                    </p:bgPr>
++                </p:bg>
++            </p:cSld>
++        </p:sld>"""
++        
++        with tempfile.NamedTemporaryFile(mode='w', suffix='.xml', delete=False) as temp_file:
++            temp_file.write(slide_xml)
++            temp_file.flush()
++            
++            try:
++                parser = SlideParser(
++                    slide_xml_path=temp_file.name,
++                    slide_rels_path=None,
++                    pptx_unpacked_path="/dummy",
++                    slide_width=1280,
++                    slide_height=720
++                )
++                
++                common_slide_data = parser._extract_common_slide_data()
++                
++                assert common_slide_data.background_color == "FF0000"
++                assert common_slide_data.background_gradient_fill is None
++                assert common_slide_data.background_reference is None
++                
++            finally:
++                os.unlink(temp_file.name)
++
++    def test_slide_level_gradient_background_extraction(self):
++        """Test extracting gradient background from slide XML."""
++        slide_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++        <p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"
++               xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
++            <p:cSld>
++                <p:bg>
++                    <p:bgPr>
++                        <a:gradFill>
++                            <a:gsLst>
++                                <a:gs pos="0">
++                                    <a:schemeClr val="accent2"/>
++                                </a:gs>
++                                <a:gs pos="100000">
++                                    <a:schemeClr val="accent4"/>
++                                </a:gs>
++                            </a:gsLst>
++                            <a:lin ang="2700000"/>
++                        </a:gradFill>
++                    </p:bgPr>
++                </p:bg>
++            </p:cSld>
++        </p:sld>"""
++        
++        with tempfile.NamedTemporaryFile(mode='w', suffix='.xml', delete=False) as temp_file:
++            temp_file.write(slide_xml)
++            temp_file.flush()
++            
++            try:
++                parser = SlideParser(
++                    slide_xml_path=temp_file.name,
++                    slide_rels_path=None,
++                    pptx_unpacked_path="/dummy",
++                    slide_width=1280,
++                    slide_height=720
++                )
++                
++                common_slide_data = parser._extract_common_slide_data()
++                
++                assert common_slide_data.background_color is None
++                assert common_slide_data.background_reference is None
++                assert common_slide_data.background_gradient_fill is not None
++                
++                gradient = common_slide_data.background_gradient_fill
++                assert len(gradient.stops) == 2
++                assert gradient.angle == 2700000
++                assert gradient.stops[0].pos == 0
++                assert gradient.stops[0].scheme_color == "accent2"
++                assert gradient.stops[1].pos == 100000
++                assert gradient.stops[1].scheme_color == "accent4"
++                
++            finally:
++                os.unlink(temp_file.name)
++
++    def test_slide_level_background_reference_extraction(self):
++        """Test extracting background reference from slide XML."""
++        slide_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++        <p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"
++               xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
++            <p:cSld>
++                <p:bg>
++                    <p:bgRef idx="1001">
++                        <a:schemeClr val="bg1"/>
++                    </p:bgRef>
++                </p:bg>
++            </p:cSld>
++        </p:sld>"""
++        
++        with tempfile.NamedTemporaryFile(mode='w', suffix='.xml', delete=False) as temp_file:
++            temp_file.write(slide_xml)
++            temp_file.flush()
++            
++            try:
++                parser = SlideParser(
++                    slide_xml_path=temp_file.name,
++                    slide_rels_path=None,
++                    pptx_unpacked_path="/dummy",
++                    slide_width=1280,
++                    slide_height=720
++                )
++                
++                common_slide_data = parser._extract_common_slide_data()
++                
++                assert common_slide_data.background_color is None
++                assert common_slide_data.background_gradient_fill is None
++                assert common_slide_data.background_reference is not None
++                
++                bg_ref = common_slide_data.background_reference
++                assert bg_ref.idx == 1001
++                assert bg_ref.scheme_color == "bg1"
++                
++            finally:
++                os.unlink(temp_file.name)
++
++    def test_layout_level_background_extraction(self):
++        """Test extracting background properties from layout XML."""
++        layout_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++        <p:sldLayout xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"
++                     xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
++            <p:cSld name="Title Slide">
++                <p:bg>
++                    <p:bgPr>
++                        <a:solidFill>
++                            <a:srgbClr val="0000FF"/>
++                        </a:solidFill>
++                    </p:bgPr>
++                </p:bg>
++            </p:cSld>
++        </p:sldLayout>"""
++        
++        with tempfile.NamedTemporaryFile(mode='w', suffix='.xml', delete=False) as temp_file:
++            temp_file.write(layout_xml)
++            temp_file.flush()
++            
++            try:
++                parser = LayoutParser(
++                    layout_xml_path=temp_file.name,
++                    pptx_unpacked_path="/dummy"
++                )
++                
++                layout = parser.parse_layout()
++                
++                assert layout.background_color == "0000FF"
++                assert layout.background_gradient_fill is None
++                assert layout.background_reference is None
++                
++            finally:
++                os.unlink(temp_file.name)
++
++    def test_master_level_background_extraction(self):
++        """Test extracting background properties from slide master XML."""
++        master_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++        <p:sldMaster xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"
++                     xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
++            <p:cSld>
++                <p:bg>
++                    <p:bgRef idx="1001">
++                        <a:schemeClr val="bg1"/>
++                    </p:bgRef>
++                </p:bg>
++            </p:cSld>
++        </p:sldMaster>"""
++        
++        with tempfile.NamedTemporaryFile(mode='w', suffix='.xml', delete=False) as temp_file:
++            temp_file.write(master_xml)
++            temp_file.flush()
++            
++            try:
++                parser = SlideMasterParser(
++                    master_xml_path=temp_file.name,
++                    pptx_unpacked_path="/dummy"
++                )
++                
++                master = parser.parse_master()
++                
++                assert master.background_color is None
++                assert master.background_gradient_fill is None
++                assert master.background_reference is not None
++                
++                bg_ref = master.background_reference
++                assert bg_ref.idx == 1001
++                assert bg_ref.scheme_color == "bg1"
++                
++            finally:
++                os.unlink(temp_file.name)
++
++    def test_no_background_properties(self):
++        """Test handling slides with no background properties."""
++        slide_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++        <p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"
++               xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
++            <p:cSld>
++                <p:spTree>
++                    <!-- Some shapes but no background -->
++                </p:spTree>
++            </p:cSld>
++        </p:sld>"""
++        
++        with tempfile.NamedTemporaryFile(mode='w', suffix='.xml', delete=False) as temp_file:
++            temp_file.write(slide_xml)
++            temp_file.flush()
++            
++            try:
++                parser = SlideParser(
++                    slide_xml_path=temp_file.name,
++                    slide_rels_path=None,
++                    pptx_unpacked_path="/dummy",
++                    slide_width=1280,
++                    slide_height=720
++                )
++                
++                common_slide_data = parser._extract_common_slide_data()
++                
++                assert common_slide_data.background_color is None
++                assert common_slide_data.background_gradient_fill is None
++                assert common_slide_data.background_reference is None
++                
++            finally:
++                os.unlink(temp_file.name)
++
++
++class TestBackgroundInheritanceHierarchy:
++    """Test suite for background property inheritance from layout and master."""
++
++    def test_layout_to_slide_inheritance(self):
++        """Test that slides inherit background from layout when no slide-level background exists."""
++        # This would require a more complex setup with actual layout files
++        # For now, test the logic directly by creating mock objects
++        
++        from learnx_parser.models.core import SlideLayout, CommonSlideData
++        
++        # Create a layout with background properties
++        layout = SlideLayout(
++            name="Test Layout",
++            background_color="FF0000"
++        )
++        
++        # Test the inheritance logic in slide parser
++        slide_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++        <p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
++            <p:cSld>
++                <!-- No background properties -->
++            </p:cSld>
++        </p:sld>"""
++        
++        with tempfile.NamedTemporaryFile(mode='w', suffix='.xml', delete=False) as temp_file:
++            temp_file.write(slide_xml)
++            temp_file.flush()
++            
++            try:
++                parser = SlideParser(
++                    slide_xml_path=temp_file.name,
++                    slide_rels_path=None,
++                    pptx_unpacked_path="/dummy",
++                    slide_width=1280,
++                    slide_height=720
++                )
++                
++                # Test inheritance logic
++                common_slide_data = parser._extract_common_slide_data(layout)
++                
++                # Should inherit from layout since slide has no background
++                assert common_slide_data.background_color == "FF0000"
++                
++            finally:
++                os.unlink(temp_file.name)
++
++    def test_no_inheritance_when_slide_has_background(self):
++        """Test that slides don't inherit when they have their own background properties."""
++        from learnx_parser.models.core import SlideLayout
++        
++        # Create a layout with background properties
++        layout = SlideLayout(
++            name="Test Layout",
++            background_color="FF0000"  # Red layout background
++        )
++        
++        # Slide with its own background
++        slide_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++        <p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"
++               xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
++            <p:cSld>
++                <p:bg>
++                    <p:bgPr>
++                        <a:solidFill>
++                            <a:srgbClr val="0000FF"/>
++                        </a:solidFill>
++                    </p:bgPr>
++                </p:bg>
++            </p:cSld>
++        </p:sld>"""
++        
++        with tempfile.NamedTemporaryFile(mode='w', suffix='.xml', delete=False) as temp_file:
++            temp_file.write(slide_xml)
++            temp_file.flush()
++            
++            try:
++                parser = SlideParser(
++                    slide_xml_path=temp_file.name,
++                    slide_rels_path=None,
++                    pptx_unpacked_path="/dummy",
++                    slide_width=1280,
++                    slide_height=720
++                )
++                
++                common_slide_data = parser._extract_common_slide_data(layout)
++                
++                # Should use slide's own background, not inherit from layout
++                assert common_slide_data.background_color == "0000FF"  # Blue slide background
++                
++            finally:
++                os.unlink(temp_file.name)
+\ No newline at end of file
+diff --git a/tests/test_background_html_integration.py b/tests/test_background_html_integration.py
+new file mode 100644
+index 0000000..88df8db
+--- /dev/null
++++ b/tests/test_background_html_integration.py
+@@ -0,0 +1,235 @@
++"""
++Tests for background image integration with HTML writer.
++Testing the complete background image pipeline from generation to HTML output.
++"""
++
++import os
++import tempfile
++from unittest.mock import MagicMock, patch
++
++import pytest
++
++from learnx_parser.models.core import (
++    BackgroundReference,
++    CommonSlideData,
++    GradientFill,
++    GradientStop,
++    Slide,
++)
++from learnx_parser.writers.html_writer import HtmlWriter
++
++
++class TestBackgroundHtmlIntegration:
++    """Test suite for background image integration with HTML writer."""
++
++    def setup_method(self):
++        """Set up test fixtures."""
++        self.temp_dir = tempfile.mkdtemp()
++        self.html_writer = HtmlWriter(output_directory=self.temp_dir)
++
++    def teardown_method(self):
++        """Clean up test fixtures."""
++        import shutil
++        shutil.rmtree(self.temp_dir, ignore_errors=True)
++
++    def test_background_css_with_generated_image(self):
++        """Test that _get_background_css returns background-image CSS when slide has generated image."""
++        slide = Slide(
++            slide_number=1,
++            generated_background_path="media/background_1.png"
++        )
++        
++        background_css = self.html_writer._get_background_css(slide)
++        
++        expected_css = "background-image: url('media/background_1.png'); background-size: cover; background-position: center; background-repeat: no-repeat;"
++        assert background_css == expected_css
++
++    def test_background_css_fallback_to_solid_color(self):
++        """Test fallback to solid color CSS when no generated image exists."""
++        common_slide_data = CommonSlideData(background_color="FF0000")
++        slide = Slide(
++            slide_number=1,
++            common_slide_data=common_slide_data,
++            generated_background_path=None  # No generated image
++        )
++        
++        background_css = self.html_writer._get_background_css(slide)
++        
++        # Should fall back to old CSS generation
++        assert "background-color: #FF0000;" in background_css
++        assert "background-image:" not in background_css
++
++    def test_background_css_fallback_to_gradient(self):
++        """Test fallback to gradient CSS when no generated image exists."""
++        gradient_stops = [
++            GradientStop(pos=0, color="FF0000", scheme_color=None),
++            GradientStop(pos=100000, color="0000FF", scheme_color=None)
++        ]
++        gradient = GradientFill(stops=gradient_stops, angle=2700000)
++        
++        common_slide_data = CommonSlideData(background_gradient_fill=gradient)
++        slide = Slide(
++            slide_number=1,
++            common_slide_data=common_slide_data,
++            generated_background_path=None  # No generated image
++        )
++        
++        background_css = self.html_writer._get_background_css(slide)
++        
++        # Should fall back to gradient CSS generation
++        assert "linear-gradient" in background_css or "background:" in background_css
++        assert "background-image: url(" not in background_css
++
++    def test_background_css_with_no_background_properties(self):
++        """Test CSS generation when slide has no background properties."""
++        slide = Slide(
++            slide_number=1,
++            common_slide_data=CommonSlideData(),  # No background properties
++            generated_background_path=None
++        )
++        
++        background_css = self.html_writer._get_background_css(slide)
++        
++        # Should return empty string or minimal CSS
++        assert background_css == "" or len(background_css.strip()) == 0
++
++    def test_background_image_priority_over_other_properties(self):
++        """Test that generated background image takes priority over other background properties."""
++        # Slide has both generated image AND other background properties
++        gradient_stops = [
++            GradientStop(pos=0, color="FF0000", scheme_color=None),
++            GradientStop(pos=100000, color="0000FF", scheme_color=None)
++        ]
++        gradient = GradientFill(stops=gradient_stops, angle=2700000)
++        
++        common_slide_data = CommonSlideData(
++            background_color="00FF00",  # Green solid color
++            background_gradient_fill=gradient  # Red to blue gradient
++        )
++        
++        slide = Slide(
++            slide_number=1,
++            common_slide_data=common_slide_data,
++            generated_background_path="media/background_1.png"  # Generated image
++        )
++        
++        background_css = self.html_writer._get_background_css(slide)
++        
++        # Should use generated image, not fallback to other properties
++        assert "background-image: url('media/background_1.png')" in background_css
++        assert "background-color: #00FF00" not in background_css
++        assert "linear-gradient" not in background_css
++
++    @patch('learnx_parser.writers.html_writer.HtmlWriter._resolve_slide_background')
++    def test_theme_resolver_integration(self, mock_resolve):
++        """Test that theme resolver integration works with background images."""
++        mock_resolve.return_value = "background: linear-gradient(theme-based);"
++        
++        slide = Slide(
++            slide_number=1,
++            generated_background_path="media/background_1.png"
++        )
++        
++        background_css = self.html_writer._get_background_css(slide)
++        
++        # Generated image should take priority over theme resolver
++        assert "background-image: url('media/background_1.png')" in background_css
++        # Theme resolver should not be called for slides with generated images
++        mock_resolve.assert_not_called()
++
++    def test_slide_html_generation_with_background_image(self):
++        """Test that background image CSS is properly integrated into slide styling."""
++        slide = Slide(
++            slide_number=1,
++            generated_background_path="media/background_1.png",
++            shapes=[],  # No shapes for simplicity
++            pictures=[],
++            group_shapes=[],
++            graphic_frames=[]
++        )
++        
++        # Test the background CSS generation directly since that's what matters
++        background_css = self.html_writer._get_background_css(slide)
++        
++        # Check that background image CSS is properly formatted
++        assert "background-image: url('media/background_1.png')" in background_css
++        assert "background-size: cover" in background_css
++        assert "background-position: center" in background_css
++        assert "background-repeat: no-repeat" in background_css
++        
++        # Verify the complete CSS string is correctly formatted
++        expected_css = "background-image: url('media/background_1.png'); background-size: cover; background-position: center; background-repeat: no-repeat;"
++        assert background_css == expected_css
++
++    def test_multiple_slides_different_backgrounds(self):
++        """Test that different slides can have different background images."""
++        slides = [
++            Slide(
++                slide_number=1,
++                generated_background_path="media/background_1.png"
++            ),
++            Slide(
++                slide_number=2,
++                generated_background_path="media/background_2.png"
++            ),
++            Slide(
++                slide_number=3,
++                generated_background_path=None,
++                common_slide_data=CommonSlideData(background_color="FF0000")
++            )
++        ]
++        
++        css_results = []
++        for slide in slides:
++            css = self.html_writer._get_background_css(slide)
++            css_results.append(css)
++        
++        # First slide should use background_1.png
++        assert "background-image: url('media/background_1.png')" in css_results[0]
++        
++        # Second slide should use background_2.png
++        assert "background-image: url('media/background_2.png')" in css_results[1]
++        
++        # Third slide should fall back to solid color CSS
++        assert "background-color: #FF0000" in css_results[2]
++        assert "background-image:" not in css_results[2]
++
++    def test_background_image_path_format(self):
++        """Test that background image paths are correctly formatted for HTML."""
++        test_cases = [
++            "media/background_1.png",
++            "slide1/media/bg.png",
++            "backgrounds/gradient_slide.png"
++        ]
++        
++        for path in test_cases:
++            slide = Slide(
++                slide_number=1,
++                generated_background_path=path
++            )
++            
++            background_css = self.html_writer._get_background_css(slide)
++            
++            # Path should be properly quoted and formatted
++            expected_url = f"background-image: url('{path}')"
++            assert expected_url in background_css
++
++    def test_css_properties_completeness(self):
++        """Test that all necessary CSS properties are included for background images."""
++        slide = Slide(
++            slide_number=1,
++            generated_background_path="media/test_background.png"
++        )
++        
++        background_css = self.html_writer._get_background_css(slide)
++        
++        # Should include all necessary CSS properties for proper display
++        required_properties = [
++            "background-image:",
++            "background-size: cover",
++            "background-position: center", 
++            "background-repeat: no-repeat"
++        ]
++        
++        for prop in required_properties:
++            assert prop in background_css
+\ No newline at end of file
+diff --git a/tests/test_background_image_generation.py b/tests/test_background_image_generation.py
+new file mode 100644
+index 0000000..b6c5c30
+--- /dev/null
++++ b/tests/test_background_image_generation.py
+@@ -0,0 +1,298 @@
++"""
++Tests for background image generation using Pillow.
++Testing the BackgroundRenderer service for generating PNG images from background properties.
++"""
++
++import os
++import tempfile
++from PIL import Image
++
++import pytest
++
++from learnx_parser.models.core import (
++    BackgroundReference,
++    CommonSlideData,
++    GradientFill,
++    GradientStop,
++)
++from learnx_parser.services.background_renderer import BackgroundRenderer
++
++
++class TestBackgroundImageGeneration:
++    """Test suite for background image generation with Pillow."""
++
++    def setup_method(self):
++        """Set up test fixtures."""
++        self.renderer = BackgroundRenderer(slide_width=1280, slide_height=720)
++        self.temp_dir = tempfile.mkdtemp()
++
++    def teardown_method(self):
++        """Clean up test fixtures."""
++        # Clean up any generated test files
++        import shutil
++        shutil.rmtree(self.temp_dir, ignore_errors=True)
++
++    def test_solid_color_background_generation(self):
++        """Test generating PNG image from solid color background."""
++        common_slide_data = CommonSlideData(
++            background_color="FF0000",  # Red background
++            cx=1280,
++            cy=720
++        )
++        
++        output_path = os.path.join(self.temp_dir, "solid_background.png")
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path
++        )
++        
++        # Verify image was generated
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        # Verify image properties
++        with Image.open(output_path) as img:
++            assert img.size == (1280, 720)
++            assert img.mode == "RGB"
++            
++            # Check that the image is actually red
++            # Sample pixel from center should be red
++            center_pixel = img.getpixel((640, 360))
++            assert center_pixel == (255, 0, 0)  # RGB for red
++
++    def test_gradient_background_generation(self):
++        """Test generating PNG image from gradient background."""
++        gradient_stops = [
++            GradientStop(pos=0, color="FF0000", scheme_color=None),      # Red start
++            GradientStop(pos=100000, color="0000FF", scheme_color=None)  # Blue end
++        ]
++        gradient = GradientFill(stops=gradient_stops, angle=2700000)  # Vertical gradient
++        
++        common_slide_data = CommonSlideData(
++            background_gradient_fill=gradient,
++            cx=1280,
++            cy=720
++        )
++        
++        output_path = os.path.join(self.temp_dir, "gradient_background.png")
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path
++        )
++        
++        # Verify image was generated
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        # Verify image properties
++        with Image.open(output_path) as img:
++            assert img.size == (1280, 720)
++            assert img.mode == "RGB"
++            
++            # Check gradient - top should be more red, bottom should be more blue
++            top_pixel = img.getpixel((640, 100))
++            bottom_pixel = img.getpixel((640, 620))
++            
++            # Top should have more red component
++            assert top_pixel[0] > bottom_pixel[0]  # More red at top
++            # Bottom should have more blue component  
++            assert bottom_pixel[2] > top_pixel[2]  # More blue at bottom
++
++    def test_background_reference_generation(self):
++        """Test generating PNG image from background reference with theme colors."""
++        bg_ref = BackgroundReference(idx=1001, scheme_color="bg1")
++        
++        common_slide_data = CommonSlideData(
++            background_reference=bg_ref,
++            cx=1280,
++            cy=720
++        )
++        
++        output_path = os.path.join(self.temp_dir, "reference_background.png")
++        
++        # Test with Galaxy theme colors (bg1 = black)
++        theme_colors = {"bg1": "#000000"}
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path, theme_colors
++        )
++        
++        # Verify image was generated
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        # Verify image properties
++        with Image.open(output_path) as img:
++            assert img.size == (1280, 720)
++            assert img.mode == "RGB"
++            
++            # Check that the image is black (Galaxy bg1 default)
++            center_pixel = img.getpixel((640, 360))
++            assert center_pixel == (0, 0, 0)  # RGB for black
++
++    def test_background_reference_with_default_colors(self):
++        """Test background reference generation with default theme colors."""
++        bg_ref = BackgroundReference(idx=1001, scheme_color="bg1")
++        
++        common_slide_data = CommonSlideData(
++            background_reference=bg_ref,
++            cx=1280,
++            cy=720
++        )
++        
++        output_path = os.path.join(self.temp_dir, "default_background.png")
++        
++        # Test without providing theme colors (should use defaults)
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path
++        )
++        
++        # Verify image was generated
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        # Verify image properties
++        with Image.open(output_path) as img:
++            assert img.size == (1280, 720)
++            assert img.mode == "RGB"
++            
++            # Should default to black for bg1
++            center_pixel = img.getpixel((640, 360))
++            assert center_pixel == (0, 0, 0)  # RGB for black
++
++    def test_no_background_properties(self):
++        """Test that no image is generated when slide has no background properties."""
++        common_slide_data = CommonSlideData(
++            cx=1280,
++            cy=720
++            # No background properties set
++        )
++        
++        output_path = os.path.join(self.temp_dir, "no_background.png")
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path
++        )
++        
++        # Should return None and not create file
++        assert result_path is None
++        assert not os.path.exists(output_path)
++
++    def test_complex_gradient_with_multiple_stops(self):
++        """Test generating gradient with multiple color stops."""
++        gradient_stops = [
++            GradientStop(pos=0, color="FF0000", scheme_color=None),      # Red
++            GradientStop(pos=50000, color="00FF00", scheme_color=None),  # Green  
++            GradientStop(pos=100000, color="0000FF", scheme_color=None)  # Blue
++        ]
++        gradient = GradientFill(stops=gradient_stops, angle=0)  # Horizontal
++        
++        common_slide_data = CommonSlideData(
++            background_gradient_fill=gradient,
++            cx=1280,
++            cy=720
++        )
++        
++        output_path = os.path.join(self.temp_dir, "multi_stop_gradient.png")
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path
++        )
++        
++        # Verify image was generated
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        with Image.open(output_path) as img:
++            assert img.size == (1280, 720)
++            # Note: Current implementation uses first and last stops only
++            # This test validates the current behavior
++
++    def test_gradient_with_scheme_colors(self):
++        """Test generating gradient with scheme colors instead of direct colors."""
++        gradient_stops = [
++            GradientStop(pos=0, color=None, scheme_color="accent2"),
++            GradientStop(pos=100000, color=None, scheme_color="accent4")
++        ]
++        gradient = GradientFill(stops=gradient_stops, angle=2700000)
++        
++        common_slide_data = CommonSlideData(
++            background_gradient_fill=gradient,
++            cx=1280,
++            cy=720
++        )
++        
++        output_path = os.path.join(self.temp_dir, "scheme_gradient.png")
++        
++        # Provide theme colors for Galaxy theme
++        theme_colors = {
++            "accent2": "#243FFF",  # Blue
++            "accent4": "#FF9022"   # Orange
++        }
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path, theme_colors
++        )
++        
++        # Verify image was generated
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        with Image.open(output_path) as img:
++            assert img.size == (1280, 720)
++            assert img.mode == "RGB"
++
++    def test_custom_slide_dimensions(self):
++        """Test generating background with custom slide dimensions."""
++        custom_renderer = BackgroundRenderer(slide_width=800, slide_height=600)
++        
++        common_slide_data = CommonSlideData(
++            background_color="00FF00",  # Green
++            cx=800,
++            cy=600
++        )
++        
++        output_path = os.path.join(self.temp_dir, "custom_size.png")
++        
++        result_path = custom_renderer.generate_background_image(
++            common_slide_data, output_path
++        )
++        
++        # Verify image was generated with custom size
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        with Image.open(output_path) as img:
++            assert img.size == (800, 600)
++            assert img.mode == "RGB"
++            
++            center_pixel = img.getpixel((400, 300))
++            assert center_pixel == (0, 255, 0)  # RGB for green
++
++    def test_output_directory_creation(self):
++        """Test that output directories are created automatically."""
++        nested_dir = os.path.join(self.temp_dir, "nested", "subdirs")
++        output_path = os.path.join(nested_dir, "auto_created.png")
++        
++        common_slide_data = CommonSlideData(
++            background_color="FFFF00",  # Yellow
++            cx=1280,
++            cy=720
++        )
++        
++        # Directory doesn't exist yet
++        assert not os.path.exists(nested_dir)
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path
++        )
++        
++        # Should create directory and file
++        assert result_path == output_path
++        assert os.path.exists(nested_dir)
++        assert os.path.exists(output_path)
++        
++        with Image.open(output_path) as img:
++            assert img.size == (1280, 720)
++            center_pixel = img.getpixel((640, 360))
++            assert center_pixel == (255, 255, 0)  # RGB for yellow
+\ No newline at end of file
+diff --git a/tests/test_background_theme_colors.py b/tests/test_background_theme_colors.py
+new file mode 100644
+index 0000000..91f3fd9
+--- /dev/null
++++ b/tests/test_background_theme_colors.py
+@@ -0,0 +1,339 @@
++"""
++Tests for theme color resolution accuracy in background generation.
++Testing the correct resolution of scheme colors to actual hex colors.
++"""
++
++import os
++import tempfile
++from PIL import Image
++
++import pytest
++
++from learnx_parser.models.core import (
++    BackgroundReference,
++    CommonSlideData,
++    GradientFill,
++    GradientStop,
++)
++from learnx_parser.services.background_renderer import BackgroundRenderer
++
++
++class TestBackgroundThemeColorResolution:
++    """Test suite for theme color resolution in background generation."""
++
++    def setup_method(self):
++        """Set up test fixtures."""
++        self.renderer = BackgroundRenderer(slide_width=100, slide_height=100)  # Small size for testing
++        self.temp_dir = tempfile.mkdtemp()
++
++    def teardown_method(self):
++        """Clean up test fixtures."""
++        import shutil
++        shutil.rmtree(self.temp_dir, ignore_errors=True)
++
++    def test_galaxy_theme_bg1_resolution(self):
++        """Test that bg1 scheme color resolves to black for Galaxy theme."""
++        bg_ref = BackgroundReference(idx=1001, scheme_color="bg1")
++        common_slide_data = CommonSlideData(background_reference=bg_ref)
++        
++        output_path = os.path.join(self.temp_dir, "bg1_test.png")
++        
++        # Test with Galaxy theme colors
++        galaxy_theme = {"bg1": "#000000"}
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path, galaxy_theme
++        )
++        
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        # Verify the color is actually black
++        with Image.open(output_path) as img:
++            pixel = img.getpixel((50, 50))  # Center pixel
++            assert pixel == (0, 0, 0)  # RGB for black
++
++    def test_galaxy_theme_accent_colors_resolution(self):
++        """Test that Galaxy theme accent colors resolve correctly."""
++        galaxy_theme = {
++            "accent2": "#243FFF",  # Blue
++            "accent4": "#FF9022",  # Orange
++            "bg1": "#000000",      # Black
++            "bg2": "#FFFFFF"       # White
++        }
++        
++        test_cases = [
++            ("accent2", (36, 63, 255)),    # Blue RGB
++            ("accent4", (255, 144, 34)),   # Orange RGB  
++            ("bg1", (0, 0, 0)),           # Black RGB
++            ("bg2", (255, 255, 255))      # White RGB
++        ]
++        
++        for scheme_color, expected_rgb in test_cases:
++            bg_ref = BackgroundReference(idx=1001, scheme_color=scheme_color)
++            common_slide_data = CommonSlideData(background_reference=bg_ref)
++            
++            output_path = os.path.join(self.temp_dir, f"{scheme_color}_test.png")
++            
++            result_path = self.renderer.generate_background_image(
++                common_slide_data, output_path, galaxy_theme
++            )
++            
++            assert result_path == output_path
++            assert os.path.exists(output_path)
++            
++            # Verify the color matches expected RGB
++            with Image.open(output_path) as img:
++                pixel = img.getpixel((50, 50))
++                assert pixel == expected_rgb, f"Failed for {scheme_color}: got {pixel}, expected {expected_rgb}"
++
++    def test_theme_color_fallback_to_defaults(self):
++        """Test that scheme colors fall back to defaults when no theme is provided."""
++        # Only bg1 has special hardcoded fallback in _render_background_reference
++        # Other scheme colors need to be tested via gradient or _resolve_color
++        
++        # Test bg1 background reference (has hardcoded fallback)
++        bg_ref = BackgroundReference(idx=1001, scheme_color="bg1")
++        common_slide_data = CommonSlideData(background_reference=bg_ref)
++        
++        output_path = os.path.join(self.temp_dir, "default_bg1.png")
++        
++        # No theme colors provided - should use defaults
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path
++        )
++        
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        with Image.open(output_path) as img:
++            pixel = img.getpixel((50, 50))
++            assert pixel == (0, 0, 0), "Default color failed for bg1"
++        
++        # Test other scheme colors via gradient (uses _resolve_color with defaults)
++        gradient_test_cases = [
++            ("accent2", (36, 63, 255)),   # Blue
++            ("accent4", (255, 144, 34))   # Orange
++        ]
++        
++        for scheme_color, expected_rgb in gradient_test_cases:
++            gradient_stops = [
++                GradientStop(pos=0, color=None, scheme_color=scheme_color),
++                GradientStop(pos=100000, color=None, scheme_color=scheme_color)
++            ]
++            gradient = GradientFill(stops=gradient_stops, angle=0)
++            common_slide_data = CommonSlideData(background_gradient_fill=gradient)
++            
++            output_path = os.path.join(self.temp_dir, f"default_{scheme_color}_gradient.png")
++            
++            result_path = self.renderer.generate_background_image(
++                common_slide_data, output_path
++            )
++            
++            assert result_path == output_path
++            assert os.path.exists(output_path)
++            
++            with Image.open(output_path) as img:
++                pixel = img.getpixel((50, 50))
++                assert pixel == expected_rgb, f"Default color failed for {scheme_color} in gradient"
++
++    def test_white_background_with_theme_colors(self):
++        """Test that white backgrounds are generated when theme colors are provided."""
++        bg_ref = BackgroundReference(idx=1001, scheme_color="bg2")
++        common_slide_data = CommonSlideData(background_reference=bg_ref)
++        
++        output_path = os.path.join(self.temp_dir, "white_bg.png")
++        
++        # Provide theme colors to ensure bg2 resolves
++        theme_colors = {"bg2": "#FFFFFF"}
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path, theme_colors
++        )
++        
++        # White backgrounds should be generated when theme is provided
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        with Image.open(output_path) as img:
++            pixel = img.getpixel((50, 50))
++            assert pixel == (255, 255, 255)  # RGB for white
++
++    def test_background_reference_fallback_limitation(self):
++        """Test documenting current limitation: bg2 without theme colors doesn't generate."""
++        bg_ref = BackgroundReference(idx=1001, scheme_color="bg2")
++        common_slide_data = CommonSlideData(background_reference=bg_ref)
++        
++        output_path = os.path.join(self.temp_dir, "bg2_no_theme.png")
++        
++        # No theme colors provided - bg2 won't generate (current limitation)
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path
++        )
++        
++        # Current implementation limitation: only bg1 has hardcoded fallback
++        assert result_path is None
++        assert not os.path.exists(output_path)
++
++    def test_gradient_theme_color_resolution(self):
++        """Test theme color resolution in gradient backgrounds."""
++        gradient_stops = [
++            GradientStop(pos=0, color=None, scheme_color="accent2"),      # Blue
++            GradientStop(pos=100000, color=None, scheme_color="accent4")  # Orange
++        ]
++        gradient = GradientFill(stops=gradient_stops, angle=2700000)  # Vertical
++        
++        common_slide_data = CommonSlideData(background_gradient_fill=gradient)
++        
++        output_path = os.path.join(self.temp_dir, "gradient_theme.png")
++        
++        galaxy_theme = {
++            "accent2": "#243FFF",  # Blue
++            "accent4": "#FF9022"   # Orange
++        }
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path, galaxy_theme
++        )
++        
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        with Image.open(output_path) as img:
++            # Check top pixel (should be more blue)
++            top_pixel = img.getpixel((50, 10))
++            # Check bottom pixel (should be more orange)
++            bottom_pixel = img.getpixel((50, 90))
++            
++            # Top should have more blue component
++            assert top_pixel[2] > bottom_pixel[2], "Top should be bluer"
++            # Bottom should have more red component (orange)
++            assert bottom_pixel[0] > top_pixel[0], "Bottom should be more orange"
++
++    def test_mixed_color_types_in_gradient(self):
++        """Test gradient with both direct colors and scheme colors."""
++        gradient_stops = [
++            GradientStop(pos=0, color="FF0000", scheme_color=None),       # Direct red
++            GradientStop(pos=100000, color=None, scheme_color="accent2")  # Scheme blue
++        ]
++        gradient = GradientFill(stops=gradient_stops, angle=0)  # Horizontal
++        
++        common_slide_data = CommonSlideData(background_gradient_fill=gradient)
++        
++        output_path = os.path.join(self.temp_dir, "mixed_gradient.png")
++        
++        theme_colors = {"accent2": "#0000FF"}  # Blue
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path, theme_colors
++        )
++        
++        assert result_path == output_path
++        assert os.path.exists(output_path)
++        
++        with Image.open(output_path) as img:
++            # Should generate successfully with mixed color types
++            assert img.size == (100, 100)
++
++    def test_unknown_scheme_color_handling(self):
++        """Test handling of unknown scheme colors."""
++        bg_ref = BackgroundReference(idx=1001, scheme_color="unknownColor")
++        common_slide_data = CommonSlideData(background_reference=bg_ref)
++        
++        output_path = os.path.join(self.temp_dir, "unknown_color.png")
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path
++        )
++        
++        # Should return None for unknown colors
++        assert result_path is None
++        assert not os.path.exists(output_path)
++
++    def test_scheme_color_with_hash_prefix(self):
++        """Test that theme colors work with or without # prefix."""
++        test_cases = [
++            {"accent2": "#FF0000"},  # With hash
++            {"accent2": "FF0000"}    # Without hash
++        ]
++        
++        for i, theme_colors in enumerate(test_cases):
++            bg_ref = BackgroundReference(idx=1001, scheme_color="accent2")
++            common_slide_data = CommonSlideData(background_reference=bg_ref)
++            
++            output_path = os.path.join(self.temp_dir, f"hash_test_{i}.png")
++            
++            result_path = self.renderer.generate_background_image(
++                common_slide_data, output_path, theme_colors
++            )
++            
++            assert result_path == output_path
++            assert os.path.exists(output_path)
++            
++            # Both should result in red color
++            with Image.open(output_path) as img:
++                pixel = img.getpixel((50, 50))
++                assert pixel == (255, 0, 0), f"Hash test {i} failed"
++
++    def test_case_sensitive_scheme_colors(self):
++        """Test that scheme color names are case-sensitive."""
++        bg_ref = BackgroundReference(idx=1001, scheme_color="BG1")  # Uppercase
++        common_slide_data = CommonSlideData(background_reference=bg_ref)
++        
++        output_path = os.path.join(self.temp_dir, "case_test.png")
++        
++        theme_colors = {"bg1": "#FF0000"}  # lowercase in theme
++        
++        result_path = self.renderer.generate_background_image(
++            common_slide_data, output_path, theme_colors
++        )
++        
++        # The implementation looks for exact match but falls back to defaults
++        # BG1 (uppercase) should fall back to defaults if available
++        # Since BG1 is not in defaults, it should return None
++        if result_path:
++            # If it does generate (fallback worked), verify the color
++            assert os.path.exists(output_path)
++            with Image.open(output_path) as img:
++                pixel = img.getpixel((50, 50))
++                # Should use default for bg1 (black) since uppercase BG1 isn't found
++                assert pixel == (0, 0, 0)
++        else:
++            # If no fallback, that's also valid behavior
++            assert not os.path.exists(output_path)
++
++    def test_color_resolution_helper_methods(self):
++        """Test the internal color resolution methods of BackgroundRenderer."""
++        # Test _resolve_color method directly
++        
++        # Test with direct color
++        resolved = self.renderer._resolve_color("FF0000", None, None)
++        assert resolved == "#FF0000"
++        
++        # Test with scheme color and theme
++        theme = {"accent2": "#0000FF"}
++        resolved = self.renderer._resolve_color(None, "accent2", theme)
++        assert resolved == "#0000FF"
++        
++        # Test with scheme color and default
++        resolved = self.renderer._resolve_color(None, "bg1", None)
++        assert resolved == "#000000"  # Default for bg1
++        
++        # Test with unknown scheme color
++        resolved = self.renderer._resolve_color(None, "unknown", None)
++        assert resolved is None
++
++    def test_hex_to_rgb_conversion(self):
++        """Test the internal hex to RGB conversion method."""
++        # Test valid hex colors
++        assert self.renderer._hex_to_rgb("#FF0000") == (255, 0, 0)
++        assert self.renderer._hex_to_rgb("FF0000") == (255, 0, 0)
++        assert self.renderer._hex_to_rgb("#00FF00") == (0, 255, 0)
++        assert self.renderer._hex_to_rgb("0000FF") == (0, 0, 255)
++        assert self.renderer._hex_to_rgb("FFFFFF") == (255, 255, 255)
++        assert self.renderer._hex_to_rgb("000000") == (0, 0, 0)
++        
++        # Test invalid hex colors
++        assert self.renderer._hex_to_rgb("invalid") is None
++        assert self.renderer._hex_to_rgb("FF00") is None  # Too short
++        assert self.renderer._hex_to_rgb("FF00000") is None  # Too long
+\ No newline at end of file

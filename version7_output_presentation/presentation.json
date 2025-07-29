@@ -1,0 +1,3512 @@
+{
+  "presentation": {
+    "id": "galaxy-001",
+    "title": "Galaxy Presentation",
+    "slides": [
+      {
+        "id": "slide-1",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Chapter 16Respiratory Physiology"
+          },
+          {
+            "type": "text-box",
+            "text": "VPHY 3100E\nPaul Eubig\npaul.eubig@uga.edu",
+            "style": {
+              "fontSize": 2800
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-2",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Lecture Outline"
+          },
+          {
+            "type": "text-box",
+            "text": "1. Introduction to respiratory system\n2. Physical aspects and mechanics of ventilation\n3. Factors affecting ventilation\n4. O2 & CO2 transport\n5. Acid-base balance \n6. Regulation of breathing",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image2.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image3.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image4.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-3",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Chapter 16Respiratory Physiology"
+          },
+          {
+            "type": "text-box",
+            "text": "Part 1 \u2013 Introduction to the respiratory system",
+            "style": {
+              "fontSize": 2800
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-4",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Functions of the Respiratory System"
+          },
+          {
+            "type": "text-box",
+            "text": "What is the purpose of this entire process?\nVentilation (breathing)",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "To move air into and out of respiratory system.",
+                "style": {
+                  "fontSize": 2200
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Gas exchange",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "External respiration \u2013 gas exchange between air and capillaries in the lungs",
+                "style": {
+                  "fontSize": 2200
+                }
+              },
+              {
+                "text": "Internal respiration \u2013 gas exchange between systemic capillaries and tissues of the body",
+                "style": {
+                  "fontSize": 2200
+                }
+              },
+              {
+                "text": "Pressure gradients generate diffusion",
+                "style": {
+                  "fontSize": 2200
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "O2 utilization and CO2 production",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Cellular respiration",
+                "style": {
+                  "fontSize": 2200
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image5.jpg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image6.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-5",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pulmonary Structures"
+          },
+          {
+            "type": "text-box",
+            "text": "Airway passages",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Conducting zone and respiratory zone",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Conducting zone",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Outside the lungs \u2013 nasal passages \uf0ae pharynx \uf0ae epiglottis \uf0ae larynx (glottis)",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Inside the lungs \u2013 trachea (1) \uf0ae bronchus (2 branches) \uf0ae bronchiole \uf0ae \u2026 \uf0ae terminal bronchiole",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Respiratory zone",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Respiratory bronchiole \uf0ae \u2026 \uf0ae alveolar sacs",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "What happens to individual airway diameter and length as go deeper into the lungs?\nCollective x-sectional area?",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image9.png"
+          },
+          {
+            "type": "image",
+            "src": "../media/image10.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-6",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Functions of Conducting Zone"
+          },
+          {
+            "type": "text-box",
+            "text": "Conducting zone:",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Passage of air",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Warming",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Humidification",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Filtration",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Immune surveillance",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "What is the source of the water vapor?",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "OUT of LUNGS",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Role of the mucociliary apparatus in removal of particulates.",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image11.jpg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image12.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image13.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image14.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-7",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Functions of Respiratory Zone"
+          },
+          {
+            "type": "text-box",
+            "text": "Respiratory zone: ",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Passage of air",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Gas exchange",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Immune surveillance",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image15.jpg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image14.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-8",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Alveoli Are the Site of Gas Exchange"
+          },
+          {
+            "type": "text-box",
+            "text": "Alveoli",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Total # = ~300 x 106 ",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "0.25 - 0.5 mm in diameter",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Total area = 60 - 80 m2",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Alveolar wall",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Type I alveolar cells \u2013 the major lining cells, accounts for 95-97% of total surface area",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Type II alveolar cells \u2013 production of surfactants",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Air-blood barrier = ~0.3 \uf06dm\t",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "slide-9",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Capillary Net Over Alveolar Sacs"
+          },
+          {
+            "type": "text-box",
+            "text": "Scanning electron micrograph of capillary net over alveoli.",
+            "style": {
+              "fontSize": 1400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image18.jpg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image19.JPG"
+          }
+        ]
+      },
+      {
+        "id": "slide-10",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Very Thin Diffusion Barrier for Gas Exchange"
+          },
+          {
+            "type": "text-box",
+            "text": "Layers of respiratory membrane:\n1. Fluid layer with surfactant.\n2. Type I alveolar cell membranes.\n(3. Narrow interstitial space.)\n4. Capillary endothelial cell membranes.",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image20.png"
+          },
+          {
+            "type": "image",
+            "src": "../media/image21.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-11",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Thoracic Cavity"
+          },
+          {
+            "type": "text-box",
+            "text": "Thoracic cavity surrounded by rib cage (chest wall) and the respiratory muscles. \nPleural (intra-pleural) space ",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Thin fluid layer between visceral pleura covering lungs (visceral) and parietal pleura lining thoracic cavity walls.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "*Air-free, potential space -> lungs cling to inside of thorax.",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Diaphragm \u2013 muscle between thoracic & abdominal cavities.",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Healthy pleural space (air introduced).",
+            "style": {
+              "fontSize": 1600
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image24.png"
+          },
+          {
+            "type": "image",
+            "src": "../media/image25.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-12",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Respiratory Muscles and Inspiration"
+          },
+          {
+            "type": "text-box",
+            "text": "Quiet Inspiration - active process:",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "1. Contraction of diaphragm \uf0ae \uf0ad thoracic vol vertically",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "2. Parasternal and external intercostals contract \uf0ae raising the ribs \uf0ae \uf0ad thoracic vol laterally (horizontally)",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Sternum",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Before Inspiration",
+            "style": {
+              "bold": true,
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Inspiration",
+            "style": {
+              "bold": true,
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image26.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image27.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image28.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-13",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Respiratory Muscles and Expiration"
+          },
+          {
+            "type": "text-box",
+            "text": "Quiet expiration \u2013 passive process, relaxation of inspiratory muscles.\nForced expiration \u2013 active process assisted by the abdominal muscles.",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Before Inspiration",
+            "style": {
+              "bold": true,
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Inspiration",
+            "style": {
+              "bold": true,
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Quiet Expiration",
+            "style": {
+              "bold": true,
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Forced Expiration",
+            "style": {
+              "bold": true,
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image26.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image27.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image29.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image30.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image28.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-14",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Chapter 16Respiratory Physiology"
+          },
+          {
+            "type": "text-box",
+            "text": "Part 2 \u2013 Physical aspects and mechanics of ventilation",
+            "style": {
+              "fontSize": 2800
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-15",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Physics of Gas Pressures 1"
+          },
+          {
+            "type": "text-box",
+            "text": "*Boyle\u2019s Law",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "At a constant temperature   P1V1 = P2V2",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Thoracic expansion and contraction -> air movement",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Boyle\u2019s Law",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image31.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-16",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pressure Gradients"
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "How do we get O2 into the body and CO2 out of the body?",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Ventilation = air in and out of lungs",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Results from pressure differences (gradient) induced by changes in lung volumes",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Pressure (P) gradient \u2013 results in net gas flow & diffusion from high P to low P",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Similar principles apply to respiration",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "For PO2 \u2013 alveolar space > blood plasma > interstitial fluid > cytosol > mitochondria ",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "For PCO2 \u2013 mitochondria > cytosol > interstitial fluid > blood plasma > alveoli",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image6.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-17",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pressure Gradients"
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Anatomically correct version of the last slide.",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "CELLULAR RESPIRATION",
+            "style": {
+              "bold": true,
+              "fontSize": 1200
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "CELLULAR RESPIRATION",
+            "style": {
+              "bold": true,
+              "fontSize": 1200
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image32.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-18",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "3 Pressures to Follow"
+          },
+          {
+            "type": "text-box",
+            "text": "Atmospheric \u2013 always 760 mm Hg\nAlveolar (Intrapulmonary) \u2013 at rest, during inspiration, during expiration\nPleural (Intrapleural) \u2013 at rest, during inspiration, during expiration",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image33.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-19",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Natural Properties of Lungs & Chest Wall"
+          },
+          {
+            "type": "text-box",
+            "text": "The lung can be viewed as a passive, elastic container.\nThe \u201cpleural space\u201d contains only a film of fluid, so lungs normally remain in contact with the chest walls.\nThe lung tends to recoil inward and the chest wall outward\n*These recoil forces in opposite directions create a negative (sub-atmospheric) pleural pressure: -3 to -4 mm Hg relative to atmospheric and alveolar pressures.\n-> Lungs expand and contract along with the thoracic cavity.\nWhat happens if the pleural space is disrupted by air or fluid?",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image34.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-20",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Importance of the Pleural Space"
+          },
+          {
+            "type": "text-box",
+            "text": "Mediastinum separates each side of thorax.\nAir (pneumothorax) or fluid (hydrothorax, generically) -> relative negative pressure lost -> lung lobes collapse.\nNew pressure gradient -> pneumothorax.",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Left-sided pneumothorax with a chest tube in place.",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "CT scan of right-sided hydropneumothorax. A = air, B = fluid.",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image35.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image36.jpg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image37.JPG"
+          }
+        ]
+      },
+      {
+        "id": "slide-21",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Mechanics of Breathing (Ventilation)"
+          },
+          {
+            "type": "text-box",
+            "text": "Ventilation occurs as a result of pressure gradients induced by changes in lung volume. \nDuring inspiration:",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Contraction of inspiratory muscles  \uf0ae \uf0ad chest vol \uf0ae \uf0ad pleural vol \uf0ae \uf0af pleural P \uf0ae  \uf0ad lung vol \uf0ae \uf0af alveolar P ",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "\uf0ae atmospheric P > alveolar P \uf0ae generation of pressure gradient \uf0ae air to flows into the lung",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Energy -> muscular contraction -> works against the elastic recoil forces of the lung. ",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "During (passive) expiration:",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "\uf0af lung vol \uf0ae \uf0ad alveolar pressure above atmosphere (alveolar P > atmospheric P) \uf0ae air goes out",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Elastic recoil forces of the lung contribute to change in pressure gradient.",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image38.jpg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image28.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image39.jpg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image40.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-22",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "text-box",
+            "text": "Relative pressures\nPleural P \u2013 ALWAYS lower than alveolar P & atmospheric P",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "ALWAYS negative (sub-atmospheric) ",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Alveolar P \u2013 may be \u201c-\u201d (inspiration) or \u201c+\u201d (expiration)\nTrans-pulmonary P = D P across the wall of the lung",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "= Alveolar P \u2013 Pleural P",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Always positive",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Increasing difference vs. decreasing difference.",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "title",
+            "text": "Alveolar & Pleural P"
+          },
+          {
+            "type": "text-box",
+            "text": "Atmospheric\nPressure",
+            "style": {
+              "fontSize": 1600
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "*Pressures relative to atmospheric pressure.",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image41.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-23",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pulmonary Volumes, Capacities, & Function Tests"
+          },
+          {
+            "type": "text-box",
+            "text": "Lung volumes - tidal vol (TV), inspiratory reserve vol (IRV), expiratory reserve vol (ERV), and residual vol (RV).\nLung capacities \u2013 inspiratory capacity (IC), functional residual capacity (FRC), vital capacity (VC), and total lung capacity (TLC).",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Capacity \u2013 sum of more than 1 volume",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Timed vital capacity (or forced expiration volume for the 1st second, FEV1) \u2013 normal is > 80%",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Spirometry",
+            "style": {
+              "bold": true,
+              "fontSize": 1600
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image43.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-24",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pulmonary Volumes & Capacities"
+          },
+          {
+            "type": "text-box",
+            "text": "*",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "*",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "*",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "*",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image44.png"
+          },
+          {
+            "type": "image",
+            "src": "../media/image45.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-25",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Dead Space"
+          },
+          {
+            "type": "text-box",
+            "text": "Dead space = regions of the airways that are ventilated but no gas exchange occurs.\nPhysiologic dead space = anatomic dead space + alveolar dead space\nAnatomic dead space",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "*Air in the conducting airways of respiratory system that does NOT participate in the gas exchange.",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Not all of the inspired air reaches the alveoli.",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Inhaled fresh air mixed with expired air in anatomical dead space.",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Alveolar or functional dead space",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "*Air in the respiratory zone that is ventilated but does NOT participate in gas exchange. ",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Due to lack of blood flow to those alveoli.",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image46.png"
+          },
+          {
+            "type": "image",
+            "src": "../media/image47.JPG"
+          }
+        ]
+      },
+      {
+        "id": "slide-26",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Ventilation-Perfusion Ratio (V/Q)"
+          },
+          {
+            "type": "text-box",
+            "text": "VA = alveolar ventilation\nQ = blood flow\nFor efficient gas exchange (O2 in, CO2 out), want level of ventilation to match blood flow in alveoli. V/Q \u2248 0.8\nVA is greater in the apices of the lungs -> high V/Q \u2013 overventilated and underperfused\nQ is greater in the basal lung lobes -> low V/Q \u2013 underventilated and overperfused",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image48.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-27",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Ventilation-Perfusion Ratio (V/Q)"
+          },
+          {
+            "type": "text-box",
+            "text": "Pulmonary arterioles try to maximize V/Q ratio \u2248 0.8\nSystemic arterioles (e.g., muscle beds) dilate if arterial O2 levels (PaO2) are low -> more blood with O2 delivered.\nPulmonary arterioles constrict if alveolar O2 levels (PAO2) are low. Dilate if PAO2 high. \nWhat does this accomplish if PAO2 is low in individual alveoli or a region of lung? \nIf PAO2 is high in alveoli or a region of lung?\nV/Q mismatch occurs with different disease states.",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image49.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-28",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Chapter 16Respiratory Physiology"
+          },
+          {
+            "type": "text-box",
+            "text": "Part 3 \u2013 Factors affecting ventilation",
+            "style": {
+              "fontSize": 2800
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-29",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Factors Affecting Ventilation"
+          },
+          {
+            "type": "text-box",
+            "text": "1. Compliance \u2013 distensibility (stretchability)",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Change in lung vol per change in transpulmonary P",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Compliance = \uf044V/\uf044P",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "100 x more distensible than a balloon",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Compliance is affected by elastance (2) ; and surface tension (3)",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "2. Elastance (elasticity) \u2013 recoil ability, resistance to distension",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Elasticity = 1/compliance",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Tendency to return to initial size after distension.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "High content of elastin proteins",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Elastic tension \uf0ad during inspiration and \uf0af during expiration",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Balloon analogy\nDiseases can alter compliance and elasticity (ahead). ",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "https://www.youtube.com/watch?v=v7477AMrUyc",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "3. Surface tension \u2013 to be discussed in the next slides",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image50.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-30",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Surface Tension"
+          },
+          {
+            "type": "text-box",
+            "text": "Thin film of liquid (water) lines alveoli.\nSurface tension (T)",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Reflects the work needed to \uf0ad surface area of a liquid at an interface.",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Law of Laplace \u2013 P in alveoli is directly proportional to surface tension; and inversely proportional to radius of alveoli.",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "T is the same for same interface.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "For the same T, smaller alveoli have higher P to collapse than larger alveoli.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "r=2 (P=T) vs. r=1 (P=2T) \uf0ae collapse of smaller alveoli",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "\uf0ad P \uf0ae \uf0af compliance \uf0ae takes more energy to expand.",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "What helps keep surface tension from collapsing our alveoli?",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image52.JPG"
+          },
+          {
+            "type": "image",
+            "src": "../media/image53.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-31",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Surfactants"
+          },
+          {
+            "type": "text-box",
+            "text": "Surfactants \u2013 biochemistry",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Produced by type II alveolar cells (pneumocytes).",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "1. Phospholipids \u2013 amphipathic",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "2. Surfactant proteins \u2013 help distribute phospholipids.",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Surfactants \u2013 functions",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Lower surface tension \uf0ae \uf0ad compliance.",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Prevent collapse of smaller alveoli.",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "As alveoli radius decreases, surfactant\u2019s ability to lower surface tension increases.",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image54.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-32",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pulmonary Disorders (1)"
+          },
+          {
+            "type": "text-box",
+            "text": "Newborn respiratory distress syndrome ",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Occurs in ~10% of premature neonates.",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Underdeveloped anatomy.",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Surfactant insufficiency.",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Every breath is like the first breath.",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image55.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image56.png"
+          },
+          {
+            "type": "image",
+            "src": "../media/image57.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-33",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pulmonary Disorders (2)"
+          },
+          {
+            "type": "text-box",
+            "text": "Restrictive Disorders",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Ex., pulmonary fibrosis\nAccumulation of fibrous connective tissue in alveolar wall.\n\uf0af vital capacity; normal FEV1; \uf0af compliance\n*Reduced lung volume\nEvident in which phase of ventilation?",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "text-box",
+            "text": " ",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image58.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-34",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pulmonary Disorders (3)"
+          },
+          {
+            "type": "text-box",
+            "text": " ",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Obstructive Disorders",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Ex., asthma, cystic fibrosis\nVital capacity may be normal; FEV1 is < 80%\n*Reduced airflow\nEvident in which phase of ventilation?",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image59.jpg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image60.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-35",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pulmonary Disorders (4)"
+          },
+          {
+            "type": "text-box",
+            "text": "Emphysema \u2013 alveolar tissue is destroyed, \uf0ad compliance",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Chronic progressive; reduces surface area for gas exchange",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Cigarette smoking \uf0ae \uf0ad WBC proteinases secretion \uf0ae \uf0ad destruction tissue proteins \uf0ae collapse of alveolar sacs",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "COPD (chronic obstructive pulmonary disease):",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Asthma & emphysema",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image61.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image62.JPG"
+          },
+          {
+            "type": "image",
+            "src": "../media/image63.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-36",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Chapter 16Respiratory Physiology"
+          },
+          {
+            "type": "text-box",
+            "text": "Part 4 \u2013 O2 & CO2 transport",
+            "style": {
+              "fontSize": 2800
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-37",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Physics of Gas Pressures 2"
+          },
+          {
+            "type": "text-box",
+            "text": "*Dalton\u2019s Law \u2013 the law of partial pressures",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "The pressure exerted by each component in a gaseous mixture is independent of other gases in the mixture, and the total pressure of the mixture of gases is equal to the sum of the separate pressures.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "PB = PCO2 + PO2 + PN2 + PH2O = 760 mm Hg atmospheric pressure",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Movement of individual gases",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image64.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-38",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Physics of Gas Pressures 3"
+          },
+          {
+            "type": "text-box",
+            "text": "Henry\u2019s Law: C = kP\nConcentration of gas in liquid = solubility x partial pressure in liquid.\nAt equilibrium, partial pressure is equal on both gas and liquid sides, but # of molecules varies depending on solubility of the gas.",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Henry\u2019s Law",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Partial pressure of each gas is the same for both.",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image65.JPG"
+          },
+          {
+            "type": "image",
+            "src": "../media/image66.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image67.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-39",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "The Concept of \u201cDissolved O2\u201d"
+          },
+          {
+            "type": "text-box",
+            "text": "Gases can exist in either in gas phase or in liquid phase (dissolved in blood plasma).\nDissolved gas molecules also exert partial P.\n\uf0ad Gas molecules dissolve in blood plasma \uf0ae \uf0ad [gas] in blood plasma \uf0ae \uf0ad P.\nAt equilibrium, the # of gas molecules entering (dissolving in) the plasma equals the # of gas molecules leaving the plasma to air phase.\nAt equilibrium does not mean that the # of gas molecules (concentration) in the air and the liquid are equal.",
+            "style": {
+              "fontSize": 2000
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-40",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Respiration and Pressure Gradient"
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "How do we get O2 into the body and CO2 out of the body?  (Ventilation) ",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "A) In and out of the lungs:",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Gas exchange results from pressure differences (gradient) induced by changes in lung volumes.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "B) From the lungs to the cells in the body (O2) and from the cells in the body to the lungs (CO2):",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "*For PO2 \u2013 alveolar space PAO2 > blood plasma PaO2 > interstitial fluid > cytosol > mitochondria ",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "*For PCO2 \u2013 mitochondria > cytosol > interstitial fluid > blood plasma PvCO2 > alveoli PACO2",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Higher PO2 Lower PCO2",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Higher PCO2 Lower PO2",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "PA",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Pa",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Pa",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Pv",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Pv",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "PA = partial pressure alveolar\nPa = partial pressure arterial\nPv = partial pressure venous",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image69.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-41",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pulmonary Circulation vs. Systemic Circulation"
+          },
+          {
+            "type": "text-box",
+            "text": "Rate of blood flow through the pulmonary circulation = flow rate through the systemic circulation.\nPulmonary vascular resistance is lower -> lower BP.",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Structure of pulmonary arteries \u2013 contains less smooth muscle",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "What purposes might this serve?",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Look at all those systemic vessels vs. much less pulmonary vessels!",
+            "style": {
+              "fontSize": 1400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Vena cavae",
+            "style": {
+              "fontSize": 1400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "RA -> RV",
+            "style": {
+              "fontSize": 1400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "LA -> LV",
+            "style": {
+              "fontSize": 1400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "Please know the path of blood through the heart, lungs, and systemic circulation.",
+            "style": {
+              "fontSize": 1400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image70.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image71.png"
+          },
+          {
+            "type": "image",
+            "src": "../media/image72.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-42",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Partial Pressures of Gases"
+          },
+          {
+            "type": "text-box",
+            "text": "Generation of pressure gradients for net gas exchange.\nWhat is the P gradient for O2 in the lungs (PvO2 vs. PaO2)? \nFor CO2?\nAssuming correctly that every O2 molecule consumed -> one CO2 molecule (roughly)\u2026why the big difference between O2 and CO2?",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "5",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "64",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image73.jpg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image74.png"
+          },
+          {
+            "type": "image",
+            "src": "../media/image75.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-43",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "CO2 Diffuses Much More Readily in Plasma Than O2"
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Solubility coefficient CO2/solubility coefficient O2 = 0.57/0.024 = 23.75/1.",
+                "style": {
+                  "fontSize": 2200
+                }
+              },
+              {
+                "text": "CO2 has a much higher diffusion rate in fluid/tissue phase vs. O2.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Need a much higher diffusion gradient for O2 to supply enough molecules to tissues to produce ATP.",
+                "style": {
+                  "fontSize": 2200
+                }
+              },
+              {
+                "text": "Much lower diffusion gradient for CO2 needed to bring enough molecules to lung for exhalation. ",
+                "style": {
+                  "fontSize": 2200
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image76.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-44",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Forms of O2 Transport"
+          },
+          {
+            "type": "text-box",
+            "text": "O2 is transported in blood in:",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "1. Dissolved O2 (< 2%) ",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "2. Hb-O2 (> 98%)",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Hemoglobin \u2013 280 million Hb/Red Blood Cell",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Each Hb has 4 polypeptide chains and 4 hemes",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "*1 heme binds to 1 O2, thus 1 Hb binds to 4 O2 maximally",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Oxyhemoglobin (Hb-O2) \u2013 O2 binds to Fe2+  of heme\nDeoxyhemoglobin \u2013 Hb only, no O2, also contain Fe2+ (oxygenation, not oxidation)",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image78.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-45",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Hemoglobin"
+          },
+          {
+            "type": "text-box",
+            "text": "Oxygen-carrying capacity of blood determined by its [Hb].",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Anemia - \u2193 RBCs -> [Hb] below normal.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Polycythemia - \u2191 RBCs -> [Hb] above normal.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Hb production controlled by erythropoietin.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Production stimulated by PCO2 delivery to kidneys.",
+                "style": {
+                  "fontSize": 2400
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Loading/unloading depends on P gradient .",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image79.jpeg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image80.png"
+          },
+          {
+            "type": "image",
+            "src": "../media/image81.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-46",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Problems Related to Hemoglobin"
+          },
+          {
+            "type": "text-box",
+            "text": "Methemoglobin \u2013 Fe2+ oxidized -> Fe3+, cannot bind with O2.",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Brown blood, brownish-blue mucous membranes.",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Carboxyhemoglobin (CO-Hb) \u2013 carbon monoxide.",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "The bond with CO is 210x stronger than the bond with O2.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Transport of O2 to tissues is impaired.",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image82.jpg"
+          },
+          {
+            "type": "image",
+            "src": "../media/image83.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-47",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Hb-O2 Dissociation Curve"
+          },
+          {
+            "type": "text-box",
+            "text": "X-axis denotes PO2 (mm Hg)\nY-axis denotes O2 saturation rate (%) or O2 content (mL O2 /dL blood)\nThe higher the PO2, the higher Hb-O2 saturation",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image84.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-48",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Hb-O2 Saturation"
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Gas exchange at alveolar space \u2192 loading of O2 \u2192 oxygenated blood \u2192 PO2 = 100 mm Hg \u2192 O2-Hb is ~98%.",
+                "style": {
+                  "fontSize": 2200
+                }
+              },
+              {
+                "text": "At peripheral tissues \u2192 unloading of O2 \u2192 deoxygenated blood \u2192 PO2 = to 40 mm Hg \u2192 O2-Hb is ~ 75%.",
+                "style": {
+                  "fontSize": 2200
+                }
+              },
+              {
+                "text": "The physiological range of represents the flatter portion of the sigmoid Hb-O2 curve",
+                "style": {
+                  "fontSize": 2200
+                }
+              },
+              {
+                "text": "Only ~20-25% of O2 from Hb-O2 is unloaded",
+                "style": {
+                  "fontSize": 2200
+                }
+              },
+              {
+                "text": "How about the steep portion of the curve?",
+                "style": {
+                  "fontSize": 2200
+                }
+              },
+              {
+                "text": "What happens to unloading of O2 when PO2 \u2193 \u2193?",
+                "style": {
+                  "fontSize": 2200
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image85.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-49",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Hb-O2 Saturation: Affinity of Hb for O2 Changes"
+          },
+          {
+            "type": "text-box",
+            "text": "Structure of Hb changes conformation as subsequent O2\u2019s bind or depart.\n Affinity of Hb for O2 increases as more O2 binds -> Hb holds O2 more tightly at higher PO2\u2019s (pulmonary capillary beds).\nAffinity of Hb for O2 decreases as more O2 departs -> Hb holds O2 less tightly at lower PO2\u2019s (tissue capillary beds).",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image86.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-50",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Hb-O2 Saturation: A More Helpful Figure"
+          },
+          {
+            "type": "text-box",
+            "text": "This figure incorporates the role of affinity of Hb for O2 based on PO2. ",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image87.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-51",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Factors Affecting Hb-O2 Curve"
+          },
+          {
+            "type": "text-box",
+            "text": "Shifts in the curve reflect the effect of a physiological factor on affinity of Hb for O2.\nA shift of curve to left increases affinity of Hb for O2. What does this mean in the lungs? In the tissues?\nA shift of curve to the right decreases affinity of Hb for O2. What does this mean in the lungs? In the tissues?",
+            "style": {
+              "fontSize": 2400
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-52",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Factors Affecting Hb-O2 Curve"
+          },
+          {
+            "type": "text-box",
+            "text": "For each factor, ask yourself whether the change will result in a greater need for O2 in the tissues. \u201cYes\u201d -> right shift. \nFactors affecting O2-Hb affinity",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "\u2193 pH (acidosis) \u2192 right shift",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "\u2191 PCO2 (suggests hypoxemia) \u2192 right shift (Bohr effect)",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "\u2191 temperature \u2192 right shift",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "\u2191 [2,3-DPG] in RBC \u2192 right shift  ",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "What about left shifts?",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image89.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-53",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "2,3-DPG Alters Affinity of Hb for O2"
+          },
+          {
+            "type": "text-box",
+            "text": "2,3-diphosphoglycerate or 2,3 bisphosphoglycerate (2,3-BPG)\nMetabolic by-product of glycolysis in RBCs.\nO2 inhibits its production.\n2,3-DPG binds Hb -> decrease in affinity for O2 -> right shift where more O2 is released in tissues.\n2,3-DPG production \u2191 with hypoxemic conditions",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Anemia",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "High altitudes",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Some forms of chronic lung disease",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image90.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-54",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Muscle Myoglobin"
+          },
+          {
+            "type": "text-box",
+            "text": "Red pigment found exclusively in striated muscle (skeletal and cardiac muscle fibers).\n*Has a higher affinity for O2 than Hb.\nFerrying effect \u2013 acts as a \u201cgo-between\u201d in the transfer of O2 from blood to the mitochondria within muscle cells.\nO2 storage function \u2013 in cardiac muscles.",
+            "style": {
+              "fontSize": 2400
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-55",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Chapter 16Respiratory Physiology"
+          },
+          {
+            "type": "text-box",
+            "text": "Part 5 \u2013 Acid-base balance",
+            "style": {
+              "fontSize": 2800
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-56",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Acid-Base Balance Part I"
+          },
+          {
+            "type": "text-box",
+            "text": "Normal blood pH is 7.40 (7.35 \u2013 7.45)",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Acidosis \u2013 pH < 7.35  \u2191 H+ ions",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Alkalosis \u2013 pH > 7.45  \u2193 H+ ions",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "2 major classes of acids in body:",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "A volatile acid can be converted to a gas ",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "CO2 in bicarbonate buffer system can be breathed out (lungs).",
+                "style": {
+                  "fontSize": 2400
+                }
+              },
+              {
+                "text": "All other acids are non-volatile and cannot leave blood",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Non-volatile acids \u2013 lactic acid, fatty acids, ketone bodies.",
+                "style": {
+                  "fontSize": 2400
+                }
+              },
+              {
+                "text": "Need to bind to buffer molecules.",
+                "style": {
+                  "fontSize": 2400
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Buffers in the body include HCO3\u2013, PO42\u2013, proteins including Hb.\nKidneys \u2013 excrete H+ into urine, reabsorb HCO3- from urine (Part II).",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image92.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-57",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Bicarbonate Buffer System"
+          },
+          {
+            "type": "text-box",
+            "text": "CO2 + H2O \u21cc H2CO3 \u21cc H+ + HCO3-\nCarbon dioxide \u21cc carbonic acid \u21cc bicarbonate\nCA = carbonic anhydrase enzyme",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Catalyzes reaction both directions.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Higher expression in RBCs, gastric mucosa, pancreatic exocrine cells, renal tubules.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Why would it be in all these tissues?",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Henderson-Hasselbalch equation",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "pH = 6.1 + log ( [HCO3-] / [CO2] )",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "[CO2] is adjusted by lungs, [HCO3-] by kidneys",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Free H+ in nmol/L concentrations, free HCO3- in mmol/L concentrations.",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "text-box",
+            "text": "CA",
+            "style": {
+              "bold": true,
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image93.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-58",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Acid-Base Balance"
+          },
+          {
+            "type": "text-box",
+            "text": "CO2 + H2O \u21cc H2CO3 \u21cc H+ + HCO3-",
+            "style": {
+              "fontSize": 2600
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "What effect does adding HCO3- have on plasma [H+]?",
+                "style": {
+                  "fontSize": 2600
+                }
+              },
+              {
+                "text": "What does increased [HCO3-] do to pH? Decreased?",
+                "style": {
+                  "fontSize": 2600
+                }
+              },
+              {
+                "text": "What effect does adding CO2 have on plasma [H+]?",
+                "style": {
+                  "fontSize": 2600
+                }
+              },
+              {
+                "text": "What does increased [CO2] do to pH? Decreased?",
+                "style": {
+                  "fontSize": 2600
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image93.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-59",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Respiratory Acid-Base Balance"
+          },
+          {
+            "type": "text-box",
+            "text": "*Ventilation usually adjusted to metabolic rate to maintain normal CO2 levels.\nWhat does increased respiratory rate or ventilation do to plasma [CO2]?\nWhat does decreased respiratory rate or ventilation do to plasma [CO2]?\nSo how would the lungs (controlled by the brain) respond to \u2191 plasma [CO2], \u2191 plasma [H+], and \u2193 plasma pH?\nAnd how would the lungs (controlled by the brain) respond to \u2193 plasma [CO2], \u2193 plasma [H+], and \u2191 plasma pH?",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image94.JPG"
+          }
+        ]
+      },
+      {
+        "id": "slide-60",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Respiratory Acid-Base Balance"
+          },
+          {
+            "type": "text-box",
+            "text": "Respiratory acidosis",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Caused by hypoventilation \u2013 CNS depression, neuromuscular disorders, chest wall restriction, pulmonary tissue disease, airway obstruction.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Accumulation of CO2 in the tissues \uf0ae \uf0ad PCO2 in blood \uf0ae \uf0af pH in blood",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Respiratory alkalosis",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Caused by hyperventilation \u2013 CNS disease, acute asthma, hypoxemia.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Excessive loss of CO2 \uf0ae \uf0af PCO2 \uf0ae \uf0ad pH in blood",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Where is the H+ when CO2 is exhaled?",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image94.JPG"
+          }
+        ]
+      },
+      {
+        "id": "slide-61",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Now You Are Ready for CO2 Transport"
+          },
+          {
+            "type": "text-box",
+            "text": "CO2 transported in the blood in 3 forms: ",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Dissolved CO2 (10%) \u2013 accounts for PCO2",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "HCO3- (70%)",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Carbaminohemoglobin (20%)",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Unloading of O2 \uf0ae Hb-CO2 formed",
+                "style": {
+                  "fontSize": 2400
+                }
+              },
+              {
+                "text": "CO2 does NOT bind heme in Hb.",
+                "style": {
+                  "fontSize": 2400
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "3 things to remember to understand this:\nCarbonic anhydrase is located in RBCs.\nCO2 readily crosses plasma membranes.\nBicarb (HCO3-) needs to be transported across plasma membranes. Antiporter exchanges chloride (Cl-) for bicarb.",
+            "style": {
+              "fontSize": 2400
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-62",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Now You Are Ready for CO2 Transport"
+          },
+          {
+            "type": "text-box",
+            "text": "At systemic capillaries",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Chloride shift into RBCs",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "At pulmonary capillaries",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Reverse chloride shift out of RBCs",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image97.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-63",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Chapter 16Respiratory Physiology"
+          },
+          {
+            "type": "text-box",
+            "text": "Part 6 \u2013 Regulation of breathing",
+            "style": {
+              "fontSize": 2800
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-64",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Regulation of Breathing"
+          },
+          {
+            "type": "text-box",
+            "text": "For metabolic homeostasis, the frequency and amplitude of breathing must respond to metabolic changes. \nSensors: Chemoreceptors for chemical changes, mechanoreceptors for mechanical changes.\nIntegrator: Brain",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Continuous display of voluntary and involuntary actions.",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Voluntary action is done by cerebrum, hypothalamus, limbic system (anger).",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Involuntary action is done by the brain stem respiratory centers (medulla oblongata and pons).",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Brain stem respiratory centers",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Rhythmicity center (medulla)",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Apneustic center (pons)",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Pneumotaxic center (pons)",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Effectors: Respiratory muscles.",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image99.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-65",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "text-box",
+            "text": "2 groups of chemoreceptors that monitor changes in blood PCO2, PO2, and pH.\nCentral chemoreceptors:",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Located in medulla, different from the rhythmicity center.",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "More sensitive to blood PCO2 than blood pH (due to the BBB).",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Peripheral chemoreceptors:",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Carotid and aortic bodies",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Directly detect changes in PO2",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "Indirectly detect changes in PCO2 through pH",
+                "style": {
+                  "fontSize": 1800
+                }
+              },
+              {
+                "text": "H2O + CO2 \uf0ab H2CO3 \uf0ab H+ + HCO3-",
+                "style": {
+                  "fontSize": 2400
+                }
+              },
+              {
+                "text": "More sensitive to changes in blood pH than PO2 ",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "title",
+            "text": "Sensors \u2013 Chemoreceptors"
+          },
+          {
+            "type": "text-box",
+            "text": "Peripheral Chemoreceptors",
+            "style": {
+              "fontSize": 1800
+            }
+          },
+          {
+            "type": "image",
+            "src": "../media/image100.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-66",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "text-box",
+            "text": "Baroreceptors: Carotid sinuses and aortic arch\nChemoreceptors: Carotid bodies and aortic bodies",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "title",
+            "text": "Reminder"
+          },
+          {
+            "type": "image",
+            "src": "../media/image101.jpg"
+          }
+        ]
+      },
+      {
+        "id": "slide-67",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pulmonary Mechanoreceptors (1)"
+          },
+          {
+            "type": "text-box",
+            "text": "Detect mechanical changes of breathing (volume and frequency).\nInfluence the brain stem respiratory control centers via sensory fibers in vagus nerves.\nPulmonary stretch receptors (PSR) \u2013 detect volume changes; present in the smooth muscle of the airways; slowly adapting; activated during inspiration to force expiration.\nHering-Breuer inflation reflex:",
+            "style": {
+              "fontSize": 2400
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Triggered to prevent over-inflation of the lungs.",
+                "style": {
+                  "fontSize": 1800
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image102.JPG"
+          }
+        ]
+      },
+      {
+        "id": "slide-68",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Pulmonary Mechanoreceptors (2)"
+          },
+          {
+            "type": "text-box",
+            "text": "Pulmonary irritant receptors (PIR)",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "A.k.a. \u2013 rapidly adaptive receptors on A\u03b4 fibers",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Detect frequency of breathing",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Respond to smoke, smog, and particulates -> cause coughing",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Unmyelinated C fibers",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Sensory neurons located in lungs",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Stimulated by noxious substances such as capsaicin",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Produces initial apnea -> rapid, shallow breathing",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image103.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-69",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "The Rhythmicity Center"
+          },
+          {
+            "type": "text-box",
+            "text": "Located in medulla oblongata",
+            "style": {
+              "fontSize": 2200
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "generate automatic basic rhythm of breathing",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Basic rhythm is irregular, erratic, and unstable. It is NOT the normal rhythm",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Consists of interacting neurons that fire either during inspiration (I neurons) or expiration (E neurons)",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Quiet expiration is a passive process that occurs when the I neurons are inhibited",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Dorsal respiratory group (DRG) \u2013 inspiration\nVentral respiratory group (VRG) - expiration",
+            "style": {
+              "fontSize": 2200
+            }
+          }
+        ]
+      },
+      {
+        "id": "slide-70",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "The Pontine Centers"
+          },
+          {
+            "type": "text-box",
+            "text": "Basic rhythm generated by the medullary rhythmicity center must be adjusted by pons.\nApneustic center:",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Promotes long inspiration and sharp expiration (apneustic breathing).",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "text-box",
+            "text": "Pneumotaxic center:",
+            "style": {
+              "fontSize": 2000
+            }
+          },
+          {
+            "type": "bullet-list",
+            "items": [
+              {
+                "text": "Needs to work together with apneustic center.",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Antagonizes the apneustic center\u2019s effects.",
+                "style": {
+                  "fontSize": 2000
+                }
+              },
+              {
+                "text": "Inhibits inspiration, thus the normal rhythm.",
+                "style": {
+                  "fontSize": 2000
+                }
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "../media/image105.jpeg"
+          }
+        ]
+      },
+      {
+        "id": "slide-71",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Overview"
+          },
+          {
+            "type": "image",
+            "src": "../media/image106.png"
+          }
+        ]
+      },
+      {
+        "id": "slide-72",
+        "layout": "blank",
+        "elements": [
+          {
+            "type": "title",
+            "text": "Questions?"
+          },
+          {
+            "type": "text-box",
+            "text": " ",
+            "style": {
+              "fontSize": 2800
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
