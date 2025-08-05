@@ -192,8 +192,8 @@ class HtmlWriter:
             except Exception as e:
                 # Fallback rendering if element renderer fails
                 print(
-                    f"Warning: Failed to render shape {
-                        getattr(shape, 'id', 'unknown')}: {e}"
+                    f"Warning: Failed to render shape "
+                    f"{getattr(shape, 'id', 'unknown')}: {e}"
                 )
                 if shape.transform:
                     from learnx_parser.writers.css_utils import CoordinateConverter
@@ -203,9 +203,11 @@ class HtmlWriter:
                     if position:
                         css = CoordinateConverter.generate_absolute_css(
                             position, 100)
-                        fallback_html = f'<div class="shape-fallback" style="{
-                            # 999;">Shape (fallback)</div>'
-                            css} background: lightcoral; border: 1px solid
+                        fallback_html = (
+                            f'<div class="shape-fallback" style="{css} '
+                            f'background: lightcoral; border: 1px solid #999;">'
+                            f'Shape (fallback)</div>'
+                        )
                         html_parts.append(fallback_html)
 
         # Render all pictures with absolute positioning
@@ -216,8 +218,8 @@ class HtmlWriter:
             except Exception as e:
                 # Fallback rendering if element renderer fails
                 print(
-                    f"Warning: Failed to render picture {
-                        getattr(picture, 'id', 'unknown')}: {e}"
+                    f"Warning: Failed to render picture",
+                    f"{getattr(picture, 'id', 'unknown')}: {e}"
                 )
                 if picture.transform:
                     from learnx_parser.writers.css_utils import CoordinateConverter
@@ -227,9 +229,11 @@ class HtmlWriter:
                     if position:
                         css = CoordinateConverter.generate_absolute_css(
                             position, 300)
-                        fallback_html = f'<div class="picture-fallback" style="{
-                            #666;">Picture (fallback)</div>'
-                            css} background: lightblue; border: 1px solid
+                        fallback_html = (
+                            f'<div class="shape-fallback" style="{css} '
+                            f'background: lightcoral; border: 1px solid #999;">'
+                            f'Shape (fallback)</div>'
+                        )
                         html_parts.append(fallback_html)
 
         # Render all group shapes with absolute positioning
@@ -240,8 +244,8 @@ class HtmlWriter:
             except Exception as e:
                 # Fallback rendering if element renderer fails
                 print(
-                    f"Warning: Failed to render group shape {
-                        getattr(group_shape, 'id', 'unknown')}: {e}"
+                    f"Warning: Failed to render group shape"
+                    f"{getattr(group_shape, 'id', 'unknown')}: {e}"
                 )
                 if group_shape.transform:
                     from learnx_parser.writers.css_utils import CoordinateConverter
@@ -252,9 +256,11 @@ class HtmlWriter:
                     if position:
                         css = CoordinateConverter.generate_absolute_css(
                             position, 100)
-                        fallback_html = f'<div class="group-fallback" style="{
-                            #333;">Group (fallback)</div>'
-                            css} background: lightgreen; border: 1px solid
+                        fallback_html = (
+                            f'<div class="group-fallback" style="{css} '
+                            f'background: lightgreen; border: 1px solid #333;">'
+                            f'Group (fallback)</div>'
+                        )
                         html_parts.append(fallback_html)
 
         # Render all graphic frames with absolute positioning
@@ -265,8 +271,8 @@ class HtmlWriter:
             except Exception as e:
                 # Fallback rendering if element renderer fails
                 print(
-                    f"Warning: Failed to render graphic frame {
-                        getattr(graphic_frame, 'id', 'unknown')}: {e}"
+                    f"Warning: Failed to render graphic frame"
+                    f"{getattr(graphic_frame, 'id', 'unknown')}: {e}"
                 )
                 if graphic_frame.transform:
                     from learnx_parser.writers.css_utils import CoordinateConverter
@@ -277,9 +283,11 @@ class HtmlWriter:
                     if position:
                         css = CoordinateConverter.generate_absolute_css(
                             position, 100)
-                        fallback_html = f'<div class="frame-fallback" style="{
-                            #444;">Frame (fallback)</div>'
-                            css} background: lightyellow; border: 1px solid
+                        fallback_html = (
+                            f'<div class="group-fallback" style="{css} '
+                            f'background: lightgreen; border: 1px solid #444;">'
+                            f'Group (fallback)</div>'
+                        )
                         html_parts.append(fallback_html)
 
         # If no elements, show placeholder
@@ -408,13 +416,13 @@ class HtmlWriter:
         except Exception as e:
             if slide_xml_path:
                 print(
-                    f"Warning: Error parsing slide background from {
-                        slide_xml_path}: {e}"
+                    f"Warning: Error parsing slide background from",
+                    f"{slide_xml_path}: {e}"
                 )
             else:
                 print(
-                    f"Warning: Error parsing slide background for slide {
-                        slide.slide_number}: {e}"
+                    f"Warning: Error parsing slide background for slide",
+                    f"{slide.slide_number}: {e}"
                 )
 
         return ""
@@ -498,8 +506,8 @@ class HtmlWriter:
 
         except Exception as e:
             print(
-                f"Warning: Error finding slide XML path for slide {
-                    slide_number}: {e}"
+                f"Warning: Error finding slide XML path for slide",
+                f"{slide_number}: {e}"
             )
 
         return None
@@ -620,8 +628,8 @@ class HtmlWriter:
                             return os.path.join(self.pptx_unpacked_path, "ppt", target)
 
         except Exception as e:
-            print(f"Warning: Error resolving image relationship {
-                  r_embed}: {e}")
+            print(f"Warning: Error resolving image relationship",
+                  f"{r_embed}: {e}")
 
         return None
 
@@ -734,13 +742,13 @@ class HtmlWriter:
         except Exception as e:
             if slide_xml_path:
                 print(
-                    f"Warning: Error parsing layout background for slide {
-                        slide.slide_number}: {e}"
+                    f"Warning: Error parsing layout background for slide",
+                    f"{slide.slide_number}: {e}"
                 )
             else:
                 print(
-                    f"Warning: Error parsing layout background for slide {
-                        slide.slide_number}: {e}"
+                    f"Warning: Error parsing layout background for slide",
+                    f"{slide.slide_number}: {e}"
                 )
 
         return ""
@@ -935,8 +943,8 @@ class HtmlWriter:
 
         except Exception as e:
             print(
-                f"Warning: Error extracting master background from {
-                    master_path}: {e}"
+                f"Warning: Error extracting master background from",
+                f"{master_path}: {e}"
             )
 
         return ""
