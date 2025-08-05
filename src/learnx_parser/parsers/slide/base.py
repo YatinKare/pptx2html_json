@@ -50,13 +50,15 @@ class SlideParser:
         self.slide_width = slide_width
         # Height of the slide in EMUs, inherited from presentation properties
         self.slide_height = slide_height
-        
+
         # Store the presentation object containing all shared resources
         self.presentation = presentation
-        
+
         # Presentation-level default text styles for theme inheritance
-        self.presentation_defaults = presentation_defaults or (presentation.presentation_defaults if presentation else {})
-        
+        self.presentation_defaults = presentation_defaults or (
+            presentation.presentation_defaults if presentation else {}
+        )
+
         # Style resolver instance - create from presentation data or use passed instance
         if style_resolver:
             self.style_resolver = style_resolver
@@ -68,7 +70,7 @@ class SlideParser:
                 presentation_defaults_obj = PresentationDefaults()
                 self.style_resolver = StyleResolver(
                     slide_master=slide_layout.slide_master,
-                    presentation_defaults=presentation_defaults_obj
+                    presentation_defaults=presentation_defaults_obj,
                 )
             else:
                 self.style_resolver = None
@@ -92,10 +94,10 @@ class SlideParser:
 
     def _resolve_relationship(self, r_embed: str) -> str | None:
         """Resolve a relationship ID to an absolute file path.
-        
+
         Args:
             r_embed: Relationship ID (e.g., "rId2")
-            
+
         Returns:
             Absolute path to the resolved file, or None if not found
         """
@@ -104,18 +106,24 @@ class SlideParser:
             # Convert relative path to absolute path
             if relative_path.startswith("../"):
                 # Handle relative paths like "../media/image1.jpeg"
-                absolute_path = os.path.join(self.pptx_unpacked_path, "ppt", relative_path[3:])
+                absolute_path = os.path.join(
+                    self.pptx_unpacked_path, "ppt", relative_path[3:]
+                )
             else:
                 # Handle direct paths like "media/image1.jpeg"
-                absolute_path = os.path.join(self.pptx_unpacked_path, "ppt", relative_path)
-            
+                absolute_path = os.path.join(
+                    self.pptx_unpacked_path, "ppt", relative_path
+                )
+
             # Verify the file exists
             if os.path.exists(absolute_path):
                 return absolute_path
-        
+
         return None
 
-    def _extract_common_slide_data(self, slide_layout_obj: SlideLayout | None = None) -> CommonSlideData:
+    def _extract_common_slide_data(
+        self, slide_layout_obj: SlideLayout | None = None
+    ) -> CommonSlideData:
         # Initialize CommonSlideData with slide width and height
         common_slide_data = CommonSlideData(cx=self.slide_width, cy=self.slide_height)
 
@@ -140,7 +148,7 @@ class SlideParser:
                     )
                     if scheme_color_element is not None:
                         scheme_color = scheme_color_element.get("val")
-                    
+
                     common_slide_data.background_reference = BackgroundReference(
                         idx=idx, scheme_color=scheme_color
                     )
@@ -160,8 +168,8 @@ class SlideParser:
                                 ".//a:srgbClr", namespaces=self.nsmap
                             )
                             if srgb_color_element is not None:
-                                common_slide_data.background_color = srgb_color_element.get(
-                                    "val"
+                                common_slide_data.background_color = (
+                                    srgb_color_element.get("val")
                                 )
                         else:
                             # Check for gradient fill background
@@ -195,7 +203,9 @@ class SlideParser:
                                     ) in gradient_stop_list_element.findall(
                                         ".//a:gs", namespaces=self.nsmap
                                     ):
-                                        position = int(gradient_stop_element.get("pos", 0))
+                                        position = int(
+                                            gradient_stop_element.get("pos", 0)
+                                        )
                                         stop_color = None
                                         stop_scheme_color = None
                                         # Extract SRGB color for the stop
@@ -208,7 +218,8 @@ class SlideParser:
                                             # Extract scheme color for the stop
                                             scheme_color_element = (
                                                 gradient_stop_element.find(
-                                                    ".//a:schemeClr", namespaces=self.nsmap
+                                                    ".//a:schemeClr",
+                                                    namespaces=self.nsmap,
                                                 )
                                             )
                                             if scheme_color_element is not None:
@@ -223,7 +234,9 @@ class SlideParser:
                                                 scheme_color=stop_scheme_color,
                                             )
                                         )
-                                common_slide_data.background_gradient_fill = gradient_fill
+                                common_slide_data.background_gradient_fill = (
+                                    gradient_fill
+                                )
                             else:
                                 # Check for image fill background (blipFill)
                                 blip_fill_element = background_properties_element.find(
@@ -240,24 +253,31 @@ class SlideParser:
                                         )
                                         if r_embed:
                                             # Resolve the relationship to get the image path
-                                            image_path = self._resolve_relationship(r_embed)
+                                            image_path = self._resolve_relationship(
+                                                r_embed
+                                            )
                                             if image_path:
                                                 common_slide_data.background_image_path = image_path
 
         # Inherit background properties from layout if no slide-level background is found
-        if (not common_slide_data.background_color and 
-            not common_slide_data.background_gradient_fill and 
-            not common_slide_data.background_reference and 
-            not common_slide_data.background_image_path and 
-            slide_layout_obj):
-            
+        if (
+            not common_slide_data.background_color
+            and not common_slide_data.background_gradient_fill
+            and not common_slide_data.background_reference
+            and not common_slide_data.background_image_path
+            and slide_layout_obj
+        ):
             # Inherit background properties from layout
             if slide_layout_obj.background_color:
                 common_slide_data.background_color = slide_layout_obj.background_color
             elif slide_layout_obj.background_gradient_fill:
-                common_slide_data.background_gradient_fill = slide_layout_obj.background_gradient_fill
+                common_slide_data.background_gradient_fill = (
+                    slide_layout_obj.background_gradient_fill
+                )
             elif slide_layout_obj.background_reference:
-                common_slide_data.background_reference = slide_layout_obj.background_reference
+                common_slide_data.background_reference = (
+                    slide_layout_obj.background_reference
+                )
 
         return common_slide_data
 
@@ -269,7 +289,7 @@ class SlideParser:
                 if "slideLayout" in target:
                     # Extract the layout filename from the target path
                     layout_filename = os.path.basename(target)
-                    
+
                     # Look up the pre-parsed layout from the presentation object
                     if layout_filename in self.presentation.slide_layouts:
                         layout_obj = self.presentation.slide_layouts[layout_filename]
@@ -313,7 +333,9 @@ class SlideParser:
         if shape_tree_root is None:
             shape_tree_root = self.root
         # Parse the shape tree to extract all shapes, pictures, group shapes, and graphic frames
-        return parse_shape_tree(self, shape_tree_root, slide_layout_obj, self.style_resolver)
+        return parse_shape_tree(
+            self, shape_tree_root, slide_layout_obj, self.style_resolver
+        )
 
     def _apply_inherited_transforms(self, shapes, pictures, slide_layout_object):
         # If a slide layout object exists, apply inherited transforms to placeholders
@@ -351,7 +373,7 @@ class SlideParser:
 
     def parse_slide(self, slide_number: int) -> Slide:
         slide_layout_obj = self._get_slide_layout_obj()
-        
+
         shapes, pictures, group_shapes, graphic_frames = self._parse_slide_elements(
             slide_layout_obj
         )

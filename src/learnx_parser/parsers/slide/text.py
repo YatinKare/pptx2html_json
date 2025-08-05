@@ -45,7 +45,11 @@ def extract_text_frame_properties(
     ):
         # Extract properties for the current paragraph
         paragraph_object = extract_paragraph_properties(
-            parser_instance, paragraph_element, slide_layout_obj, ph_type, style_resolver
+            parser_instance,
+            paragraph_element,
+            slide_layout_obj,
+            ph_type,
+            style_resolver,
         )
         # Only add the paragraph to the text frame if it contains actual text runs
         if paragraph_object.text_runs:
@@ -75,23 +79,23 @@ def extract_paragraph_properties(
     ):
         current_level = int(paragraph_properties_element.get("lvl"))
 
-    # Use StyleResolver if available, otherwise fall back to old logic
-    if style_resolver:
-        # Use the new centralized StyleResolver
-        paragraph_object.properties = style_resolver.resolve_paragraph_properties(
-            paragraph_element, slide_layout_obj, ph_type, current_level
-        )
-        
-        # Override with any direct properties from the paragraph's XML
-        if paragraph_properties_element is not None:
-            if paragraph_properties_element.get("algn") is not None:
-                paragraph_object.properties.align = paragraph_properties_element.get("algn")
-            if paragraph_properties_element.get("indent") is not None:
-                paragraph_object.properties.indent = int(
-                    paragraph_properties_element.get("indent")
-                )
-            if paragraph_properties_element.get("lvl") is not None:
-                paragraph_object.properties.level = int(paragraph_properties_element.get("lvl"))
+    # Use the centralized StyleResolver to get paragraph properties
+    paragraph_object.properties = style_resolver.resolve_paragraph_properties(
+        paragraph_element, slide_layout_obj, ph_type, current_level
+    )
+
+    # Override with any direct properties from the paragraph's XML
+    if paragraph_properties_element is not None:
+        if paragraph_properties_element.get("algn") is not None:
+            paragraph_object.properties.align = paragraph_properties_element.get("algn")
+        if paragraph_properties_element.get("indent") is not None:
+            paragraph_object.properties.indent = int(
+                paragraph_properties_element.get("indent")
+            )
+        if paragraph_properties_element.get("lvl") is not None:
+            paragraph_object.properties.level = int(
+                paragraph_properties_element.get("lvl")
+            )
 
     # Iterate through all run elements (a:r) within the paragraph
     for run_element in paragraph_element.findall(
@@ -131,28 +135,23 @@ def extract_run_properties(
     style_resolver=None,
 ) -> RunProperties:
     """Extract run properties from a text run element."""
-    
+
     # Use StyleResolver if available, otherwise fall back to old logic
-    if (style_resolver and resolved_paragraph_properties):
-        
+    if style_resolver and resolved_paragraph_properties:
         # Extract the run properties element from XML
-        run_properties_element = run_element.find(".//a:rPr", namespaces=parser_instance.nsmap)
-        
+        run_properties_element = run_element.find(
+            ".//a:rPr", namespaces=parser_instance.nsmap
+        )
+
         # Use the new centralized StyleResolver
         run_properties = style_resolver.resolve_run_properties(
-            run_properties_element, resolved_paragraph_properties, slide_layout_obj, paragraph_level
+            run_properties_element,
+            resolved_paragraph_properties,
+            slide_layout_obj,
+            paragraph_level,
         )
-        
+
         return run_properties
-
-
-
-
-
-
-
-
-
 
 
 def _extract_layout_default_run_properties(
@@ -436,275 +435,21 @@ def _resolve_paragraph_alignment_intelligently(
         return "l"
 
 
-def _resolve_bullet_properties_intelligently(
-    parser_instance,
-    paragraph_object,
-    paragraph_properties_element,
-    slide_layout_obj: SlideLayout | None,
-    ph_type: str | None,
-    level: int | None,
-):
-    """Intelligently resolve bullet properties using proper OpenXML inheritance hierarchy.
-
-    Follows the exact bullet hierarchy:
-    1. Slide Level: Check <a:pPr> on the slide itself
-    2. Layout Level: Check <a:pPr> of placeholder in slide layout
-    3. Master Level: Check <a:lvlXpPr> in slide master text style
-    4. Theme Level: Check <p:defaultTextStyle> in presentation
-    5. Application Default: No bullet
-
-    Args:
-        parser_instance: Slide parser instance
-        paragraph_object: Paragraph object to update
-        paragraph_properties_element: XML element containing slide-level properties
-        slide_layout_obj: Slide layout object
-        ph_type: Placeholder type
-        level: Paragraph level
-    """
-
-    # 1. Slide Level (Most Powerful): Check slide's <a:pPr> element
-    slide_bullet_result = _check_bullet_properties_in_element(
-        parser_instance, paragraph_properties_element
-    )
-    if slide_bullet_result is not None:
-        _apply_bullet_result(paragraph_object, slide_bullet_result, parser_instance)
-        return  # Slide level wins - stop here
-
-    # 2. Layout Level: Check placeholder in slide layout
-    if slide_layout_obj and ph_type:
-        layout_bullet_result = _get_layout_bullet_properties(slide_layout_obj, ph_type)
-        if layout_bullet_result is not None:
-            _apply_bullet_result(
-                paragraph_object, layout_bullet_result, parser_instance
-            )
-            return  # Layout level wins - stop here
-
-    # 3. Master Level: Check slide master text style for this level
-    if slide_layout_obj and level is not None:
-        master_bullet_result = _get_master_bullet_properties(slide_layout_obj, level)
-        if master_bullet_result is not None:
-            _apply_bullet_result(
-                paragraph_object, master_bullet_result, parser_instance
-            )
-            return  # Master level wins - stop here
-
-    # 4. Theme Level: Check presentation defaults
-    theme_bullet_result = _get_presentation_bullet_properties(parser_instance, level)
-    if theme_bullet_result is not None:
-        _apply_bullet_result(paragraph_object, theme_bullet_result, parser_instance)
-        return  # Theme level wins - stop here
-
-    # 5. Application Default: No bullet (leave bullet_type as None)
-    # paragraph_object.properties.bullet_type remains None (no bullet)
-
-
-def _check_bullet_properties_in_element(parser_instance, properties_element):
-    """Check for bullet properties in a given XML element.
-
-    Returns:
-        dict: Bullet information if found, None if no definitive bullet info
-    """
-    if properties_element is None:
-        return None
-
-    # Check for buNone (no bullet) - this stops the search
-    bu_none_element = properties_element.find(
-        ".//a:buNone", namespaces=parser_instance.nsmap
-    )
-    if bu_none_element is not None:
-        return {"type": "none"}
-
-    # Check for buChar (character bullet)
-    bu_char_element = properties_element.find(
-        ".//a:buChar", namespaces=parser_instance.nsmap
-    )
-    if bu_char_element is not None:
-        result = {"type": "char", "char": bu_char_element.get("char")}
-
-        # Get additional char bullet properties
-        bu_font_element = properties_element.find(
-            ".//a:buFont", namespaces=parser_instance.nsmap
-        )
-        if bu_font_element is not None:
-            result["font_face"] = bu_font_element.get("typeface")
-
-        bu_sz_pct_element = properties_element.find(
-            ".//a:buSzPct", namespaces=parser_instance.nsmap
-        )
-        if bu_sz_pct_element is not None:
-            result["size_pct"] = int(bu_sz_pct_element.get("val"))
-
-        bu_sz_pts_element = properties_element.find(
-            ".//a:buSzPts", namespaces=parser_instance.nsmap
-        )
-        if bu_sz_pts_element is not None:
-            result["size_pts"] = int(bu_sz_pts_element.get("val"))
-
-        return result
-
-    # Check for buAutoNum (auto numbering)
-    bu_auto_num_element = properties_element.find(
-        ".//a:buAutoNum", namespaces=parser_instance.nsmap
-    )
-    if bu_auto_num_element is not None:
-        result = {"type": "autoNum", "auto_num_type": bu_auto_num_element.get("type")}
-        if bu_auto_num_element.get("startAt") is not None:
-            result["start_at"] = int(bu_auto_num_element.get("startAt"))
-        return result
-
-    # Check for buBlip (image bullet)
-    bu_blip_element = properties_element.find(
-        ".//a:buBlip", namespaces=parser_instance.nsmap
-    )
-    if bu_blip_element is not None:
-        blip_element = bu_blip_element.find(
-            ".//a:blip", namespaces=parser_instance.nsmap
-        )
-        if blip_element is not None:
-            embed_id = blip_element.get(
-                "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed"
-            )
-            if embed_id and embed_id in parser_instance.rels:
-                return {"type": "blip", "image_path": parser_instance.rels[embed_id]}
-
-    # No definitive bullet information found
-    return None
-
-
-def _apply_bullet_result(paragraph_object, bullet_result, parser_instance):
-    """Apply bullet result to paragraph object."""
-    if not bullet_result:
-        return
-
-    bullet_type = bullet_result.get("type")
-    paragraph_object.properties.bullet_type = bullet_type
-
-    if bullet_type == "char":
-        paragraph_object.properties.bullet_char = bullet_result.get("char")
-        paragraph_object.properties.bullet_font_face = bullet_result.get("font_face")
-        paragraph_object.properties.bullet_size_pct = bullet_result.get("size_pct")
-        paragraph_object.properties.bullet_size_pts = bullet_result.get("size_pts")
-    elif bullet_type == "autoNum":
-        paragraph_object.properties.bullet_auto_num_type = bullet_result.get(
-            "auto_num_type"
-        )
-        paragraph_object.properties.bullet_start_at = bullet_result.get("start_at")
-    elif bullet_type == "blip":
-        paragraph_object.properties.bullet_image_path = bullet_result.get("image_path")
-
-
-def _get_layout_bullet_properties(slide_layout_obj: SlideLayout, ph_type: str):
-    """Get bullet properties from slide layout placeholder.
-
-    Currently returns None as layout-level bullet parsing is not yet implemented.
-    This would require parsing the slide layout XML for placeholder bullet properties.
-    """
-    # TODO: Implement layout-level bullet property parsing
-    # This would involve parsing the slide layout XML files to extract
-    # bullet properties from placeholder definitions
-    return None
-
-
-def _get_master_bullet_properties(slide_layout_obj: SlideLayout, level: int):
-    """Get bullet properties from slide master text style for given level.
-
-    Uses the list_styles which contain master slide text style defaults.
-    """
-    if not slide_layout_obj or level is None:
-        return None
-
-    # Check master slide list styles for this level
-    if slide_layout_obj.list_styles and level in slide_layout_obj.list_styles:
-        level_props = slide_layout_obj.list_styles[level]
-        if level_props and level_props.bullet_type:
-            result = {"type": level_props.bullet_type}
-
-            if level_props.bullet_type == "char":
-                result["char"] = level_props.bullet_char
-                result["font_face"] = level_props.bullet_font_face
-                result["size_pct"] = level_props.bullet_size_pct
-                result["size_pts"] = level_props.bullet_size_pts
-            elif level_props.bullet_type == "autoNum":
-                result["auto_num_type"] = level_props.bullet_auto_num_type
-                result["start_at"] = level_props.bullet_start_at
-            elif level_props.bullet_type == "blip":
-                result["image_path"] = level_props.bullet_image_path
-
-            return result
-
-    return None
-
-
-def _get_presentation_bullet_properties(parser_instance, level: int | None):
-    """Get bullet properties from presentation defaults.
-
-    Uses presentation_defaults which contain parsed p:defaultTextStyle data.
-    """
-    if (
-        not hasattr(parser_instance, "presentation_defaults")
-        or not parser_instance.presentation_defaults
-    ):
-        return None
-
-    # Use level 0 if no specific level provided
-    effective_level = level if level is not None else 0
-
-    # Check if we have defaults for this level
-    if effective_level in parser_instance.presentation_defaults:
-        level_props = parser_instance.presentation_defaults[effective_level]
-        if level_props and level_props.bullet_type:
-            result = {"type": level_props.bullet_type}
-
-            if level_props.bullet_type == "char":
-                result["char"] = level_props.bullet_char
-                result["font_face"] = level_props.bullet_font_face
-                result["size_pct"] = level_props.bullet_size_pct
-                result["size_pts"] = level_props.bullet_size_pts
-            elif level_props.bullet_type == "autoNum":
-                result["auto_num_type"] = level_props.bullet_auto_num_type
-                result["start_at"] = level_props.bullet_start_at
-            elif level_props.bullet_type == "blip":
-                result["image_path"] = level_props.bullet_image_path
-
-            return result
-
-    # Fallback to level 0 if specific level not found
-    if effective_level != 0 and 0 in parser_instance.presentation_defaults:
-        level_0_props = parser_instance.presentation_defaults[0]
-        if level_0_props and level_0_props.bullet_type:
-            result = {"type": level_0_props.bullet_type}
-
-            if level_0_props.bullet_type == "char":
-                result["char"] = level_0_props.bullet_char
-                result["font_face"] = level_0_props.bullet_font_face
-                result["size_pct"] = level_0_props.bullet_size_pct
-                result["size_pts"] = level_0_props.bullet_size_pts
-            elif level_0_props.bullet_type == "autoNum":
-                result["auto_num_type"] = level_0_props.bullet_auto_num_type
-                result["start_at"] = level_0_props.bullet_start_at
-            elif level_0_props.bullet_type == "blip":
-                result["image_path"] = level_0_props.bullet_image_path
-
-            return result
-
-    return None
-
-
-
-
-def _get_layout_text_style_font_size(slide_layout_obj: SlideLayout, ph_type: str) -> int | None:
+def _get_layout_text_style_font_size(
+    slide_layout_obj: SlideLayout, ph_type: str
+) -> int | None:
     """Get font size from layout text styles based on placeholder type.
-    
+
     Args:
         slide_layout_obj: SlideLayout object with parsed text styles
         ph_type: Placeholder type (title, body, etc.)
-        
+
     Returns:
         Font size in PowerPoint units or None if not found
     """
     if not slide_layout_obj:
         return None
-    
+
     # Map placeholder types to text style properties
     if ph_type in ["title", "ctrTitle"]:
         text_style = slide_layout_obj.title_style
@@ -712,31 +457,35 @@ def _get_layout_text_style_font_size(slide_layout_obj: SlideLayout, ph_type: str
         text_style = slide_layout_obj.body_style
     else:
         text_style = slide_layout_obj.other_style
-    
+
     # Extract font size from text style
-    if (text_style and 
-        text_style.default_run_properties and 
-        text_style.default_run_properties.font_size is not None):
+    if (
+        text_style
+        and text_style.default_run_properties
+        and text_style.default_run_properties.font_size is not None
+    ):
         return text_style.default_run_properties.font_size
-    
+
     return None
 
 
-def _get_master_text_style_font_size(slide_layout_obj: SlideLayout, ph_type: str) -> int | None:
+def _get_master_text_style_font_size(
+    slide_layout_obj: SlideLayout, ph_type: str
+) -> int | None:
     """Get font size from master text styles based on placeholder type.
-    
+
     Args:
         slide_layout_obj: SlideLayout object that may reference a master
         ph_type: Placeholder type (title, body, etc.)
-        
+
     Returns:
         Font size in PowerPoint units or None if not found
     """
     if not slide_layout_obj or not slide_layout_obj.slide_master:
         return None
-    
+
     slide_master = slide_layout_obj.slide_master
-    
+
     # Map placeholder types to master text style properties
     if ph_type in ["title", "ctrTitle"]:
         text_style = slide_master.title_style
@@ -744,38 +493,43 @@ def _get_master_text_style_font_size(slide_layout_obj: SlideLayout, ph_type: str
         text_style = slide_master.body_style
     else:
         text_style = slide_master.other_style
-    
+
     # Extract font size from master text style
-    if (text_style and 
-        text_style.default_run_properties and 
-        text_style.default_run_properties.font_size is not None):
+    if (
+        text_style
+        and text_style.default_run_properties
+        and text_style.default_run_properties.font_size is not None
+    ):
         return text_style.default_run_properties.font_size
-    
+
     # Fallback to master list styles if text styles don't have font size
-    if (slide_layout_obj.list_styles and 
-        0 in slide_layout_obj.list_styles):
+    if slide_layout_obj.list_styles and 0 in slide_layout_obj.list_styles:
         level_0_props = slide_layout_obj.list_styles[0]
-        if (level_0_props and 
-            level_0_props.default_run_properties and 
-            level_0_props.default_run_properties.font_size is not None):
+        if (
+            level_0_props
+            and level_0_props.default_run_properties
+            and level_0_props.default_run_properties.font_size is not None
+        ):
             return level_0_props.default_run_properties.font_size
-    
+
     return None
 
 
-def _get_layout_text_style_font_info(slide_layout_obj: SlideLayout, ph_type: str) -> dict | None:
+def _get_layout_text_style_font_info(
+    slide_layout_obj: SlideLayout, ph_type: str
+) -> dict | None:
     """Get font information from layout text styles based on placeholder type.
-    
+
     Args:
         slide_layout_obj: SlideLayout object containing text styles
         ph_type: Placeholder type (title, body, etc.)
-        
+
     Returns:
         Dict with font_face or font_ref key, or None if not found
     """
     if not slide_layout_obj:
         return None
-    
+
     # Map placeholder types to layout text style properties
     if ph_type in ["title", "ctrTitle"]:
         text_style = slide_layout_obj.title_style
@@ -783,30 +537,30 @@ def _get_layout_text_style_font_info(slide_layout_obj: SlideLayout, ph_type: str
         text_style = slide_layout_obj.body_style
     else:
         text_style = slide_layout_obj.other_style
-    
+
     # Extract font information from layout text style
-    if (text_style and text_style.default_run_properties):
+    if text_style and text_style.default_run_properties:
         if text_style.default_run_properties.font_face:
             return {"font_face": text_style.default_run_properties.font_face}
         elif text_style.default_run_properties.font_ref:
             return {"font_ref": text_style.default_run_properties.font_ref}
-    
+
     return None
 
 
 def _get_master_text_style_font_info(slide_master, ph_type: str) -> dict | None:
     """Get font information from master text styles based on placeholder type.
-    
+
     Args:
         slide_master: SlideMaster object containing text styles
         ph_type: Placeholder type (title, body, etc.)
-        
+
     Returns:
         Dict with font_face or font_ref key, or None if not found
     """
     if not slide_master:
         return None
-    
+
     # Map placeholder types to master text style properties
     if ph_type in ["title", "ctrTitle"]:
         text_style = slide_master.title_style
@@ -814,20 +568,12 @@ def _get_master_text_style_font_info(slide_master, ph_type: str) -> dict | None:
         text_style = slide_master.body_style
     else:
         text_style = slide_master.other_style
-    
+
     # Extract font information from master text style
-    if (text_style and text_style.default_run_properties):
+    if text_style and text_style.default_run_properties:
         if text_style.default_run_properties.font_face:
             return {"font_face": text_style.default_run_properties.font_face}
         elif text_style.default_run_properties.font_ref:
             return {"font_ref": text_style.default_run_properties.font_ref}
-    
+
     return None
-
-
-
-
-
-
-
-

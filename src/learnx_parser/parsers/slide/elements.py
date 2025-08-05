@@ -17,7 +17,9 @@ from learnx_parser.parsers.slide.properties import (
 )
 
 
-def parse_shape_element(parser_instance, shape_element, slide_layout_obj, style_resolver) -> Shape:
+def parse_shape_element(
+    parser_instance, shape_element, slide_layout_obj, style_resolver
+) -> Shape:
     """Parse a shape element from XML to Shape object.
 
     Args:

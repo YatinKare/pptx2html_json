@@ -82,7 +82,7 @@ class HtmlWriter:
 
         # Create CSS content for absolute positioning (HTML5Point-inspired)
         css_content = f"""
-        body {{ 
+        body {{
             position: absolute;
             height: 100%;
             width: 100%;
@@ -91,19 +91,19 @@ class HtmlWriter:
             padding: 0;
             font-family: sans-serif;
         }}
-        
+
         #player {{
             position: relative;
             height: 100%;
             width: 100%;
             overflow: hidden;
         }}
-        
+
         #player canvas, #player div, #player iframe, #player img {{
             position: absolute;
         }}
-        
-        #resizer {{ 
+
+        #resizer {{
             left: 0px;
             top: 0px;
             height: {slide_height}px;
@@ -121,16 +121,16 @@ class HtmlWriter:
             margin-top: -{slide_height // 2}px;
             {background_css}
         }}
-        
+
         .shape {{
             position: absolute;
             box-sizing: border-box;
         }}
-        
+
         .image {{
             position: absolute;
         }}
-        
+
         /* Auto-scaling based on window size */
         @media all {{
             #resizer {{
@@ -192,15 +192,20 @@ class HtmlWriter:
             except Exception as e:
                 # Fallback rendering if element renderer fails
                 print(
-                    f"Warning: Failed to render shape {getattr(shape, 'id', 'unknown')}: {e}"
+                    f"Warning: Failed to render shape {
+                        getattr(shape, 'id', 'unknown')}: {e}"
                 )
                 if shape.transform:
                     from learnx_parser.writers.css_utils import CoordinateConverter
 
-                    position = CoordinateConverter.extract_position(shape.transform)
+                    position = CoordinateConverter.extract_position(
+                        shape.transform)
                     if position:
-                        css = CoordinateConverter.generate_absolute_css(position, 100)
-                        fallback_html = f'<div class="shape-fallback" style="{css} background: lightcoral; border: 1px solid #999;">Shape (fallback)</div>'
+                        css = CoordinateConverter.generate_absolute_css(
+                            position, 100)
+                        fallback_html = f'<div class="shape-fallback" style="{
+                            # 999;">Shape (fallback)</div>'
+                            css} background: lightcoral; border: 1px solid
                         html_parts.append(fallback_html)
 
         # Render all pictures with absolute positioning
@@ -211,15 +216,20 @@ class HtmlWriter:
             except Exception as e:
                 # Fallback rendering if element renderer fails
                 print(
-                    f"Warning: Failed to render picture {getattr(picture, 'id', 'unknown')}: {e}"
+                    f"Warning: Failed to render picture {
+                        getattr(picture, 'id', 'unknown')}: {e}"
                 )
                 if picture.transform:
                     from learnx_parser.writers.css_utils import CoordinateConverter
 
-                    position = CoordinateConverter.extract_position(picture.transform)
+                    position = CoordinateConverter.extract_position(
+                        picture.transform)
                     if position:
-                        css = CoordinateConverter.generate_absolute_css(position, 300)
-                        fallback_html = f'<div class="picture-fallback" style="{css} background: lightblue; border: 1px solid #666;">Picture (fallback)</div>'
+                        css = CoordinateConverter.generate_absolute_css(
+                            position, 300)
+                        fallback_html = f'<div class="picture-fallback" style="{
+                            #666;">Picture (fallback)</div>'
+                            css} background: lightblue; border: 1px solid
                         html_parts.append(fallback_html)
 
         # Render all group shapes with absolute positioning
@@ -230,7 +240,8 @@ class HtmlWriter:
             except Exception as e:
                 # Fallback rendering if element renderer fails
                 print(
-                    f"Warning: Failed to render group shape {getattr(group_shape, 'id', 'unknown')}: {e}"
+                    f"Warning: Failed to render group shape {
+                        getattr(group_shape, 'id', 'unknown')}: {e}"
                 )
                 if group_shape.transform:
                     from learnx_parser.writers.css_utils import CoordinateConverter
@@ -239,8 +250,11 @@ class HtmlWriter:
                         group_shape.transform
                     )
                     if position:
-                        css = CoordinateConverter.generate_absolute_css(position, 100)
-                        fallback_html = f'<div class="group-fallback" style="{css} background: lightgreen; border: 1px solid #333;">Group (fallback)</div>'
+                        css = CoordinateConverter.generate_absolute_css(
+                            position, 100)
+                        fallback_html = f'<div class="group-fallback" style="{
+                            #333;">Group (fallback)</div>'
+                            css} background: lightgreen; border: 1px solid
                         html_parts.append(fallback_html)
 
         # Render all graphic frames with absolute positioning
@@ -251,7 +265,8 @@ class HtmlWriter:
             except Exception as e:
                 # Fallback rendering if element renderer fails
                 print(
-                    f"Warning: Failed to render graphic frame {getattr(graphic_frame, 'id', 'unknown')}: {e}"
+                    f"Warning: Failed to render graphic frame {
+                        getattr(graphic_frame, 'id', 'unknown')}: {e}"
                 )
                 if graphic_frame.transform:
                     from learnx_parser.writers.css_utils import CoordinateConverter
@@ -260,8 +275,11 @@ class HtmlWriter:
                         graphic_frame.transform
                     )
                     if position:
-                        css = CoordinateConverter.generate_absolute_css(position, 100)
-                        fallback_html = f'<div class="frame-fallback" style="{css} background: lightyellow; border: 1px solid #444;">Frame (fallback)</div>'
+                        css = CoordinateConverter.generate_absolute_css(
+                            position, 100)
+                        fallback_html = f'<div class="frame-fallback" style="{
+                            #444;">Frame (fallback)</div>'
+                            css} background: lightyellow; border: 1px solid
                         html_parts.append(fallback_html)
 
         # If no elements, show placeholder
@@ -274,38 +292,21 @@ class HtmlWriter:
 
     def _get_background_css(self, slide: Slide) -> str:
         """Generate CSS for slide background with Goal 1 integration.
-        
+
         This method implements the background image priority system for Goal 1:
         Background as a Single Image. It prioritizes generated background images
         over legacy CSS-based background generation to ensure perfect visual fidelity.
-        
+
         Priority order:
         1. Generated background images (Goal 1) - highest priority
         2. Theme-resolved background CSS - medium priority
         3. Direct background properties (fallback) - lowest priority
-        
-        For Goal 1 implementation, when a slide has a generated_background_path,
-        this method generates CSS with background-image, background-size: cover,
-        background-position: center, and background-repeat: no-repeat to ensure
-        the PNG background image displays correctly at all screen sizes.
 
-        Args:
-            slide (Slide): Slide object containing background properties and 
-                potentially a generated_background_path from Goal 1 processing
-
-        Returns:
-            str: CSS background properties string. For generated images, returns
-                complete background-image CSS. For legacy slides, returns 
-                background-color or gradient CSS. Empty string if no background.
-                
-        Example generated CSS:
-            "background-image: url('media/background_1.png'); background-size: cover; 
-             background-position: center; background-repeat: no-repeat;"
         """
         # Check for generated background image first (Goal 1: Background as Single Image)
         if slide.generated_background_path:
             return f"background-image: url('{slide.generated_background_path}'); background-size: cover; background-position: center; background-repeat: no-repeat;"
-        
+
         # Fallback to old background generation for slides without generated images
         background_css_parts = []
 
@@ -407,11 +408,13 @@ class HtmlWriter:
         except Exception as e:
             if slide_xml_path:
                 print(
-                    f"Warning: Error parsing slide background from {slide_xml_path}: {e}"
+                    f"Warning: Error parsing slide background from {
+                        slide_xml_path}: {e}"
                 )
             else:
                 print(
-                    f"Warning: Error parsing slide background for slide {slide.slide_number}: {e}"
+                    f"Warning: Error parsing slide background for slide {
+                        slide.slide_number}: {e}"
                 )
 
         return ""
@@ -495,7 +498,8 @@ class HtmlWriter:
 
         except Exception as e:
             print(
-                f"Warning: Error finding slide XML path for slide {slide_number}: {e}"
+                f"Warning: Error finding slide XML path for slide {
+                    slide_number}: {e}"
             )
 
         return None
@@ -616,7 +620,8 @@ class HtmlWriter:
                             return os.path.join(self.pptx_unpacked_path, "ppt", target)
 
         except Exception as e:
-            print(f"Warning: Error resolving image relationship {r_embed}: {e}")
+            print(f"Warning: Error resolving image relationship {
+                  r_embed}: {e}")
 
         return None
 
@@ -729,11 +734,13 @@ class HtmlWriter:
         except Exception as e:
             if slide_xml_path:
                 print(
-                    f"Warning: Error parsing layout background for slide {slide.slide_number}: {e}"
+                    f"Warning: Error parsing layout background for slide {
+                        slide.slide_number}: {e}"
                 )
             else:
                 print(
-                    f"Warning: Error parsing layout background for slide {slide.slide_number}: {e}"
+                    f"Warning: Error parsing layout background for slide {
+                        slide.slide_number}: {e}"
                 )
 
         return ""
@@ -794,7 +801,8 @@ class HtmlWriter:
                 if scheme_clr is not None:
                     color_name = scheme_clr.get("val")
                     if self.theme_resolver:
-                        color_hex = self.theme_resolver.resolve_scheme_color(color_name)
+                        color_hex = self.theme_resolver.resolve_scheme_color(
+                            color_name)
                         stops.append((pos, f"#{color_hex}"))
                     else:
                         # Fallback colors for accent2 and accent4
@@ -847,7 +855,8 @@ class HtmlWriter:
             if scheme_clr is not None:
                 color_name = scheme_clr.get("val")
                 if self.theme_resolver:
-                    color_hex = self.theme_resolver.resolve_scheme_color(color_name)
+                    color_hex = self.theme_resolver.resolve_scheme_color(
+                        color_name)
                     return f"background-color: #{color_hex};"
 
         except Exception as e:
@@ -874,7 +883,8 @@ class HtmlWriter:
 
             for master_file in os.listdir(slide_master_path):
                 if master_file.endswith(".xml"):
-                    master_full_path = os.path.join(slide_master_path, master_file)
+                    master_full_path = os.path.join(
+                        slide_master_path, master_file)
                     return self._extract_master_background(master_full_path)
 
         except Exception as e:
@@ -925,14 +935,15 @@ class HtmlWriter:
 
         except Exception as e:
             print(
-                f"Warning: Error extracting master background from {master_path}: {e}"
+                f"Warning: Error extracting master background from {
+                    master_path}: {e}"
             )
 
         return ""
 
     def _get_slide_background_color(self, slide: Slide) -> str | None:
         """Extract the dominant background color from slide for contrast calculations.
-        
+
         This function has been updated for Goal 1 compatibility. Instead of parsing CSS
         (which now contains background-image URLs), it directly accesses the slide's
         background data and resolves theme colors properly.
@@ -956,28 +967,31 @@ class HtmlWriter:
             # For gradient backgrounds, determine the overall darkness by examining all stops
             total_luminance = 0
             valid_stops = 0
-            
+
             for stop in gradient.stops:
                 stop_color = None
                 if stop.color:
                     stop_color = stop.color
                 elif stop.scheme_color and self.theme_resolver:
-                    resolved = self.theme_resolver.resolve_scheme_color(stop.scheme_color)
+                    resolved = self.theme_resolver.resolve_scheme_color(
+                        stop.scheme_color
+                    )
                     if resolved:
                         stop_color = resolved
-                
+
                 if stop_color:
                     # Calculate luminance for this stop
                     try:
                         r = int(stop_color[0:2], 16)
                         g = int(stop_color[2:4], 16)
                         b = int(stop_color[4:6], 16)
-                        luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+                        luminance = (0.2126 * r + 0.7152 *
+                                     g + 0.0722 * b) / 255
                         total_luminance += luminance
                         valid_stops += 1
                     except (ValueError, IndexError):
                         continue
-            
+
             if valid_stops > 0:
                 avg_luminance = total_luminance / valid_stops
                 # Return a representative color based on average luminance
@@ -986,13 +1000,15 @@ class HtmlWriter:
                     return "000000"  # Dark background - will trigger white text
                 else:
                     return "FFFFFF"  # Light background - will trigger black text
-            
+
             # Fallback to first stop if analysis fails
             first_stop = gradient.stops[0]
             if first_stop.color:
                 return first_stop.color
             if first_stop.scheme_color and self.theme_resolver:
-                resolved_color = self.theme_resolver.resolve_scheme_color(first_stop.scheme_color)
+                resolved_color = self.theme_resolver.resolve_scheme_color(
+                    first_stop.scheme_color
+                )
                 if resolved_color:
                     return resolved_color
 
@@ -1000,18 +1016,20 @@ class HtmlWriter:
         if slide.common_slide_data.background_reference:
             bg_ref = slide.common_slide_data.background_reference
             if bg_ref.scheme_color and self.theme_resolver:
-                resolved_color = self.theme_resolver.resolve_scheme_color(bg_ref.scheme_color)
+                resolved_color = self.theme_resolver.resolve_scheme_color(
+                    bg_ref.scheme_color
+                )
                 if resolved_color:
                     return resolved_color
-            
+
             # Galaxy theme defaults for common scheme colors
             galaxy_defaults = {
                 "bg1": "000000",  # Black background
-                "bg2": "FFFFFF",  # White background  
+                "bg2": "FFFFFF",  # White background
                 "accent2": "243FFF",  # Blue accent
                 "accent4": "FF9022",  # Orange accent
             }
-            
+
             if bg_ref.scheme_color in galaxy_defaults:
                 return galaxy_defaults[bg_ref.scheme_color]
 

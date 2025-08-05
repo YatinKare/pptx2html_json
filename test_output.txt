@@ -1,0 +1,1814 @@
+Re-building old
+Re-Adding packages
+
+Running main
+Parsing: Respiratory Ch 16_students.pptx
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Chapter 16Respiratory Physiolo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='VPHY 3100E...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Paul Eubig...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='paul.eubig@uga.edu...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Chapter 16Respiratory Physiolo...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='VPHY 3100E...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Paul Eubig...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='paul.eubig@uga.edu...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Lecture Outline...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='1. Introduction to respiratory...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='2. Physical aspects and mechan...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='3. Factors affecting ventilati...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='4. O2 & CO2 transport...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='5. Acid-base balance...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='6. Regulation of breathing...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=none
+DEBUG: TextParser: Text='...', Assigned BulletType=none
+DEBUG: HTMLRenderer: Text='Lecture Outline...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='1. Introduction to respiratory...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='2. Physical aspects and mechan...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='3. Factors affecting ventilati...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='4. O2 & CO2 transport...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='5. Acid-base balance...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='6. Regulation of breathing...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Chapter 16Respiratory Physiolo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Part 1 – Introduction to the r...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Chapter 16Respiratory Physiolo...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Part 1 – Introduction to the r...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Functions of the Respiratory S...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='What is the purpose of this en...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Ventilation (breathing)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='To move air into and out of re...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Gas exchange...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='External respiration – gas exc...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Internal respiration – gas exc...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pressure gradients generate di...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='O2 utilization and CO2 product...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Cellular respiration...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Functions of the Respiratory S...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='What is the purpose of this en...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Ventilation (breathing)...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='To move air into and out of re...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Gas exchange...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='External respiration – gas exc...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Internal respiration – gas exc...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Pressure gradients generate di...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='O2 utilization and CO2 product...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Cellular respiration...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary Structures...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Airway passages...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Conducting zone and respirator...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Conducting zone...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Outside the lungs – nasal pass...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Inside the lungs – trachea (1)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respiratory zone...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respiratory bronchiole  …  a...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='What happens to individual air...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Collective x-sectional area?...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary Structures...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Airway passages...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Conducting zone and respirator...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Conducting zone...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Outside the lungs – nasal pass...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Inside the lungs – trachea (1)...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Respiratory zone...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Respiratory bronchiole  …  a...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='What happens to individual air...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Collective x-sectional area?...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Functions of Conducting Zone...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Conducting zone:...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Passage of air...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Warming...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Humidification...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Filtration...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Immune surveillance...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='What is the source of the wate...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='OUT of LUNGS...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Role of the mucociliary appara...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Functions of Conducting Zone...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Conducting zone:...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Passage of air...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Warming...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Humidification...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Filtration...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Immune surveillance...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='What is the source of the wate...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='OUT of LUNGS...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Role of the mucociliary appara...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Functions of Respiratory Zone...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respiratory zone:...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Passage of air...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Gas exchange...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Immune surveillance...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Functions of Respiratory Zone...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Respiratory zone:...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Passage of air...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Gas exchange...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Immune surveillance...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Alveoli Are the Site of Gas Ex...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Alveoli...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Total # = ~300 x 106...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='0.25 - 0.5 mm in diameter...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Total area = 60 - 80 m2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Alveolar wall...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Type I alveolar cells – the ma...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Type II alveolar cells – produ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Air-blood barrier = ~0.3 m...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Alveoli Are the Site of Gas Ex...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Alveoli...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Total # = ~300 x 106...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='0.25 - 0.5 mm in diameter...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Total area = 60 - 80 m2...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Alveolar wall...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Type I alveolar cells – the ma...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Type II alveolar cells – produ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Air-blood barrier = ~0.3 m...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Capillary Net Over Alveolar Sa...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Scanning electron micrograph o...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Capillary Net Over Alveolar Sa...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Scanning electron micrograph o...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Very Thin Diffusion Barrier fo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Layers of respiratory membrane...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='1. Fluid layer with surfactant...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='2. Type I alveolar cell membra...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='(3. Narrow interstitial space....', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='4. Capillary endothelial cell ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='O2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CO2...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Very Thin Diffusion Barrier fo...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Layers of respiratory membrane...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='1. Fluid layer with surfactant...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='2. Type I alveolar cell membra...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='(3. Narrow interstitial space....', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='4. Capillary endothelial cell ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='O2...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CO2...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Thoracic Cavity...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Thoracic cavity surrounded by ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pleural (intra-pleural) space...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Thin fluid layer between visce...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='*Air-free, potential space -> ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Diaphragm – muscle between tho...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Healthy pleural space (air int...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Thoracic Cavity...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Thoracic cavity surrounded by ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pleural (intra-pleural) space...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Thin fluid layer between visce...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='*Air-free, potential space -> ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Diaphragm – muscle between tho...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Healthy pleural space (air int...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respiratory Muscles and Inspir...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Quiet Inspiration - active pro...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='1. Contraction of diaphragm  ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='2. Parasternal and external in...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Sternum...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Before Inspiration...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Inspiration...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Respiratory Muscles and Inspir...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Quiet Inspiration - active pro...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='1. Contraction of diaphragm  ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='2. Parasternal and external in...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Sternum...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Before Inspiration...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Inspiration...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respiratory Muscles and Expira...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Quiet expiration – passive pro...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Forced expiration – active pro...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Before Inspiration...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Inspiration...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Quiet Expiration...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Forced Expiration...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Respiratory Muscles and Expira...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Quiet expiration – passive pro...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Forced expiration – active pro...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Before Inspiration...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Inspiration...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Quiet Expiration...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Forced Expiration...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Chapter 16Respiratory Physiolo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Part 2 – Physical aspects and ...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Chapter 16Respiratory Physiolo...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Part 2 – Physical aspects and ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Physics of Gas Pressures 1...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*Boyle’s Law...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='At a constant temperature   P1...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Thoracic expansion and contrac...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Boyle’s Law...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Physics of Gas Pressures 1...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*Boyle’s Law...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='At a constant temperature   P1...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Thoracic expansion and contrac...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Boyle’s Law...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pressure Gradients...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='How do we get O2 into the body...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='Ventilation = air in and out o...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='Results from pressure differen...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pressure (P) gradient – result...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=none
+DEBUG: TextParser: Text='...', Assigned BulletType=none
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Similar principles apply to re...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='For PO2 – alveolar space > blo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='For PCO2 – mitochondria > cyto...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pressure Gradients...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='How do we get O2 into the body...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Ventilation = air in and out o...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='Results from pressure differen...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='Pressure (P) gradient – result...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='Similar principles apply to re...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='For PO2 – alveolar space > blo...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='For PCO2 – mitochondria > cyto...', IsBullet=True, Level=2, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pressure Gradients...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Anatomically correct version o...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CELLULAR RESPIRATION...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CELLULAR RESPIRATION...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pressure Gradients...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Anatomically correct version o...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='CELLULAR RESPIRATION...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CELLULAR RESPIRATION...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='3 Pressures to Follow...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Atmospheric – always 760 mm Hg...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Alveolar (Intrapulmonary) – at...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pleural (Intrapleural) – at re...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='3 Pressures to Follow...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Atmospheric – always 760 mm Hg...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Alveolar (Intrapulmonary) – at...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pleural (Intrapleural) – at re...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Natural Properties of Lungs & ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='The lung can be viewed as a pa...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='The “pleural space” contains o...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='The lung tends to recoil inwar...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*These recoil forces in opposi...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='-> Lungs expand and contract a...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='What happens if the pleural sp...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Natural Properties of Lungs & ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='The lung can be viewed as a pa...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='The “pleural space” contains o...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='The lung tends to recoil inwar...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*These recoil forces in opposi...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='-> Lungs expand and contract a...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='What happens if the pleural sp...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Importance of the Pleural Spac...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Mediastinum separates each sid...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Air (pneumothorax) or fluid (h...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='New pressure gradient -> pneum...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='R...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='L...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Left-sided pneumothorax with a...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CT scan of right-sided hydropn...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Importance of the Pleural Spac...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Mediastinum separates each sid...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Air (pneumothorax) or fluid (h...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='New pressure gradient -> pneum...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Left-sided pneumothorax with a...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CT scan of right-sided hydropn...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='R...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='L...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Mechanics of Breathing (Ventil...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Ventilation occurs as a result...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='During inspiration:...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Contraction of inspiratory mus...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text=' atmospheric P > alveolar P ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Energy -> muscular contraction...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='During (passive) expiration:...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text=' lung vol   alveolar pressu...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Elastic recoil forces of the l...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Mechanics of Breathing (Ventil...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Ventilation occurs as a result...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='During inspiration:...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Contraction of inspiratory mus...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text=' atmospheric P > alveolar P ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Energy -> muscular contraction...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='During (passive) expiration:...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text=' lung vol   alveolar pressu...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Elastic recoil forces of the l...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Relative pressures...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pleural P – ALWAYS lower than ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='ALWAYS negative (sub-atmospher...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Alveolar P – may be “-” (inspi...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Trans-pulmonary P = D P across...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='= Alveolar P – Pleural P...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Always positive...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Increasing difference vs. decr...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Alveolar & Pleural P...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Atmospheric...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pressure...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*Pressures relative to atmosph...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Relative pressures...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pleural P – ALWAYS lower than ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='ALWAYS negative (sub-atmospher...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Alveolar P – may be “-” (inspi...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Trans-pulmonary P = D P across...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='= Alveolar P – Pleural P...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Always positive...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Increasing difference vs. decr...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Alveolar & Pleural P...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Atmospheric...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pressure...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*Pressures relative to atmosph...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary Volumes, Capacities,...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Lung volumes - tidal vol (TV),...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Lung capacities – inspiratory ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Capacity – sum of more than 1 ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Timed vital capacity (or force...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Spirometry...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary Volumes, Capacities,...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Lung volumes - tidal vol (TV),...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Lung capacities – inspiratory ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Capacity – sum of more than 1 ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Timed vital capacity (or force...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Spirometry...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary Volumes & Capacities...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary Volumes & Capacities...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Dead Space...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Dead space = regions of the ai...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Physiologic dead space = anato...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Anatomic dead space...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='*Air in the conducting airways...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Not all of the inspired air re...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Inhaled fresh air mixed with e...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Alveolar or functional dead sp...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='*Air in the respiratory zone t...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Due to lack of blood flow to t...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Dead Space...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Dead space = regions of the ai...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Physiologic dead space = anato...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Anatomic dead space...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*Air in the conducting airways...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Not all of the inspired air re...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Inhaled fresh air mixed with e...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Alveolar or functional dead sp...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*Air in the respiratory zone t...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Due to lack of blood flow to t...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Ventilation-Perfusion Ratio (V...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='VA = alveolar ventilation...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Q = blood flow...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='For efficient gas exchange (O2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='VA is greater in the apices of...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Q is greater in the basal lung...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Ventilation-Perfusion Ratio (V...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='VA = alveolar ventilation...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Q = blood flow...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='For efficient gas exchange (O2...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='VA is greater in the apices of...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Q is greater in the basal lung...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Ventilation-Perfusion Ratio (V...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary arterioles try to ma...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Systemic arterioles (e.g., mus...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary arterioles constrict...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='What does this accomplish if P...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='If PAO2 is high in alveoli or ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='V/Q mismatch occurs with diffe...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Ventilation-Perfusion Ratio (V...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary arterioles try to ma...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Systemic arterioles (e.g., mus...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary arterioles constrict...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='What does this accomplish if P...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='If PAO2 is high in alveoli or ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='V/Q mismatch occurs with diffe...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Chapter 16Respiratory Physiolo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Part 3 – Factors affecting ven...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Chapter 16Respiratory Physiolo...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Part 3 – Factors affecting ven...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Factors Affecting Ventilation...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='1. Compliance – distensibility...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Change in lung vol per change ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='Compliance = V/P...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='100 x more distensible than a ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Compliance is affected by elas...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='2. Elastance (elasticity) – re...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Elasticity = 1/compliance...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Tendency to return to initial ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='High content of elastin protei...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Elastic tension  during inspi...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Balloon analogy...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Diseases can alter compliance ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='https://www.youtube.com/watch?...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='3. Surface tension – to be dis...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Factors Affecting Ventilation...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='1. Compliance – distensibility...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Change in lung vol per change ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Compliance = V/P...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='100 x more distensible than a ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Compliance is affected by elas...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='2. Elastance (elasticity) – re...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Elasticity = 1/compliance...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Tendency to return to initial ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='High content of elastin protei...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Elastic tension  during inspi...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Balloon analogy...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Diseases can alter compliance ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='https://www.youtube.com/watch?...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='3. Surface tension – to be dis...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Surface Tension...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Thin film of liquid (water) li...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Surface tension (T)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Reflects the work needed to  ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Law of Laplace – P in alveoli ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='T is the same for same interfa...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='For the same T, smaller alveol...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='r=2 (P=T) vs. r=1 (P=2T)  col...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text=' P   compliance  takes mor...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='What helps keep surface tensio...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Surface Tension...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Thin film of liquid (water) li...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Surface tension (T)...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Reflects the work needed to  ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Law of Laplace – P in alveoli ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='T is the same for same interfa...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='For the same T, smaller alveol...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='r=2 (P=T) vs. r=1 (P=2T)  col...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text=' P   compliance  takes mor...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='What helps keep surface tensio...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Surfactants...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Surfactants – biochemistry...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Produced by type II alveolar c...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='1. Phospholipids – amphipathic...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='2. Surfactant proteins – help ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Surfactants – functions...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Lower surface tension   comp...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Prevent collapse of smaller al...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='As alveoli radius decreases, s...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Surfactants...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Surfactants – biochemistry...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Produced by type II alveolar c...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='1. Phospholipids – amphipathic...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='2. Surfactant proteins – help ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Surfactants – functions...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Lower surface tension   comp...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Prevent collapse of smaller al...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='As alveoli radius decreases, s...', IsBullet=True, Level=2, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary Disorders (1)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Newborn respiratory distress s...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Occurs in ~10% of premature ne...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Underdeveloped anatomy....', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Surfactant insufficiency....', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Every breath is like the first...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary Disorders (1)...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Newborn respiratory distress s...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Occurs in ~10% of premature ne...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Underdeveloped anatomy....', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Surfactant insufficiency....', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Every breath is like the first...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary Disorders (2)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Restrictive Disorders...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Ex., pulmonary fibrosis...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Accumulation of fibrous connec...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text=' vital capacity; normal FEV1;...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*Reduced lung volume...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Evident in which phase of vent...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary Disorders (2)...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Restrictive Disorders...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Ex., pulmonary fibrosis...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Accumulation of fibrous connec...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text=' vital capacity; normal FEV1;...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*Reduced lung volume...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Evident in which phase of vent...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary Disorders (3)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Obstructive Disorders...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Ex., asthma, cystic fibrosis...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Vital capacity may be normal; ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*Reduced airflow...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Evident in which phase of vent...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary Disorders (3)...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Obstructive Disorders...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Ex., asthma, cystic fibrosis...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Vital capacity may be normal; ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*Reduced airflow...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Evident in which phase of vent...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary Disorders (4)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Emphysema – alveolar tissue is...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Chronic progressive; reduces s...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Cigarette smoking   WBC prot...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='COPD (chronic obstructive pulm...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Asthma & emphysema...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary Disorders (4)...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Emphysema – alveolar tissue is...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Chronic progressive; reduces s...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Cigarette smoking   WBC prot...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='COPD (chronic obstructive pulm...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Asthma & emphysema...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Chapter 16Respiratory Physiolo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Part 4 – O2 & CO2 transport...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Chapter 16Respiratory Physiolo...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Part 4 – O2 & CO2 transport...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Physics of Gas Pressures 2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*Dalton’s Law – the law of par...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='The pressure exerted by each c...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='PB = PCO2 + PO2 + PN2 + PH2O =...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Movement of individual gases...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Physics of Gas Pressures 2...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*Dalton’s Law – the law of par...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='The pressure exerted by each c...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='PB = PCO2 + PO2 + PN2 + PH2O =...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Movement of individual gases...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Physics of Gas Pressures 3...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Henry’s Law: C = kP...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Concentration of gas in liquid...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='At equilibrium, partial pressu...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Henry’s Law...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Partial pressure of each gas i...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Physics of Gas Pressures 3...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Henry’s Law: C = kP...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Concentration of gas in liquid...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='At equilibrium, partial pressu...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Henry’s Law...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Partial pressure of each gas i...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='The Concept of “Dissolved O2”...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Gases can exist in either in g...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Dissolved gas molecules also e...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text=' Gas molecules dissolve in bl...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='At equilibrium, the # of gas m...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='At equilibrium does not mean t...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='plasma...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='air...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='37o C...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='The Concept of “Dissolved O2”...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Gases can exist in either in g...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Dissolved gas molecules also e...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text=' Gas molecules dissolve in bl...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='At equilibrium, the # of gas m...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='At equilibrium does not mean t...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='plasma...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='air...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='37o C...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respiration and Pressure Gradi...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='How do we get O2 into the body...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='A) In and out of the lungs:...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='Gas exchange results from pres...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='B) From the lungs to the cells...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='*For PO2 – alveolar space PAO2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='*For PCO2 – mitochondria > cyt...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='capillaries...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='capillaries...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='ventilation...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='gas exchange...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='perfusion...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='gas exchange...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='diffusion...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='diffusion...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='O2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CO2 in opposite direction...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='diffusion...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Higher PO2 Lower PCO2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Higher PCO2 Lower PO2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='PA...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pa...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pa...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pv...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pv...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='PA = partial pressure alveolar...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pa = partial pressure arterial...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pv = partial pressure venous...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Respiration and Pressure Gradi...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='How do we get O2 into the body...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='A) In and out of the lungs:...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Gas exchange results from pres...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='B) From the lungs to the cells...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='*For PO2 – alveolar space PAO2...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='*For PCO2 – mitochondria > cyt...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='Higher PO2 Lower PCO2...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Higher PCO2 Lower PO2...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='PA...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pa...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pa...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pv...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pv...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='PA = partial pressure alveolar...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pa = partial pressure arterial...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pv = partial pressure venous...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='diffusion...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CO2 in opposite direction...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='capillaries...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='ventilation...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='gas exchange...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='perfusion...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='gas exchange...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='diffusion...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='diffusion...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='O2...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='capillaries...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary Circulation vs. Syst...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Rate of blood flow through the...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary vascular resistance ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Structure of pulmonary arterie...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='What purposes might this serve...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Look at all those systemic ves...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Vena cavae...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='RA -> RV...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='LA -> LV...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Please know the path of blood ...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary Circulation vs. Syst...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Rate of blood flow through the...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary vascular resistance ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Structure of pulmonary arterie...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='What purposes might this serve...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Look at all those systemic ves...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Vena cavae...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='RA -> RV...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='LA -> LV...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Please know the path of blood ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Partial Pressures of Gases...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Generation of pressure gradien...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='What is the P gradient for O2 ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='For CO2?...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Assuming correctly that every ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='5...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='64...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Partial Pressures of Gases...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Generation of pressure gradien...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='What is the P gradient for O2 ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='For CO2?...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Assuming correctly that every ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='5...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='64...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CO2 Diffuses Much More Readily...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Solubility coefficient CO2/sol...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='CO2 has a much higher diffusio...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Need a much higher diffusion g...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Much lower diffusion gradient ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=none
+DEBUG: TextParser: Text='...', Assigned BulletType=none
+DEBUG: HTMLRenderer: Text='CO2 Diffuses Much More Readily...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Solubility coefficient CO2/sol...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='CO2 has a much higher diffusio...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='Need a much higher diffusion g...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Much lower diffusion gradient ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Forms of O2 Transport...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='O2 is transported in blood in:...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='1. Dissolved O2 (< 2%)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='2. Hb-O2 (> 98%)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Hemoglobin – 280 million Hb/Re...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Each Hb has 4 polypeptide chai...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='*1 heme binds to 1 O2, thus 1 ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Oxyhemoglobin (Hb-O2) – O2 bin...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Deoxyhemoglobin – Hb only, no ...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Forms of O2 Transport...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='O2 is transported in blood in:...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='1. Dissolved O2 (< 2%)...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='2. Hb-O2 (> 98%)...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Hemoglobin – 280 million Hb/Re...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Each Hb has 4 polypeptide chai...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='*1 heme binds to 1 O2, thus 1 ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Oxyhemoglobin (Hb-O2) – O2 bin...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Deoxyhemoglobin – Hb only, no ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Hemoglobin...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Oxygen-carrying capacity of bl...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Anemia - ↓ RBCs -> [Hb] below ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Polycythemia - ↑ RBCs -> [Hb] ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Hb production controlled by er...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='Production stimulated by PCO2 ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Loading/unloading depends on P...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Hemoglobin...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Oxygen-carrying capacity of bl...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Anemia - ↓ RBCs -> [Hb] below ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Polycythemia - ↑ RBCs -> [Hb] ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Hb production controlled by er...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Production stimulated by PCO2 ...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='Loading/unloading depends on P...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Problems Related to Hemoglobin...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Methemoglobin – Fe2+ oxidized ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Brown blood, brownish-blue muc...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Carboxyhemoglobin (CO-Hb) – ca...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='The bond with CO is 210x stron...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Transport of O2 to tissues is ...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Problems Related to Hemoglobin...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Methemoglobin – Fe2+ oxidized ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Brown blood, brownish-blue muc...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Carboxyhemoglobin (CO-Hb) – ca...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='The bond with CO is 210x stron...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Transport of O2 to tissues is ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Hb-O2 Dissociation Curve...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='X-axis denotes PO2 (mm Hg)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Y-axis denotes O2 saturation r...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='The higher the PO2, the higher...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Hb-O2 Dissociation Curve...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='X-axis denotes PO2 (mm Hg)...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Y-axis denotes O2 saturation r...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='The higher the PO2, the higher...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Hb-O2 Saturation...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Gas exchange at alveolar space...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='At peripheral tissues → unload...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='The physiological range of rep...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Only ~20-25% of O2 from Hb-O2 ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='How about the steep portion of...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='What happens to unloading of O...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Hb-O2 Saturation...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Gas exchange at alveolar space...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='At peripheral tissues → unload...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='The physiological range of rep...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Only ~20-25% of O2 from Hb-O2 ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='How about the steep portion of...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='What happens to unloading of O...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Hb-O2 Saturation: Affinity of ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Structure of Hb changes confor...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Affinity of Hb for O2 increase...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Affinity of Hb for O2 decrease...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Hb-O2 Saturation: Affinity of ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Structure of Hb changes confor...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Affinity of Hb for O2 increase...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Affinity of Hb for O2 decrease...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Hb-O2 Saturation: A More Helpf...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='This figure incorporates the r...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Hb-O2 Saturation: A More Helpf...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='This figure incorporates the r...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Factors Affecting Hb-O2 Curve...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Shifts in the curve reflect th...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='A shift of curve to left incre...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='A shift of curve to the right ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='↓ O2 affinity...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='↑ O2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='affinity...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Factors Affecting Hb-O2 Curve...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Shifts in the curve reflect th...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='A shift of curve to left incre...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='A shift of curve to the right ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='↓ O2 affinity...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='↑ O2...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='affinity...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Factors Affecting Hb-O2 Curve...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='For each factor, ask yourself ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Factors affecting O2-Hb affini...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='↓ pH (acidosis) → right shift...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='↑ PCO2 (suggests hypoxemia) → ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='↑ temperature → right shift...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='↑ [2,3-DPG] in RBC → right shi...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='What about left shifts?...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Factors Affecting Hb-O2 Curve...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='For each factor, ask yourself ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Factors affecting O2-Hb affini...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='↓ pH (acidosis) → right shift...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='↑ PCO2 (suggests hypoxemia) → ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='↑ temperature → right shift...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='↑ [2,3-DPG] in RBC → right shi...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='What about left shifts?...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='2,3-DPG Alters Affinity of Hb ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='2,3-diphosphoglycerate or 2,3 ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Metabolic by-product of glycol...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='O2 inhibits its production....', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='2,3-DPG binds Hb -> decrease i...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='2,3-DPG production ↑ with hypo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Anemia...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='High altitudes...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Some forms of chronic lung dis...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='2,3-DPG Alters Affinity of Hb ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='2,3-diphosphoglycerate or 2,3 ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Metabolic by-product of glycol...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='O2 inhibits its production....', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='2,3-DPG binds Hb -> decrease i...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='2,3-DPG production ↑ with hypo...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Anemia...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='High altitudes...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Some forms of chronic lung dis...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Muscle Myoglobin...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Red pigment found exclusively ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*Has a higher affinity for O2 ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Ferrying effect – acts as a “g...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='O2 storage function – in cardi...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Muscle Myoglobin...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Red pigment found exclusively ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*Has a higher affinity for O2 ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Ferrying effect – acts as a “g...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='O2 storage function – in cardi...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Chapter 16Respiratory Physiolo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Part 5 – Acid-base balance...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Chapter 16Respiratory Physiolo...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Part 5 – Acid-base balance...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Acid-Base Balance Part I...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Normal blood pH is 7.40 (7.35 ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Acidosis – pH < 7.35  ↑ H+ ion...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Alkalosis – pH > 7.45  ↓ H+ io...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='2 major classes of acids in bo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='A volatile acid can be convert...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='CO2 in bicarbonate buffer syst...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='All other acids are non-volati...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='Non-volatile acids – lactic ac...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='Need to bind to buffer molecul...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Buffers in the body include HC...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Kidneys – excrete H+ into urin...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Acid-Base Balance Part I...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Normal blood pH is 7.40 (7.35 ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Acidosis – pH < 7.35  ↑ H+ ion...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Alkalosis – pH > 7.45  ↓ H+ io...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='2 major classes of acids in bo...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='A volatile acid can be convert...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='CO2 in bicarbonate buffer syst...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='All other acids are non-volati...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Non-volatile acids – lactic ac...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='Need to bind to buffer molecul...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='Buffers in the body include HC...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Kidneys – excrete H+ into urin...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Bicarbonate Buffer System...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CO2 + H2O ⇌ H2CO3 ⇌ H+ + HCO3-...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Carbon dioxide ⇌ carbonic acid...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CA = carbonic anhydrase enzyme...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Catalyzes reaction both direct...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Higher expression in RBCs, gas...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Why would it be in all these t...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Henderson-Hasselbalch equation...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='pH = 6.1 + log ( [HCO3-] / [CO...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='[CO2] is adjusted by lungs, [H...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Free H+ in nmol/L concentratio...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CA...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CA...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CA...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CA...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CA...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CA...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Bicarbonate Buffer System...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CO2 + H2O ⇌ H2CO3 ⇌ H+ + HCO3-...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Carbon dioxide ⇌ carbonic acid...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CA = carbonic anhydrase enzyme...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Catalyzes reaction both direct...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Higher expression in RBCs, gas...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Why would it be in all these t...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Henderson-Hasselbalch equation...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='pH = 6.1 + log ( [HCO3-] / [CO...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='[CO2] is adjusted by lungs, [H...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Free H+ in nmol/L concentratio...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CA...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CA...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CA...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CA...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CA...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CA...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Acid-Base Balance...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CO2 + H2O ⇌ H2CO3 ⇌ H+ + HCO3-...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='What effect does adding HCO3- ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='What does increased [HCO3-] do...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='What effect does adding CO2 ha...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='What does increased [CO2] do t...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CA...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CA...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Acid-Base Balance...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CO2 + H2O ⇌ H2CO3 ⇌ H+ + HCO3-...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='What effect does adding HCO3- ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='What does increased [HCO3-] do...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='What effect does adding CO2 ha...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='What does increased [CO2] do t...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='CA...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CA...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respiratory Acid-Base Balance...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='*Ventilation usually adjusted ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='What does increased respirator...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='What does decreased respirator...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='So how would the lungs (contro...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='And how would the lungs (contr...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Respiratory Acid-Base Balance...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='*Ventilation usually adjusted ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='What does increased respirator...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='What does decreased respirator...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='So how would the lungs (contro...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='And how would the lungs (contr...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respiratory Acid-Base Balance...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respiratory acidosis...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Caused by hypoventilation – CN...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Accumulation of CO2 in the tis...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respiratory alkalosis...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Caused by hyperventilation – C...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Excessive loss of CO2   PCO2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Where is the H+ when CO2 is ex...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Respiratory Acid-Base Balance...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Respiratory acidosis...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Caused by hypoventilation – CN...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Accumulation of CO2 in the tis...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Respiratory alkalosis...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Caused by hyperventilation – C...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Excessive loss of CO2   PCO2...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Where is the H+ when CO2 is ex...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Now You Are Ready for CO2 Tran...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CO2 transported in the blood i...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Dissolved CO2 (10%) – accounts...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='HCO3- (70%)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Carbaminohemoglobin (20%)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='Unloading of O2  Hb-CO2 forme...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='CO2 does NOT bind heme in Hb....', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='3 things to remember to unders...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Carbonic anhydrase is located ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='CO2 readily crosses plasma mem...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Bicarb (HCO3-) needs to be tra...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Now You Are Ready for CO2 Tran...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CO2 transported in the blood i...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Dissolved CO2 (10%) – accounts...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='HCO3- (70%)...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Carbaminohemoglobin (20%)...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Unloading of O2  Hb-CO2 forme...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='CO2 does NOT bind heme in Hb....', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='3 things to remember to unders...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Carbonic anhydrase is located ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='CO2 readily crosses plasma mem...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Bicarb (HCO3-) needs to be tra...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Now You Are Ready for CO2 Tran...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='At systemic capillaries...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Chloride shift into RBCs...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='At pulmonary capillaries...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Reverse chloride shift out of ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=none
+DEBUG: TextParser: Text='...', Assigned BulletType=none
+DEBUG: HTMLRenderer: Text='Now You Are Ready for CO2 Tran...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='At systemic capillaries...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Chloride shift into RBCs...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='At pulmonary capillaries...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Reverse chloride shift out of ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Chapter 16Respiratory Physiolo...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Part 6 – Regulation of breathi...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Chapter 16Respiratory Physiolo...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Part 6 – Regulation of breathi...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Regulation of Breathing...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='For metabolic homeostasis, the...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Sensors: Chemoreceptors for ch...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Integrator: Brain...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Continuous display of voluntar...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Voluntary action is done by ce...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Involuntary action is done by ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Brain stem respiratory centers...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Rhythmicity center (medulla)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Apneustic center (pons)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pneumotaxic center (pons)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Effectors: Respiratory muscles...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Regulation of Breathing...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='For metabolic homeostasis, the...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Sensors: Chemoreceptors for ch...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Integrator: Brain...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Continuous display of voluntar...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Voluntary action is done by ce...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Involuntary action is done by ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Brain stem respiratory centers...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Rhythmicity center (medulla)...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Apneustic center (pons)...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Pneumotaxic center (pons)...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Effectors: Respiratory muscles...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='2 groups of chemoreceptors tha...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Central chemoreceptors:...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Located in medulla, different ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='More sensitive to blood PCO2 t...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Peripheral chemoreceptors:...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Carotid and aortic bodies...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Directly detect changes in PO2...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Indirectly detect changes in P...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=2, Resolved bullet_type=char
+DEBUG: TextParser: Text='H2O + CO2  H2CO3  H+ + HCO3-...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='More sensitive to changes in b...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Sensors – Chemoreceptors...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Peripheral Chemoreceptors...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='2 groups of chemoreceptors tha...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Central chemoreceptors:...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Located in medulla, different ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='More sensitive to blood PCO2 t...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Peripheral chemoreceptors:...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Carotid and aortic bodies...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Directly detect changes in PO2...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Indirectly detect changes in P...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='H2O + CO2  H2CO3  H+ + HCO3-...', IsBullet=True, Level=2, BulletType=char
+DEBUG: HTMLRenderer: Text='More sensitive to changes in b...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Sensors – Chemoreceptors...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Peripheral Chemoreceptors...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Baroreceptors: Carotid sinuses...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Chemoreceptors: Carotid bodies...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Reminder...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Baroreceptors: Carotid sinuses...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Chemoreceptors: Carotid bodies...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Reminder...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary Mechanoreceptors (1)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Detect mechanical changes of b...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Influence the brain stem respi...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary stretch receptors (P...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Hering-Breuer inflation reflex...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Triggered to prevent over-infl...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary Mechanoreceptors (1)...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Detect mechanical changes of b...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Influence the brain stem respi...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary stretch receptors (P...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Hering-Breuer inflation reflex...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Triggered to prevent over-infl...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary Mechanoreceptors (2)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pulmonary irritant receptors (...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='A.k.a. – rapidly adaptive rece...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Detect frequency of breathing...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Respond to smoke, smog, and pa...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Unmyelinated C fibers...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Sensory neurons located in lun...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Stimulated by noxious substanc...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Produces initial apnea -> rapi...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary Mechanoreceptors (2)...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Pulmonary irritant receptors (...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='A.k.a. – rapidly adaptive rece...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Detect frequency of breathing...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Respond to smoke, smog, and pa...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Unmyelinated C fibers...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Sensory neurons located in lun...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Stimulated by noxious substanc...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Produces initial apnea -> rapi...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='The Rhythmicity Center...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Located in medulla oblongata...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='generate automatic basic rhyth...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Basic rhythm is irregular, err...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Consists of interacting neuron...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Quiet expiration is a passive ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Dorsal respiratory group (DRG)...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Ventral respiratory group (VRG...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='The Rhythmicity Center...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Located in medulla oblongata...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='generate automatic basic rhyth...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Basic rhythm is irregular, err...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Consists of interacting neuron...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Quiet expiration is a passive ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Dorsal respiratory group (DRG)...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Ventral respiratory group (VRG...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='The Pontine Centers...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Basic rhythm generated by the ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Apneustic center:...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Promotes long inspiration and ...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Pneumotaxic center:...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Needs to work together with ap...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Antagonizes the apneustic cent...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=1, Resolved bullet_type=char
+DEBUG: TextParser: Text='Inhibits inspiration, thus the...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='The Pontine Centers...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Basic rhythm generated by the ...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Apneustic center:...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Promotes long inspiration and ...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Pneumotaxic center:...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='Needs to work together with ap...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Antagonizes the apneustic cent...', IsBullet=True, Level=1, BulletType=char
+DEBUG: HTMLRenderer: Text='Inhibits inspiration, thus the...', IsBullet=True, Level=1, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Overview...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Overview...', IsBullet=True, Level=0, BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='Questions?...', Assigned BulletType=char
+DEBUG: StyleResolver: p_level=None, Resolved bullet_type=char
+DEBUG: TextParser: Text='...', Assigned BulletType=char
+DEBUG: HTMLRenderer: Text='Questions?...', IsBullet=True, Level=0, BulletType=char
+DEBUG: HTMLRenderer: Text='...', IsBullet=True, Level=0, BulletType=char
+Successfully parsed 72 slides.

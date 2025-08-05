@@ -239,7 +239,10 @@ class SlideMaster:
 @dataclass
 class PresentationDefaults:
     """Default text styles for the entire presentation."""
-    default_paragraph_properties: ParagraphProperties = field(default_factory=ParagraphProperties)
+
+    default_paragraph_properties: ParagraphProperties = field(
+        default_factory=ParagraphProperties
+    )
     default_run_properties: RunProperties = field(default_factory=RunProperties)
 
 

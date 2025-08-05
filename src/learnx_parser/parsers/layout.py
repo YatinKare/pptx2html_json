@@ -353,70 +353,100 @@ class LayoutParser:
 
         return run_props
 
-    def _extract_background_properties(self) -> tuple[str | None, GradientFill | None, BackgroundReference | None]:
+    def _extract_background_properties(
+        self,
+    ) -> tuple[str | None, GradientFill | None, BackgroundReference | None]:
         """Extract background properties from layout XML.
-        
+
         Returns:
             Tuple of (background_color, background_gradient_fill, background_reference)
         """
         background_color = None
         background_gradient_fill = None
         background_reference = None
-        
+
         # Look for background element in common slide data
         cSld_element = self.root.find(".//p:cSld", namespaces=self.nsmap)
         if cSld_element is not None:
             background_element = cSld_element.find(".//p:bg", namespaces=self.nsmap)
             if background_element is not None:
                 # Check for background properties (p:bgPr)
-                background_properties_element = background_element.find(".//p:bgPr", namespaces=self.nsmap)
+                background_properties_element = background_element.find(
+                    ".//p:bgPr", namespaces=self.nsmap
+                )
                 if background_properties_element is not None:
                     # Extract solid fill
-                    solid_fill_element = background_properties_element.find(".//a:solidFill", namespaces=self.nsmap)
+                    solid_fill_element = background_properties_element.find(
+                        ".//a:solidFill", namespaces=self.nsmap
+                    )
                     if solid_fill_element is not None:
-                        srgb_color_element = solid_fill_element.find(".//a:srgbClr", namespaces=self.nsmap)
+                        srgb_color_element = solid_fill_element.find(
+                            ".//a:srgbClr", namespaces=self.nsmap
+                        )
                         if srgb_color_element is not None:
                             background_color = srgb_color_element.get("val")
-                    
+
                     # Extract gradient fill
-                    gradient_fill_element = background_properties_element.find(".//a:gradFill", namespaces=self.nsmap)
+                    gradient_fill_element = background_properties_element.find(
+                        ".//a:gradFill", namespaces=self.nsmap
+                    )
                     if gradient_fill_element is not None:
                         gradient_stops = []
-                        for gs_element in gradient_fill_element.findall(".//a:gs", namespaces=self.nsmap):
+                        for gs_element in gradient_fill_element.findall(
+                            ".//a:gs", namespaces=self.nsmap
+                        ):
                             pos = int(gs_element.get("pos", "0"))
-                            
+
                             # Extract color from gradient stop
                             color = None
                             scheme_color = None
-                            srgb_color_element = gs_element.find(".//a:srgbClr", namespaces=self.nsmap)
+                            srgb_color_element = gs_element.find(
+                                ".//a:srgbClr", namespaces=self.nsmap
+                            )
                             if srgb_color_element is not None:
                                 color = srgb_color_element.get("val")
                             else:
-                                scheme_color_element = gs_element.find(".//a:schemeClr", namespaces=self.nsmap)
+                                scheme_color_element = gs_element.find(
+                                    ".//a:schemeClr", namespaces=self.nsmap
+                                )
                                 if scheme_color_element is not None:
                                     scheme_color = scheme_color_element.get("val")
-                            
-                            gradient_stops.append(GradientStop(pos=pos, color=color, scheme_color=scheme_color))
-                        
+
+                            gradient_stops.append(
+                                GradientStop(
+                                    pos=pos, color=color, scheme_color=scheme_color
+                                )
+                            )
+
                         if gradient_stops:
                             # Extract gradient direction/angle
                             angle = None
-                            lin_element = gradient_fill_element.find(".//a:lin", namespaces=self.nsmap)
+                            lin_element = gradient_fill_element.find(
+                                ".//a:lin", namespaces=self.nsmap
+                            )
                             if lin_element is not None:
                                 angle = int(lin_element.get("ang", "0"))
-                            
-                            background_gradient_fill = GradientFill(stops=gradient_stops, angle=angle)
-                
+
+                            background_gradient_fill = GradientFill(
+                                stops=gradient_stops, angle=angle
+                            )
+
                 # Check for background reference (p:bgRef)
-                background_reference_element = background_element.find(".//p:bgRef", namespaces=self.nsmap)
+                background_reference_element = background_element.find(
+                    ".//p:bgRef", namespaces=self.nsmap
+                )
                 if background_reference_element is not None:
                     idx = int(background_reference_element.get("idx", "0"))
                     scheme_color = None
-                    scheme_color_element = background_reference_element.find(".//a:schemeClr", namespaces=self.nsmap)
+                    scheme_color_element = background_reference_element.find(
+                        ".//a:schemeClr", namespaces=self.nsmap
+                    )
                     if scheme_color_element is not None:
                         scheme_color = scheme_color_element.get("val")
-                    background_reference = BackgroundReference(idx=idx, scheme_color=scheme_color)
-        
+                    background_reference = BackgroundReference(
+                        idx=idx, scheme_color=scheme_color
+                    )
+
         return background_color, background_gradient_fill, background_reference
 
     def _get_slide_master_obj(self) -> SlideMaster | None:
@@ -447,42 +477,54 @@ class LayoutParser:
             slide_master_object = slide_master_parser.parse_master()
         return slide_master_object
 
-    def _parse_text_styles(self) -> tuple[ParagraphProperties | None, ParagraphProperties | None, ParagraphProperties | None]:
+    def _parse_text_styles(
+        self,
+    ) -> tuple[
+        ParagraphProperties | None,
+        ParagraphProperties | None,
+        ParagraphProperties | None,
+    ]:
         """Parse text styles from <p:txStyles> element in slide layout.
-        
+
         Returns:
             Tuple of (title_style, body_style, other_style)
         """
         title_style = None
         body_style = None
         other_style = None
-        
+
         # Look for txStyles element in slide layout
         tx_styles_element = self.root.find(".//p:txStyles", namespaces=self.nsmap)
         if tx_styles_element is not None:
             # Parse title style
-            title_style_element = tx_styles_element.find(".//p:titleStyle", namespaces=self.nsmap)
+            title_style_element = tx_styles_element.find(
+                ".//p:titleStyle", namespaces=self.nsmap
+            )
             if title_style_element is not None:
                 title_style = self._parse_text_style_element(title_style_element)
-            
+
             # Parse body style
-            body_style_element = tx_styles_element.find(".//p:bodyStyle", namespaces=self.nsmap)
+            body_style_element = tx_styles_element.find(
+                ".//p:bodyStyle", namespaces=self.nsmap
+            )
             if body_style_element is not None:
                 body_style = self._parse_text_style_element(body_style_element)
-            
+
             # Parse other style
-            other_style_element = tx_styles_element.find(".//p:otherStyle", namespaces=self.nsmap)
+            other_style_element = tx_styles_element.find(
+                ".//p:otherStyle", namespaces=self.nsmap
+            )
             if other_style_element is not None:
                 other_style = self._parse_text_style_element(other_style_element)
-        
+
         return title_style, body_style, other_style
 
     def _parse_text_style_element(self, style_element) -> ParagraphProperties | None:
         """Parse a single text style element (titleStyle, bodyStyle, otherStyle).
-        
+
         Args:
             style_element: XML element containing text style properties
-            
+
         Returns:
             ParagraphProperties with default run properties containing font size
         """
@@ -491,18 +533,22 @@ class LayoutParser:
         if def_p_pr_element is not None:
             # Create ParagraphProperties object
             props = ParagraphProperties()
-            
+
             # Parse paragraph-level properties
             if def_p_pr_element.get("algn") is not None:
                 props.align = def_p_pr_element.get("algn")
-            
+
             # Parse default run properties (defRPr) - this is where font size is usually defined
-            def_rpr_element = def_p_pr_element.find(".//a:defRPr", namespaces=self.nsmap)
+            def_rpr_element = def_p_pr_element.find(
+                ".//a:defRPr", namespaces=self.nsmap
+            )
             if def_rpr_element is not None:
-                props.default_run_properties = self._parse_default_run_properties(def_rpr_element)
-            
+                props.default_run_properties = self._parse_default_run_properties(
+                    def_rpr_element
+                )
+
             return props
-        
+
         # Check for level 1 paragraph properties (lvl1pPr) - Galaxy presentation uses this structure
         lvl1_element = style_element.find(".//a:lvl1pPr", namespaces=self.nsmap)
         if lvl1_element is not None:
@@ -510,14 +556,16 @@ class LayoutParser:
             # Parse paragraph-level properties
             if lvl1_element.get("algn") is not None:
                 props.align = lvl1_element.get("algn")
-                
+
             # Parse default run properties (defRPr) - this is where font size is defined
             def_rpr_element = lvl1_element.find(".//a:defRPr", namespaces=self.nsmap)
             if def_rpr_element is not None:
-                props.default_run_properties = self._parse_default_run_properties(def_rpr_element)
-            
+                props.default_run_properties = self._parse_default_run_properties(
+                    def_rpr_element
+                )
+
             return props
-        
+
         return None
 
     def parse_layout(self) -> SlideLayout:
@@ -531,12 +579,14 @@ class LayoutParser:
 
         placeholders = self._parse_placeholders()
         list_styles = self._extract_list_styles()
-        background_color, background_gradient_fill, background_reference = self._extract_background_properties()
+        background_color, background_gradient_fill, background_reference = (
+            self._extract_background_properties()
+        )
         title_style, body_style, other_style = self._parse_text_styles()
 
         # Get slide master object
         slide_master_obj = self._get_slide_master_obj()
-        
+
         # Inherit text styles from master if layout doesn't define its own
         if slide_master_obj:
             if not title_style:
@@ -545,24 +595,25 @@ class LayoutParser:
                 body_style = slide_master_obj.body_style
             if not other_style:
                 other_style = slide_master_obj.other_style
-            
+
             # Inherit list styles from master - merge master styles with layout styles
             # Master list styles should be the default, layout can override specific levels
             if slide_master_obj.list_styles:
                 # Start with master list styles as the base
                 merged_list_styles = slide_master_obj.list_styles.copy()
-                
+
                 # Override with layout-specific list styles if they exist
                 if list_styles:
                     merged_list_styles.update(list_styles)
-                
+
                 list_styles = merged_list_styles
-        
+
         # Inherit background properties from slide master if no layout-level background is found
-        if (not background_color and 
-            not background_gradient_fill and 
-            not background_reference):
-            
+        if (
+            not background_color
+            and not background_gradient_fill
+            and not background_reference
+        ):
             if slide_master_obj:
                 if slide_master_obj.background_color:
                     background_color = slide_master_obj.background_color
